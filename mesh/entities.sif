@@ -1,0 +1,30 @@
+!------ Skeleton for body section -----
+Body 1
+  Name = AirDomain
+End
+
+Body 2
+  Name = Magnet
+End
+
+Body 3
+  Name = CoilBlock
+End
+
+Body 4
+  Name = body4
+End
+
+Body 5
+  Name = body5
+End
+
+Body 6
+  Name = body6
+End
+
+!------ Skeleton for boundary section -----
+Boundary Condition 1
+  Name = MagneticInfinity
+End
+

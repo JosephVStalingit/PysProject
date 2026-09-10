@@ -1,0 +1,108 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: ElmerFEM
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Juha
+    family-names: Ruokolainen
+    email: juha.ruokolainen@csc.fi
+    affiliation: 'CSC-IT Center for Science Ltd. '
+  - given-names: Peter
+    family-names: Råback
+    email: peter.raback@csc.fi
+    affiliation: CSC-IT Center for Science Ltd.
+    orcid: 'https://orcid.org/0000-0002-3243-6314'
+  - given-names: Mika
+    family-names: Malinen
+    email: mika.malinen@csc.fi
+    affiliation: CSC-IT Center for Science Ltd.
+  - given-names: Thomas
+    family-names: Zwinger
+    email: thomas.zwinger@csc.fi
+    affiliation: CSC-IT Center for Science Ltd.
+    orcid: 'https://orcid.org/0000-0003-3360-4401'
+  - given-names: Juhani
+    family-names: Kataja
+    email: juhani.kataja@csc.fi
+    orcid: 'https://orcid.org/0000-0002-1212-0080'
+    affiliation: CSC-IT Center for Science Ltd.
+  - given-names: Sami
+    family-names: Ilvonen
+    affiliation: CSC-IT Center for Science Ltd.
+  - given-names: Mikko
+    family-names: Lyly
+  - given-names: Mikko
+    family-names: Byckling
+    affiliation: AMD
+  - given-names: Eelis
+    family-names: Takala
+  - given-names: Fabien
+    family-names: Gillet-Chaulet
+    affiliation: UGA - IGE
+  - given-names: Olivier
+    family-names: Gagliardini
+    affiliation: UGA - IGE
+  - given-names: Joe
+    family-names: Todd
+  - given-names: Rupert
+    family-names: Gladstone
+  - given-names: Cheng
+    family-names: Gong
+    affiliation: Dartmouth College
+  - given-names: Samuel
+    family-names: Cook
+    affiliation: FAU
+  - given-names: Fredrik
+    family-names: Robertsen
+    affiliation: CSC-IT Center for Science Ltd
+  - given-names: Iain
+    family-names: Wheel
+    affiliation: Univ. Stirling
+  - given-names: Mondher
+    family-names: Chekki
+    affiliation: UGA - IGE    
+  - given-names: Pavel
+    family-names:  Ponomarev
+    affiliation: ABB
+  - given-names: Eef
+    family-names: van Dongen
+  - given-names: Jonas
+    family-names: Thies
+    affiliation: Delft University of Technology
+    orcid: 'https://orcid.org/0000-0001-9231-9999'
+  - given-names: Takayuki
+    family-names: Saeki
+  - given-names: Anders
+    family-names: Löfgren
+    affiliation: Stockholm University
+  - given-names: Benjamin
+    family-names: Rodenberg
+    affiliation: DKRZ
+    orcid: 'https://orcid.org/0000-0002-3116-0133'
+  - given-names: Clemens
+    family-names: Schannwell
+    affiliation: Max-Planck-Institut für Meteorologie
+    orcid: 'https://orcid.org/0000-0002-6160-2107'
+identifiers:
+  - type: url
+    value: 'https://doi.org/10.5281/zenodo.7892181'
+    description: Zenodo Repository of Elmer Release 26.2
+repository-code: 'https://github.com/ElmerCSC/elmerfem'
+url: 'http://www.elmerfem.org'
+abstract: >-
+  Elmer is a tool that can solve a large number of partial
+  differential equations making it an ideal tool for
+  multi-physical problems. It includes models for structural
+  mechanics, fluid dynamics, heat transfer, electromagnetics
+  and beyond. Elmer can be used from PCs to massively
+  parallel HPC platforms.
+keywords:
+  - Finite Element Method
+  - Elmer/Ice
+  - multi-physics
+license: GPL-2.0-or-later

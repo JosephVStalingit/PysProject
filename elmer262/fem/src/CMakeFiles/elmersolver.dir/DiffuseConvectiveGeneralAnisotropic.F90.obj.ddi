@@ -1,0 +1,31 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\DiffuseConvectiveGeneralAnisotropic.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/diffuseconvectivegeneral.mod",
+					"is-interface" : true,
+					"logical-name" : "diffuseconvectivegeneral.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "differentials.mod"
+				},
+				{
+					"logical-name" : "integration.mod"
+				},
+				{
+					"logical-name" : "materialmodels.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

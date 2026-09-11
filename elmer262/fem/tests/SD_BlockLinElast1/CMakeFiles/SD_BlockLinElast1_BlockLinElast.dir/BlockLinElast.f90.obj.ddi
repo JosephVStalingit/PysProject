@@ -1,0 +1,18 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\tests\\\\SD_BlockLinElast1\\\\CMakeFiles\\\\SD_BlockLinElast1_BlockLinElast.dir\\\\BlockLinElast.f90.obj",
+			"provides" : [],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

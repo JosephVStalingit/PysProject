@@ -1,0 +1,4 @@
+ninja_dyndep_version = 1.0
+build fem//tests//mgdyn_anisotropic_cond//CMakeFiles//mgdyn_anisotropic_cond_currents.dir//currents.f90.obj | fmodules/toroidcurrents1.mod: dyndep | fmodules/defutils.mod fmodules/types.mod
+  restat = 1
+

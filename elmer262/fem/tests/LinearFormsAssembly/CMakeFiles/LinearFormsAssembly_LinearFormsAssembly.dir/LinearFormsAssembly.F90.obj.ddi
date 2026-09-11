@@ -1,0 +1,27 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\tests\\\\LinearFormsAssembly\\\\CMakeFiles\\\\LinearFormsAssembly_LinearFormsAssembly.dir\\\\LinearFormsAssembly.F90.obj",
+			"provides" : [],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "iso_c_binding.mod"
+				},
+				{
+					"logical-name" : "linearforms.mod"
+				},
+				{
+					"logical-name" : "meshutils.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

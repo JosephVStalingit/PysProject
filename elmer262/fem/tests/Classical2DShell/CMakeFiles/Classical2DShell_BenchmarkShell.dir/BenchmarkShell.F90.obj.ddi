@@ -1,0 +1,21 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\tests\\\\Classical2DShell\\\\CMakeFiles\\\\Classical2DShell_BenchmarkShell.dir\\\\BenchmarkShell.F90.obj",
+			"provides" : [],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "elementdescription.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

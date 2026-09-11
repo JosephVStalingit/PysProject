@@ -1,0 +1,3 @@
+ninja_dyndep_version = 1.0
+build fem//tests//Q1Q0//CMakeFiles//Q1Q0_Q1Q0.dir//Q1Q0.f90.obj: dyndep | fmodules/defutils.mod
+

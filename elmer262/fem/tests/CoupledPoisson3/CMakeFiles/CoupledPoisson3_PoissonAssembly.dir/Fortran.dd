@@ -1,0 +1,3 @@
+ninja_dyndep_version = 1.0
+build fem//tests//CoupledPoisson3//CMakeFiles//CoupledPoisson3_PoissonAssembly.dir//PoissonAssembly.f90.obj: dyndep | fmodules/coordinatesystems.mod fmodules/defutils.mod fmodules/elementdescription.mod fmodules/integration.mod fmodules/lists.mod fmodules/solverutils.mod fmodules/types.mod
+

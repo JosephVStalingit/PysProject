@@ -1,0 +1,33 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\modules\\\\CMakeFiles\\\\ConsistentSplitting.dir\\\\ConsistentSplitting\\\\PressureSolver.F90.obj",
+			"provides" : [],
+			"requires" : 
+			[
+				{
+					"logical-name" : "crsmatrix.mod"
+				},
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "lists.mod"
+				},
+				{
+					"logical-name" : "parallelutils.mod"
+				},
+				{
+					"logical-name" : "sparitersolve.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

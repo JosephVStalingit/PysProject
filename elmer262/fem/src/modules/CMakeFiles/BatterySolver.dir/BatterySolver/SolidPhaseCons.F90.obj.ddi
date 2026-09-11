@@ -1,0 +1,24 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\modules\\\\CMakeFiles\\\\BatterySolver.dir\\\\BatterySolver\\\\SolidPhaseCons.F90.obj",
+			"provides" : [],
+			"requires" : 
+			[
+				{
+					"logical-name" : "batterymodule.mod"
+				},
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "meshutils.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

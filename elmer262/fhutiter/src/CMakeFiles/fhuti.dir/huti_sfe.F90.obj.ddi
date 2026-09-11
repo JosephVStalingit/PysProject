@@ -1,0 +1,49 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fhutiter\\\\src\\\\CMakeFiles\\\\fhuti.dir\\\\huti_sfe.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/huti_sfe.mod",
+					"is-interface" : true,
+					"logical-name" : "huti_sfe.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "huti_aux.mod"
+				},
+				{
+					"logical-name" : "huti_bicgstab.mod"
+				},
+				{
+					"logical-name" : "huti_bicgstab_2.mod"
+				},
+				{
+					"logical-name" : "huti_cg.mod"
+				},
+				{
+					"logical-name" : "huti_cgs.mod"
+				},
+				{
+					"logical-name" : "huti_gmres.mod"
+				},
+				{
+					"logical-name" : "huti_interfaces.mod"
+				},
+				{
+					"logical-name" : "huti_qmr.mod"
+				},
+				{
+					"logical-name" : "huti_tfqmr.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

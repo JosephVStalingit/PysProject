@@ -1,0 +1,55 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\MortarUtils.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/mortarutils.mod",
+					"is-interface" : true,
+					"logical-name" : "mortarutils.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "bandwidthoptimize.mod"
+				},
+				{
+					"logical-name" : "elementdescription.mod"
+				},
+				{
+					"logical-name" : "elementutils.mod"
+				},
+				{
+					"logical-name" : "geometryfitting.mod"
+				},
+				{
+					"logical-name" : "interpolation.mod"
+				},
+				{
+					"logical-name" : "listmatrix.mod"
+				},
+				{
+					"logical-name" : "lists.mod"
+				},
+				{
+					"logical-name" : "meshallocations.mod"
+				},
+				{
+					"logical-name" : "messages.mod"
+				},
+				{
+					"logical-name" : "parallelutils.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

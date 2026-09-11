@@ -1,0 +1,18 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\solve_cmplx.F90.obj",
+			"provides" : [],
+			"requires" : 
+			[
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

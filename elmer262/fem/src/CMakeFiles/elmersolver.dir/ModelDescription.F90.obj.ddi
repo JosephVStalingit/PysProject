@@ -1,0 +1,61 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\ModelDescription.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/modeldescription.mod",
+					"is-interface" : true,
+					"logical-name" : "modeldescription.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "binio.mod"
+				},
+				{
+					"logical-name" : "elementdescription.mod"
+				},
+				{
+					"logical-name" : "elementutils.mod"
+				},
+				{
+					"logical-name" : "hashtable.mod"
+				},
+				{
+					"logical-name" : "integration.mod"
+				},
+				{
+					"logical-name" : "itersolve.mod"
+				},
+				{
+					"logical-name" : "loadmod.mod"
+				},
+				{
+					"logical-name" : "meshallocations.mod"
+				},
+				{
+					"logical-name" : "meshpartition.mod"
+				},
+				{
+					"logical-name" : "meshutils.mod"
+				},
+				{
+					"logical-name" : "mortarutils.mod"
+				},
+				{
+					"logical-name" : "parallelutils.mod"
+				},
+				{
+					"logical-name" : "spariterglobals.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

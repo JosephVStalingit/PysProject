@@ -1,0 +1,17 @@
+{
+	"modules" : 
+	{
+		"binio.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/binio.mod",
+			"is-private" : false
+		},
+		"kinds.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/kinds.mod",
+			"is-private" : false
+		}
+	},
+	"references" : {},
+	"usages" : {}
+}

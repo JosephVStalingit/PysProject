@@ -1,0 +1,18 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\tests\\\\ElementUnitTest_edge_piola\\\\CMakeFiles\\\\ElementUnitTest_edge_piola_SingleEdgeElements.dir\\\\SingleEdgeElements.F90.obj",
+			"provides" : [],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

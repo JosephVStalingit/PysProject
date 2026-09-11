@@ -1,0 +1,3 @@
+ninja_dyndep_version = 1.0
+build fem//tests//OptimizeSimplexFourHeatersInt//CMakeFiles//OptimizeSimplexFourHeatersInt_CostFunction.dir//CostFunction.f90.obj: dyndep | fmodules/elementdescription.mod fmodules/integration.mod fmodules/lists.mod fmodules/solverutils.mod fmodules/types.mod
+

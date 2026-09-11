@@ -1,0 +1,31 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\modules\\\\CMakeFiles\\\\HelmholtzBEM.dir\\\\HelmholtzBEM.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/globmatc.mod",
+					"is-interface" : true,
+					"logical-name" : "globmatc.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "huti_sfe.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

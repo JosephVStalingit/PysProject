@@ -1,0 +1,9 @@
+ninja_dyndep_version = 1.0
+build fem//src//modules//CMakeFiles//ConsistentSplitting.dir//ConsistentSplitting//CompressibilitySolver.F90.obj: dyndep | fmodules/defutils.mod
+
+build fem//src//modules//CMakeFiles//ConsistentSplitting.dir//ConsistentSplitting//OptimalSolutionUpdate.F90.obj: dyndep | fmodules/defutils.mod fmodules/elementutils.mod fmodules/linearalgebra.mod fmodules/solverutils.mod
+
+build fem//src//modules//CMakeFiles//ConsistentSplitting.dir//ConsistentSplitting//PressureSolver.F90.obj: dyndep | fmodules/crsmatrix.mod fmodules/defutils.mod fmodules/lists.mod fmodules/parallelutils.mod fmodules/sparitersolve.mod fmodules/types.mod
+
+build fem//src//modules//CMakeFiles//ConsistentSplitting.dir//ConsistentSplitting//VelocitySolver.F90.obj: dyndep | fmodules/defutils.mod
+

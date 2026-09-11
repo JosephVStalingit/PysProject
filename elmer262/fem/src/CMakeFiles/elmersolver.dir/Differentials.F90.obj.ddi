@@ -1,0 +1,37 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\Differentials.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/differentials.mod",
+					"is-interface" : true,
+					"logical-name" : "differentials.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "coordinatesystems.mod"
+				},
+				{
+					"logical-name" : "elementdescription.mod"
+				},
+				{
+					"logical-name" : "linearalgebra.mod"
+				},
+				{
+					"logical-name" : "lists.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

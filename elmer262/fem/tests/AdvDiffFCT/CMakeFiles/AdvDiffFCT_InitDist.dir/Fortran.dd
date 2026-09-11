@@ -1,0 +1,3 @@
+ninja_dyndep_version = 1.0
+build fem//tests//AdvDiffFCT//CMakeFiles//AdvDiffFCT_InitDist.dir//InitDist.f90.obj: dyndep | fmodules/solverutils.mod fmodules/types.mod
+

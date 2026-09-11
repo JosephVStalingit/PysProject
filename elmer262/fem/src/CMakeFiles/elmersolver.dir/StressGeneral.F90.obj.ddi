@@ -1,0 +1,31 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\StressGeneral.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/stressgeneral.mod",
+					"is-interface" : true,
+					"logical-name" : "stressgeneral.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "coordinatesystems.mod"
+				},
+				{
+					"logical-name" : "elementdescription.mod"
+				},
+				{
+					"logical-name" : "integration.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

@@ -1,0 +1,4 @@
+ninja_dyndep_version = 1.0
+build fem//src//modules//CMakeFiles//ParStokes.dir//ParStokes.F90.obj | fmodules/anisotropicmaterialmodels.mod: dyndep | fmodules/defutils.mod fmodules/elementdescription.mod fmodules/elementutils.mod fmodules/linearalgebra.mod fmodules/materialmodels.mod fmodules/modeldescription.mod fmodules/solverutils.mod fmodules/stresslocal.mod
+  restat = 1
+

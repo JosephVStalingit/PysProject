@@ -1,0 +1,24 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\modules\\\\CMakeFiles\\\\VelocityPrecond.dir\\\\VelocityPrecond.F90.obj",
+			"provides" : [],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "elementutils.mod"
+				},
+				{
+					"logical-name" : "solverutils.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

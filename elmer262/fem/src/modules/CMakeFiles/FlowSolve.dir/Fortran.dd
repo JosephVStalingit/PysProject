@@ -1,0 +1,3 @@
+ninja_dyndep_version = 1.0
+build fem//src//modules//CMakeFiles//FlowSolve.dir//FlowSolve.F90.obj: dyndep | fmodules/adaptive.mod fmodules/defutils.mod fmodules/elementdescription.mod fmodules/freesurface.mod fmodules/navierstokes.mod fmodules/navierstokescylindrical.mod fmodules/navierstokesgeneral.mod fmodules/types.mod
+

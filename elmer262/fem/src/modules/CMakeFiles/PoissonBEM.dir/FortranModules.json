@@ -1,0 +1,12 @@
+{
+	"modules" : 
+	{
+		"globmat.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/globmat.mod",
+			"is-private" : false
+		}
+	},
+	"references" : {},
+	"usages" : {}
+}

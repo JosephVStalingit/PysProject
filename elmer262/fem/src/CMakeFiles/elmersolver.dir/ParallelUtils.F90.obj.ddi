@@ -1,0 +1,28 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\ParallelUtils.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/parallelutils.mod",
+					"is-interface" : true,
+					"logical-name" : "parallelutils.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "sparitercomm.mod"
+				},
+				{
+					"logical-name" : "sparitersolve.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

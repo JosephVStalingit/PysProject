@@ -1,0 +1,28 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\LinearAlgebra.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/linearalgebra.mod",
+					"is-interface" : true,
+					"logical-name" : "linearalgebra.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "messages.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

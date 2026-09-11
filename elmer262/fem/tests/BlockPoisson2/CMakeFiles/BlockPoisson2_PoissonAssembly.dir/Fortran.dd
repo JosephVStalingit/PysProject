@@ -1,0 +1,3 @@
+ninja_dyndep_version = 1.0
+build fem//tests//BlockPoisson2//CMakeFiles//BlockPoisson2_PoissonAssembly.dir//PoissonAssembly.f90.obj: dyndep | fmodules/defutils.mod
+

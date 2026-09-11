@@ -1,0 +1,18 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\tests\\\\SlaveSolverSlotsScan\\\\CMakeFiles\\\\CountSolver2_CountSolver2.dir\\\\CountSolver2.F90.obj",
+			"provides" : [],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

@@ -1,0 +1,28 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\tests\\\\bodydir2\\\\CMakeFiles\\\\bodydir2_Blowers.dir\\\\Blowers.f90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/blowers.mod",
+					"is-interface" : true,
+					"logical-name" : "blowers.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

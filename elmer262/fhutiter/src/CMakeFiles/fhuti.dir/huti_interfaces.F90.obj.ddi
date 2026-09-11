@@ -1,0 +1,20 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fhutiter\\\\src\\\\CMakeFiles\\\\fhuti.dir\\\\huti_interfaces.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/huti_interfaces.mod",
+					"is-interface" : true,
+					"logical-name" : "huti_interfaces.mod"
+				}
+			],
+			"requires" : []
+		}
+	],
+	"version" : 0
+}

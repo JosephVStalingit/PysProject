@@ -1,0 +1,27 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\modules\\\\CMakeFiles\\\\LevelSet.dir\\\\LevelSet\\\\LevelSetDistance.F90.obj",
+			"provides" : [],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "integration.mod"
+				},
+				{
+					"logical-name" : "materialmodels.mod"
+				},
+				{
+					"logical-name" : "solverutils.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

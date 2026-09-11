@@ -1,0 +1,397 @@
+{
+	"modules" : 
+	{
+		"adaptive.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/adaptive.mod",
+			"is-private" : false
+		},
+		"ascbinoutpututils.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/ascbinoutpututils.mod",
+			"is-private" : false
+		},
+		"bandmatrix.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/bandmatrix.mod",
+			"is-private" : false
+		},
+		"bandwidthoptimize.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/bandwidthoptimize.mod",
+			"is-private" : false
+		},
+		"blocksolve.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/blocksolve.mod",
+			"is-private" : false
+		},
+		"circmatinitmod.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/circmatinitmod.mod",
+			"is-private" : false
+		},
+		"circuitsmod.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/circuitsmod.mod",
+			"is-private" : false
+		},
+		"circuitutils.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/circuitutils.mod",
+			"is-private" : false
+		},
+		"clusteringmethods.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/clusteringmethods.mod",
+			"is-private" : false
+		},
+		"coordinatesystems.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/coordinatesystems.mod",
+			"is-private" : false
+		},
+		"crsmatrix.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/crsmatrix.mod",
+			"is-private" : false
+		},
+		"cutfemutils.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/cutfemutils.mod",
+			"is-private" : false
+		},
+		"defutils.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/defutils.mod",
+			"is-private" : false
+		},
+		"differentials.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/differentials.mod",
+			"is-private" : false
+		},
+		"diffuseconvective.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/diffuseconvective.mod",
+			"is-private" : false
+		},
+		"diffuseconvectivegeneral.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/diffuseconvectivegeneral.mod",
+			"is-private" : false
+		},
+		"directsolve.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/directsolve.mod",
+			"is-private" : false
+		},
+		"eigensolve.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/eigensolve.mod",
+			"is-private" : false
+		},
+		"elementdescription.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/elementdescription.mod",
+			"is-private" : false
+		},
+		"elementutils.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/elementutils.mod",
+			"is-private" : false
+		},
+		"exchangecorrelations.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/exchangecorrelations.mod",
+			"is-private" : false
+		},
+		"fetisolve.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/fetisolve.mod",
+			"is-private" : false
+		},
+		"freesurface.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/freesurface.mod",
+			"is-private" : false
+		},
+		"generalutils.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/generalutils.mod",
+			"is-private" : false
+		},
+		"geometryfitting.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/geometryfitting.mod",
+			"is-private" : false
+		},
+		"h1basis.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/h1basis.mod",
+			"is-private" : false
+		},
+		"hashtable.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/hashtable.mod",
+			"is-private" : false
+		},
+		"integration.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/integration.mod",
+			"is-private" : false
+		},
+		"interpolation.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/interpolation.mod",
+			"is-private" : false
+		},
+		"interpvartovar.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/interpvartovar.mod",
+			"is-private" : false
+		},
+		"iterativemethods.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/iterativemethods.mod",
+			"is-private" : false
+		},
+		"itersolve.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/itersolve.mod",
+			"is-private" : false
+		},
+		"linearalgebra.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/linearalgebra.mod",
+			"is-private" : false
+		},
+		"linearforms.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/linearforms.mod",
+			"is-private" : false
+		},
+		"listmatrix.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/listmatrix.mod",
+			"is-private" : false
+		},
+		"listmatrixarray.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/listmatrixarray.mod",
+			"is-private" : false
+		},
+		"lists.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/lists.mod",
+			"is-private" : false
+		},
+		"loadmod.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/loadmod.mod",
+			"is-private" : false
+		},
+		"lua.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/lua.mod",
+			"is-private" : false
+		},
+		"lumpingutils.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/lumpingutils.mod",
+			"is-private" : false
+		},
+		"mainutils.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/mainutils.mod",
+			"is-private" : false
+		},
+		"materialmodels.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/materialmodels.mod",
+			"is-private" : false
+		},
+		"matrixassembly.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/matrixassembly.mod",
+			"is-private" : false
+		},
+		"meshallocations.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/meshallocations.mod",
+			"is-private" : false
+		},
+		"meshgenerate.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/meshgenerate.mod",
+			"is-private" : false
+		},
+		"meshpartition.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/meshpartition.mod",
+			"is-private" : false
+		},
+		"meshremeshing.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/meshremeshing.mod",
+			"is-private" : false
+		},
+		"meshutils.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/meshutils.mod",
+			"is-private" : false
+		},
+		"messages.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/messages.mod",
+			"is-private" : false
+		},
+		"mgdynmaterialutils.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/mgdynmaterialutils.mod",
+			"is-private" : false
+		},
+		"modeldescription.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/modeldescription.mod",
+			"is-private" : false
+		},
+		"mortarutils.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/mortarutils.mod",
+			"is-private" : false
+		},
+		"multigrid.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/multigrid.mod",
+			"is-private" : false
+		},
+		"navierstokes.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/navierstokes.mod",
+			"is-private" : false
+		},
+		"navierstokescylindrical.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/navierstokescylindrical.mod",
+			"is-private" : false
+		},
+		"navierstokesgeneral.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/navierstokesgeneral.mod",
+			"is-private" : false
+		},
+		"optimizationutils.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/optimizationutils.mod",
+			"is-private" : false
+		},
+		"paralleleigensolve.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/paralleleigensolve.mod",
+			"is-private" : false
+		},
+		"parallelutils.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/parallelutils.mod",
+			"is-private" : false
+		},
+		"particleutils.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/particleutils.mod",
+			"is-private" : false
+		},
+		"pelementbase.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/pelementbase.mod",
+			"is-private" : false
+		},
+		"pelementmaps.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/pelementmaps.mod",
+			"is-private" : false
+		},
+		"radiation.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/radiation.mod",
+			"is-private" : false
+		},
+		"saveutils.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/saveutils.mod",
+			"is-private" : false
+		},
+		"smoothers.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/smoothers.mod",
+			"is-private" : false
+		},
+		"solidmechanicsutils.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/solidmechanicsutils.mod",
+			"is-private" : false
+		},
+		"solverutils.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/solverutils.mod",
+			"is-private" : false
+		},
+		"sparitercomm.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/sparitercomm.mod",
+			"is-private" : false
+		},
+		"spariterglobals.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/spariterglobals.mod",
+			"is-private" : false
+		},
+		"spariterprecond.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/spariterprecond.mod",
+			"is-private" : false
+		},
+		"sparitersolve.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/sparitersolve.mod",
+			"is-private" : false
+		},
+		"stressgeneral.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/stressgeneral.mod",
+			"is-private" : false
+		},
+		"stresslocal.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/stresslocal.mod",
+			"is-private" : false
+		},
+		"timeintegrate.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/timeintegrate.mod",
+			"is-private" : false
+		},
+		"types.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/types.mod",
+			"is-private" : false
+		},
+		"vectorhelmholtzutils.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/vectorhelmholtzutils.mod",
+			"is-private" : false
+		},
+		"zirka.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/zirka.mod",
+			"is-private" : false
+		},
+		"zirkautils.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/zirkautils.mod",
+			"is-private" : false
+		}
+	},
+	"references" : {},
+	"usages" : {}
+}

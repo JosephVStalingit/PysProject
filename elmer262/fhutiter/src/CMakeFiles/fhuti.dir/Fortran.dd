@@ -1,0 +1,31 @@
+ninja_dyndep_version = 1.0
+build fhutiter//src//CMakeFiles//fhuti.dir//huti_aux.F90.obj | fmodules/huti_aux.mod: dyndep
+  restat = 1
+
+build fhutiter//src//CMakeFiles//fhuti.dir//huti_bicgstab_2.F90.obj | fmodules/huti_bicgstab_2.mod: dyndep | fmodules/huti_aux.mod fmodules/huti_interfaces.mod
+  restat = 1
+
+build fhutiter//src//CMakeFiles//fhuti.dir//huti_bicgstab.F90.obj | fmodules/huti_bicgstab.mod: dyndep | fmodules/huti_aux.mod fmodules/huti_interfaces.mod
+  restat = 1
+
+build fhutiter//src//CMakeFiles//fhuti.dir//huti_cg.F90.obj | fmodules/huti_cg.mod: dyndep | fmodules/huti_aux.mod fmodules/huti_interfaces.mod
+  restat = 1
+
+build fhutiter//src//CMakeFiles//fhuti.dir//huti_cgs.F90.obj | fmodules/huti_cgs.mod: dyndep | fmodules/huti_aux.mod fmodules/huti_interfaces.mod
+  restat = 1
+
+build fhutiter//src//CMakeFiles//fhuti.dir//huti_gmres.F90.obj | fmodules/huti_gmres.mod: dyndep | fmodules/huti_aux.mod fmodules/huti_interfaces.mod
+  restat = 1
+
+build fhutiter//src//CMakeFiles//fhuti.dir//huti_qmr.F90.obj | fmodules/huti_qmr.mod: dyndep | fmodules/huti_aux.mod fmodules/huti_interfaces.mod
+  restat = 1
+
+build fhutiter//src//CMakeFiles//fhuti.dir//huti_tfqmr.F90.obj | fmodules/huti_tfqmr.mod: dyndep | fmodules/huti_aux.mod fmodules/huti_interfaces.mod
+  restat = 1
+
+build fhutiter//src//CMakeFiles//fhuti.dir//huti_interfaces.F90.obj | fmodules/huti_interfaces.mod: dyndep
+  restat = 1
+
+build fhutiter//src//CMakeFiles//fhuti.dir//huti_sfe.F90.obj | fmodules/huti_sfe.mod: dyndep | fmodules/huti_aux.mod fmodules/huti_bicgstab.mod fmodules/huti_bicgstab_2.mod fmodules/huti_cg.mod fmodules/huti_cgs.mod fmodules/huti_gmres.mod fmodules/huti_interfaces.mod fmodules/huti_qmr.mod fmodules/huti_tfqmr.mod
+  restat = 1
+

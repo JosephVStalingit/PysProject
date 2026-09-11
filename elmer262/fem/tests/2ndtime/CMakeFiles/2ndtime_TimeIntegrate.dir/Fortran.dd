@@ -1,0 +1,3 @@
+ninja_dyndep_version = 1.0
+build fem//tests//2ndtime//CMakeFiles//2ndtime_TimeIntegrate.dir//TimeIntegrate.f90.obj: dyndep | fmodules/defutils.mod
+

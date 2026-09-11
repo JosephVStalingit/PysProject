@@ -1,0 +1,13 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\solve_real.F90.obj",
+			"provides" : [],
+			"requires" : []
+		}
+	],
+	"version" : 0
+}

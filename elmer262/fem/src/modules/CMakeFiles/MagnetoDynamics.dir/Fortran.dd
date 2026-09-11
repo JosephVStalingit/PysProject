@@ -1,0 +1,16 @@
+ninja_dyndep_version = 1.0
+build fem//src//modules//CMakeFiles//MagnetoDynamics.dir//MagnetoDynamics//APrecSolver.F90.obj: dyndep | fmodules/circuitutils.mod fmodules/defutils.mod fmodules/zirkautils.mod
+
+build fem//src//modules//CMakeFiles//MagnetoDynamics.dir//MagnetoDynamics//CalcFields.F90.obj: dyndep | fmodules/circuitutils.mod fmodules/magnetodynamicsutils.mod fmodules/meshutils.mod fmodules/zirka.mod fmodules/zirkautils.mod
+
+build fem//src//modules//CMakeFiles//MagnetoDynamics.dir//MagnetoDynamics//JfixPotentialSolver.F90.obj: dyndep | fmodules/defutils.mod fmodules/magnetodynamicsutils.mod
+
+build fem//src//modules//CMakeFiles//MagnetoDynamics.dir//MagnetoDynamics//PlatiseFerroModel.F90.obj: dyndep | fmodules/defutils.mod
+
+build fem//src//modules//CMakeFiles//MagnetoDynamics.dir//MagnetoDynamics//Utils.F90.obj | fmodules/magnetodynamicsutils.mod: dyndep | fmodules/defutils.mod fmodules/mgdynmaterialutils.mod
+  restat = 1
+
+build fem//src//modules//CMakeFiles//MagnetoDynamics.dir//MagnetoDynamics//WhitneyAVHarmonicSolver.F90.obj: dyndep | fmodules/circuitutils.mod fmodules/defutils.mod fmodules/elementdescription.mod fmodules/magnetodynamicsutils.mod
+
+build fem//src//modules//CMakeFiles//MagnetoDynamics.dir//MagnetoDynamics//WhitneyAVSolver.F90.obj: dyndep | fmodules/circuitutils.mod fmodules/defutils.mod fmodules/elementdescription.mod fmodules/magnetodynamicsutils.mod
+

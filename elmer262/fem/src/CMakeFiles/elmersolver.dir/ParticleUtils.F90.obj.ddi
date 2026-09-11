@@ -1,0 +1,52 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\ParticleUtils.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/particleutils.mod",
+					"is-interface" : true,
+					"logical-name" : "particleutils.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "ascbinoutpututils.mod"
+				},
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "elementdescription.mod"
+				},
+				{
+					"logical-name" : "elementutils.mod"
+				},
+				{
+					"logical-name" : "generalutils.mod"
+				},
+				{
+					"logical-name" : "interpolation.mod"
+				},
+				{
+					"logical-name" : "linearalgebra.mod"
+				},
+				{
+					"logical-name" : "lists.mod"
+				},
+				{
+					"logical-name" : "meshutils.mod"
+				},
+				{
+					"logical-name" : "saveutils.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

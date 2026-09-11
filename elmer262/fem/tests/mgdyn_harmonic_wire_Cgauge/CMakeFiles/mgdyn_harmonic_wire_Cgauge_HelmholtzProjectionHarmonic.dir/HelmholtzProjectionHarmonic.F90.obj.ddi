@@ -1,0 +1,18 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\tests\\\\mgdyn_harmonic_wire_Cgauge\\\\CMakeFiles\\\\mgdyn_harmonic_wire_Cgauge_HelmholtzProjectionHarmonic.dir\\\\HelmholtzProjectionHarmonic.F90.obj",
+			"provides" : [],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

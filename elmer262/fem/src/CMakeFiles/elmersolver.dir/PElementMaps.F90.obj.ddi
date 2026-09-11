@@ -1,0 +1,28 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\PElementMaps.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/pelementmaps.mod",
+					"is-interface" : true,
+					"logical-name" : "pelementmaps.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "generalutils.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

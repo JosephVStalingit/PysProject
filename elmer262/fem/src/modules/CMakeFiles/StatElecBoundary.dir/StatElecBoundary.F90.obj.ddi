@@ -1,0 +1,28 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\modules\\\\CMakeFiles\\\\StatElecBoundary.dir\\\\StatElecBoundary.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/statelecboundaryutils.mod",
+					"is-interface" : true,
+					"logical-name" : "statelecboundaryutils.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

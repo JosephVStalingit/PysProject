@@ -1,0 +1,3 @@
+ninja_dyndep_version = 1.0
+build fem//src//modules//CMakeFiles//HeatSolve.dir//HeatSolve.F90.obj: dyndep | fmodules/adaptive.mod fmodules/defutils.mod fmodules/differentials.mod fmodules/diffuseconvective.mod fmodules/diffuseconvectivegeneral.mod fmodules/materialmodels.mod fmodules/radiation.mod fmodules/types.mod
+

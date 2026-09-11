@@ -1,0 +1,3 @@
+ninja_dyndep_version = 1.0
+build fem//src//modules//CMakeFiles//RigidMeshMapper.dir//RigidMeshMapper.F90.obj: dyndep | fmodules/coordinatesystems.mod fmodules/defutils.mod fmodules/elementdescription.mod fmodules/elementutils.mod fmodules/lists.mod fmodules/meshutils.mod fmodules/parallelutils.mod fmodules/types.mod
+

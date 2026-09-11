@@ -1,0 +1,40 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\modules\\\\CMakeFiles\\\\ParticleDynamics.dir\\\\ParticleDynamics.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/particledynamicsstuff.mod",
+					"is-interface" : true,
+					"logical-name" : "particledynamicsstuff.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "elementutils.mod"
+				},
+				{
+					"logical-name" : "interpolation.mod"
+				},
+				{
+					"logical-name" : "lists.mod"
+				},
+				{
+					"logical-name" : "meshutils.mod"
+				},
+				{
+					"logical-name" : "particleutils.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

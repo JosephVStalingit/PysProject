@@ -1,0 +1,3 @@
+ninja_dyndep_version = 1.0
+build fem//tests//UMAT_StVenant_2D//CMakeFiles//UMAT_StVenant_2D_MyUMAT.dir//MyUMAT.F90.obj: dyndep | fmodules/messages.mod fmodules/types.mod
+

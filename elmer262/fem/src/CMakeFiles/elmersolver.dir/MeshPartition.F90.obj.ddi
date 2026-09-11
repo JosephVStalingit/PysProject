@@ -1,0 +1,37 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\MeshPartition.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/meshpartition.mod",
+					"is-interface" : true,
+					"logical-name" : "meshpartition.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "clusteringmethods.mod"
+				},
+				{
+					"logical-name" : "coordinatesystems.mod"
+				},
+				{
+					"logical-name" : "elementdescription.mod"
+				},
+				{
+					"logical-name" : "meshutils.mod"
+				},
+				{
+					"logical-name" : "parallelutils.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

@@ -1,0 +1,3 @@
+ninja_dyndep_version = 1.0
+build fem//tests//HydrostaticNSVec-ISMIP-HOM-C//CMakeFiles//HydrostaticNSVec-ISMIP-HOM-C_ismip_c.dir//ismip_c.F90.obj: dyndep | fmodules/coordinatesystems.mod fmodules/defutils.mod fmodules/elementdescription.mod fmodules/solverutils.mod fmodules/types.mod
+

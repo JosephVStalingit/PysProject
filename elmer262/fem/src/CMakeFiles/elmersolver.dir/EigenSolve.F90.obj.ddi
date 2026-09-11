@@ -1,0 +1,43 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\EigenSolve.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/eigensolve.mod",
+					"is-interface" : true,
+					"logical-name" : "eigensolve.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "crsmatrix.mod"
+				},
+				{
+					"logical-name" : "elementutils.mod"
+				},
+				{
+					"logical-name" : "generalutils.mod"
+				},
+				{
+					"logical-name" : "lists.mod"
+				},
+				{
+					"logical-name" : "messages.mod"
+				},
+				{
+					"logical-name" : "multigrid.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

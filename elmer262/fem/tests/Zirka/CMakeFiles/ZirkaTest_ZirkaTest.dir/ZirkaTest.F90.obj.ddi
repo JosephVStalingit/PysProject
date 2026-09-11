@@ -1,0 +1,24 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\tests\\\\Zirka\\\\CMakeFiles\\\\ZirkaTest_ZirkaTest.dir\\\\ZirkaTest.F90.obj",
+			"provides" : [],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "zirka.mod"
+				},
+				{
+					"logical-name" : "zirkautils.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

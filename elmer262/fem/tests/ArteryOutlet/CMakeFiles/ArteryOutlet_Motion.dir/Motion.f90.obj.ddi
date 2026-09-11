@@ -1,0 +1,18 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\tests\\\\ArteryOutlet\\\\CMakeFiles\\\\ArteryOutlet_Motion.dir\\\\Motion.f90.obj",
+			"provides" : [],
+			"requires" : 
+			[
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

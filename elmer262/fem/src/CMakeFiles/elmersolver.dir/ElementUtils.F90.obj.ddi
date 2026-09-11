@@ -1,0 +1,46 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\ElementUtils.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/elementutils.mod",
+					"is-interface" : true,
+					"logical-name" : "elementutils.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "bandwidthoptimize.mod"
+				},
+				{
+					"logical-name" : "directsolve.mod"
+				},
+				{
+					"logical-name" : "elementdescription.mod"
+				},
+				{
+					"logical-name" : "integration.mod"
+				},
+				{
+					"logical-name" : "interpolation.mod"
+				},
+				{
+					"logical-name" : "listmatrixarray.mod"
+				},
+				{
+					"logical-name" : "lists.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

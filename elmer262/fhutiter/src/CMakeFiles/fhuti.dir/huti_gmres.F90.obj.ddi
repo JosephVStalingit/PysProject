@@ -1,0 +1,28 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fhutiter\\\\src\\\\CMakeFiles\\\\fhuti.dir\\\\huti_gmres.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/huti_gmres.mod",
+					"is-interface" : true,
+					"logical-name" : "huti_gmres.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "huti_aux.mod"
+				},
+				{
+					"logical-name" : "huti_interfaces.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

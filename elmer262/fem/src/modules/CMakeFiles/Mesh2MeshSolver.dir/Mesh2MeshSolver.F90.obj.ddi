@@ -1,0 +1,33 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\modules\\\\CMakeFiles\\\\Mesh2MeshSolver.dir\\\\Mesh2MeshSolver.F90.obj",
+			"provides" : [],
+			"requires" : 
+			[
+				{
+					"logical-name" : "coordinatesystems.mod"
+				},
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "interpolation.mod"
+				},
+				{
+					"logical-name" : "lists.mod"
+				},
+				{
+					"logical-name" : "meshutils.mod"
+				},
+				{
+					"logical-name" : "sparitercomm.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

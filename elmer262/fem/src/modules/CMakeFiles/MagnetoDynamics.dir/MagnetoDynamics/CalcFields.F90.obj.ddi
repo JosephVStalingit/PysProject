@@ -1,0 +1,30 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\modules\\\\CMakeFiles\\\\MagnetoDynamics.dir\\\\MagnetoDynamics\\\\CalcFields.F90.obj",
+			"provides" : [],
+			"requires" : 
+			[
+				{
+					"logical-name" : "circuitutils.mod"
+				},
+				{
+					"logical-name" : "magnetodynamicsutils.mod"
+				},
+				{
+					"logical-name" : "meshutils.mod"
+				},
+				{
+					"logical-name" : "zirka.mod"
+				},
+				{
+					"logical-name" : "zirkautils.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

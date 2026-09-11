@@ -1,0 +1,12 @@
+{
+	"modules" : 
+	{
+		"toroidcurrents1.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/toroidcurrents1.mod",
+			"is-private" : false
+		}
+	},
+	"references" : {},
+	"usages" : {}
+}

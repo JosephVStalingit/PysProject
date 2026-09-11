@@ -1,0 +1,28 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\H1Basis.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/h1basis.mod",
+					"is-interface" : true,
+					"logical-name" : "h1basis.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "messages.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

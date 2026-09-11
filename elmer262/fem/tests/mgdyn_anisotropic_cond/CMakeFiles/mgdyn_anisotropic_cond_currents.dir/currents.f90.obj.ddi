@@ -1,0 +1,28 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\tests\\\\mgdyn_anisotropic_cond\\\\CMakeFiles\\\\mgdyn_anisotropic_cond_currents.dir\\\\currents.f90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/toroidcurrents1.mod",
+					"is-interface" : true,
+					"logical-name" : "toroidcurrents1.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

@@ -1,0 +1,4 @@
+ninja_dyndep_version = 1.0
+build fem//src//modules//CMakeFiles//CoordinateTransform.dir//CoordinateTransform.F90.obj | fmodules/vecutils.mod: dyndep | fmodules/defutils.mod
+  restat = 1
+

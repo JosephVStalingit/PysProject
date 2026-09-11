@@ -1,0 +1,4 @@
+ninja_dyndep_version = 1.0
+build fem//src//modules//CMakeFiles//IncompressibleNSVec.dir//IncompressibleNSVec.F90.obj | fmodules/incompressiblelocalforms.mod: dyndep | fmodules/defutils.mod fmodules/linearalgebra.mod fmodules/linearforms.mod fmodules/mainutils.mod
+  restat = 1
+

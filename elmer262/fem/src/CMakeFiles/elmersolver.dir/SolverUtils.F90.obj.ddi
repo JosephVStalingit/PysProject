@@ -1,0 +1,64 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\SolverUtils.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/solverutils.mod",
+					"is-interface" : true,
+					"logical-name" : "solverutils.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "eigensolve.mod"
+				},
+				{
+					"logical-name" : "elementutils.mod"
+				},
+				{
+					"logical-name" : "iso_c_binding.mod"
+				},
+				{
+					"logical-name" : "loadmod.mod"
+				},
+				{
+					"logical-name" : "lumpingutils.mod"
+				},
+				{
+					"logical-name" : "matrixassembly.mod"
+				},
+				{
+					"logical-name" : "meshutils.mod"
+				},
+				{
+					"logical-name" : "modeldescription.mod"
+				},
+				{
+					"logical-name" : "mortarutils.mod"
+				},
+				{
+					"logical-name" : "multigrid.mod"
+				},
+				{
+					"logical-name" : "paralleleigensolve.mod"
+				},
+				{
+					"logical-name" : "parallelutils.mod"
+				},
+				{
+					"logical-name" : "timeintegrate.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

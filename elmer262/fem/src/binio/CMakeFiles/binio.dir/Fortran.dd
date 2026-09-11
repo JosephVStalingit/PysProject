@@ -1,0 +1,7 @@
+ninja_dyndep_version = 1.0
+build fem//src//binio//CMakeFiles//binio.dir//biniomod.f90.obj | fmodules/binio.mod: dyndep | fmodules/kinds.mod
+  restat = 1
+
+build fem//src//binio//CMakeFiles//binio.dir//kinds.f90.obj | fmodules/kinds.mod: dyndep
+  restat = 1
+

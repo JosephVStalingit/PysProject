@@ -1,0 +1,28 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\modules\\\\CMakeFiles\\\\MagnetoDynamics.dir\\\\MagnetoDynamics\\\\Utils.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/magnetodynamicsutils.mod",
+					"is-interface" : true,
+					"logical-name" : "magnetodynamicsutils.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "mgdynmaterialutils.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

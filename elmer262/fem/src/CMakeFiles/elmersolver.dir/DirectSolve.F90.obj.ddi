@@ -1,0 +1,34 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\DirectSolve.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/directsolve.mod",
+					"is-interface" : true,
+					"logical-name" : "directsolve.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "bandmatrix.mod"
+				},
+				{
+					"logical-name" : "crsmatrix.mod"
+				},
+				{
+					"logical-name" : "sparitersolve.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

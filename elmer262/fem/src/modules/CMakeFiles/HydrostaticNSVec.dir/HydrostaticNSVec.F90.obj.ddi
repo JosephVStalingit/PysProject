@@ -1,0 +1,34 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\modules\\\\CMakeFiles\\\\HydrostaticNSVec.dir\\\\HydrostaticNSVec.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/hydrostaticnsutils.mod",
+					"is-interface" : true,
+					"logical-name" : "hydrostaticnsutils.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "linearforms.mod"
+				},
+				{
+					"logical-name" : "mainutils.mod"
+				},
+				{
+					"logical-name" : "meshutils.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

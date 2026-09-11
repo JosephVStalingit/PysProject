@@ -1,0 +1,30 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\modules\\\\CMakeFiles\\\\HeatSolveVec.dir\\\\HeatSolveVec.F90.obj",
+			"provides" : [],
+			"requires" : 
+			[
+				{
+					"logical-name" : "adaptive.mod"
+				},
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "linearforms.mod"
+				},
+				{
+					"logical-name" : "radiation.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

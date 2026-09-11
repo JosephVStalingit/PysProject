@@ -1,0 +1,4 @@
+ninja_dyndep_version = 1.0
+build fem//src//CMakeFiles//ViewFactors.dir//ViewFactors.F90.obj | fmodules/viewfactorglobals.mod: dyndep | fmodules/defutils.mod fmodules/types.mod
+  restat = 1
+

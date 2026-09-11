@@ -1,0 +1,3 @@
+ninja_dyndep_version = 1.0
+build fem//src//modules//CMakeFiles//FDiffusion.dir//FDiffusion.F90.obj: dyndep | fmodules/defutils.mod fmodules/elementdescription.mod fmodules/integration.mod fmodules/lists.mod fmodules/solverutils.mod fmodules/types.mod
+

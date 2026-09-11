@@ -1,0 +1,34 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\modules\\\\CMakeFiles\\\\ResultOutputSolve.dir\\\\ResultOutputSolve\\\\VtkOutputSolver.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/vtklegacyfile.mod",
+					"is-interface" : true,
+					"logical-name" : "vtklegacyfile.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "elementdescription.mod"
+				},
+				{
+					"logical-name" : "meshutils.mod"
+				},
+				{
+					"logical-name" : "saveutils.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

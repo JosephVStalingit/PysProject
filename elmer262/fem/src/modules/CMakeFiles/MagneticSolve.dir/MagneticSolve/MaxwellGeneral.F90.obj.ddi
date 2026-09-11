@@ -1,0 +1,28 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\modules\\\\CMakeFiles\\\\MagneticSolve.dir\\\\MagneticSolve\\\\MaxwellGeneral.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/maxwellgeneral.mod",
+					"is-interface" : true,
+					"logical-name" : "maxwellgeneral.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "elementdescription.mod"
+				},
+				{
+					"logical-name" : "integration.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

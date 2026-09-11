@@ -1,0 +1,25 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\Types.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/types.mod",
+					"is-interface" : true,
+					"logical-name" : "types.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "lua.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

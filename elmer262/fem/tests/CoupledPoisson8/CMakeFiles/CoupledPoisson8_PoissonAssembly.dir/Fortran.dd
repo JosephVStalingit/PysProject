@@ -1,0 +1,3 @@
+ninja_dyndep_version = 1.0
+build fem//tests//CoupledPoisson8//CMakeFiles//CoupledPoisson8_PoissonAssembly.dir//PoissonAssembly.f90.obj: dyndep | fmodules/defutils.mod
+

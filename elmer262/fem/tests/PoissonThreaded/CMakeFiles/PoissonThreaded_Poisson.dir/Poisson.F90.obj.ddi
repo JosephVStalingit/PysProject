@@ -1,0 +1,27 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\tests\\\\PoissonThreaded\\\\CMakeFiles\\\\PoissonThreaded_Poisson.dir\\\\Poisson.F90.obj",
+			"provides" : [],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "linearalgebra.mod"
+				},
+				{
+					"logical-name" : "linearforms.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

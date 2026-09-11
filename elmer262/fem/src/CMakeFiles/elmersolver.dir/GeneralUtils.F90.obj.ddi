@@ -1,0 +1,36 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\GeneralUtils.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/ascbinoutpututils.mod",
+					"is-interface" : true,
+					"logical-name" : "ascbinoutpututils.mod"
+				},
+				{
+					"compiled-module-path" : "fmodules/generalutils.mod",
+					"is-interface" : true,
+					"logical-name" : "generalutils.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "loadmod.mod"
+				},
+				{
+					"logical-name" : "messages.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

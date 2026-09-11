@@ -1,0 +1,4 @@
+ninja_dyndep_version = 1.0
+build fem//tests//bodydir2//CMakeFiles//bodydir2_Blowers.dir//Blowers.f90.obj | fmodules/blowers.mod: dyndep | fmodules/defutils.mod fmodules/types.mod
+  restat = 1
+

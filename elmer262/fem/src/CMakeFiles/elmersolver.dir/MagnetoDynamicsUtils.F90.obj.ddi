@@ -1,0 +1,28 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\MagnetoDynamicsUtils.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/mgdynmaterialutils.mod",
+					"is-interface" : true,
+					"logical-name" : "mgdynmaterialutils.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "circuitutils.mod"
+				},
+				{
+					"logical-name" : "defutils.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

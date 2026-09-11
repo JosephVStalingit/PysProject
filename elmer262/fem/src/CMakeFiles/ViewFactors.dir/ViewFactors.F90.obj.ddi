@@ -1,0 +1,28 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\ViewFactors.dir\\\\ViewFactors.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/viewfactorglobals.mod",
+					"is-interface" : true,
+					"logical-name" : "viewfactorglobals.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

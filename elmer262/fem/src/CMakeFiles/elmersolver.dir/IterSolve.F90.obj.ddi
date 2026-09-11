@@ -1,0 +1,43 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\IterSolve.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/itersolve.mod",
+					"is-interface" : true,
+					"logical-name" : "itersolve.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "bandmatrix.mod"
+				},
+				{
+					"logical-name" : "huti_sfe.mod"
+				},
+				{
+					"logical-name" : "iterativemethods.mod"
+				},
+				{
+					"logical-name" : "listmatrix.mod"
+				},
+				{
+					"logical-name" : "lists.mod"
+				},
+				{
+					"logical-name" : "spariterglobals.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

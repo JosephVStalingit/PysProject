@@ -1,0 +1,37 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\NavierStokesCylindrical.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/navierstokescylindrical.mod",
+					"is-interface" : true,
+					"logical-name" : "navierstokescylindrical.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "differentials.mod"
+				},
+				{
+					"logical-name" : "elementdescription.mod"
+				},
+				{
+					"logical-name" : "elementutils.mod"
+				},
+				{
+					"logical-name" : "materialmodels.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

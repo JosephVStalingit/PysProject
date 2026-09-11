@@ -1,0 +1,3 @@
+ninja_dyndep_version = 1.0
+build fem//src//modules//CMakeFiles//ElasticSolve.dir//ElasticSolve.F90.obj: dyndep | fmodules/adaptive.mod fmodules/defutils.mod fmodules/integration.mod fmodules/linearalgebra.mod fmodules/mainutils.mod fmodules/materialmodels.mod fmodules/stresslocal.mod fmodules/types.mod
+

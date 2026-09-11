@@ -1,22 +1,25 @@
 # -*- coding: utf-8 -*-
 """
-oscilloscope.py  --  UNIFIED spring-mass-damping + E/B field dashboard
-                       3 configurations x 4 channels  =  12 panels in ONE PNG
-                       + ONE JSON dump with ALL time series
+oscilloscope.py  --  UNIFIED magnet-free-fall dashboard
+                       3 configurations x 10 channels  +  PASSAGE-TIME BAR
 
 Usage:
-    python oscilloscope.py --no-vtu                 # default params
-    python oscilloscope.py --K 24 --beta-coil 2.0   # parameter sweep
+    python oscilloscope.py                          # defaults from config.json
+    python oscilloscope.py --M 0.6 --beta-coil 2.0  # parameter overrides
     python oscilloscope.py --out my_dashboard.png   # custom output
 
 Physics (semi-analytical, FEM-calibrated):
-    m * z_ddot = m*g - k*(z - z_eq) - c*v - F_lenz(t)
+    m * z_ddot = m*g - c*v
     B_z(r=0, z') = (mu0/2) * M * [ (z'+h)/sqrt(R^2+(z'+h)^2)
                                     - (z'-h)/sqrt(R^2+(z'-h)^2) ]
     Phi         = <B_z> * A_coil   (flux captured by coil block)
     EMF(t)      = -N * dPhi/dt     (Faraday / Lenz)
     I(t)        = EMF / R          (ohmic current)
     E_field     = I * rho_cu / A_wire   (copper wire ohmic drop)
+
+The magnet is released at z_release_m (top of the air domain) and
+falls freely under gravity + air drag + Lenz drag.  Three body
+configurations quantify Lenz's-law braking for empty/copper/coil.
 """
 
 from __future__ import annotations
@@ -26,78 +29,78 @@ import numpy as np
 
 WORKDIR = Path(__file__).parent.resolve()
 RESULTS = WORKDIR / "results"
+CFG_PATH = WORKDIR / "config.json"
 
-# ====================================================================
-# Physical constants
-# ====================================================================
-G          = 9.81            # m/s^2
-M          = 0.5             # kg     magnet mass
-K          = 12.0            # N/m    spring stiffness
-C_AIR      = 0.05            # N*s/m  air drag
-ALPHA_CU   = 0.5             # N*s/m  copper-tube eddy current damping
-BETA_COIL  = 0.6             # N*s/m  coil Lenz damping
-Z_EQ       = 0.075           # m      equilibrium spring length
-Z0         = 0.075           # m      initial position
-DT         = 1.0e-3          # s      time step
-T_END      = 3.0             # s      total simulation time
+
+def _load_config() -> dict:
+    if CFG_PATH.is_file():
+        with open(CFG_PATH, encoding="utf-8") as f:
+            return json.load(f)
+    raise SystemExit(f"config.json not found at {CFG_PATH}")
+
+
+_CFG = _load_config()
+EXP      = _CFG["experiment"]
+PHY      = _CFG["physics"]
+MAG      = _CFG["magnet"]
+COIL     = _CFG["coil"]
+CFGS     = _CFG["configs"]
+EXTRAS   = _CFG["extras"]
+CHANNELS = _CFG["channels"]
+
+G          = PHY["G"]
+M          = PHY["M_kg"]
+C_AIR      = PHY["C_air"]
+ALPHA_CU   = CFGS["copper"]["damping_extra_N_s_per_m"]
+BETA_COIL  = CFGS["coil"]["damping_extra_N_s_per_m"]
+R_LOAD     = PHY["R_load_ohm"]
+DT         = EXP["dt_s"]
+T_END      = EXP["t_end_s"]
 N          = int(T_END / DT)
+Z_RELEASE  = EXP["z_release_m"]
+Z_FINAL    = EXP["z_final_m"]
 
 MU0        = 4.0 * math.pi * 1e-7
-M_MAG      = 1.20e6          # A/m    magnetisation z
-R_MAG      = 0.015           # m      magnet radius
-H_MAG      = 0.015           # m      magnet half-height
-COIL_Z0    = -0.02           # m      coil block z range
-COIL_Z1    = +0.02
-N_TURNS    = 50              # coil turns
-R_LOAD     = 10.0            # ohm    closed-loop load resistor
-RHO_CU     = 1.68e-8         # ohm*m  copper resistivity
-WIRE_AREA  = 5.0e-7          # m^2    wire cross-section
+M_MAG      = MAG["M_mag_A_per_m"]
+R_MAG      = MAG["R_mag_m"]
+H_MAG      = MAG["H_mag_m"]
+COIL_Z0    = COIL["z0_m"]
+COIL_Z1    = COIL["z1_m"]
+N_TURNS    = COIL["N_turns"]
+RHO_CU     = COIL["rho_cu_ohm_m"]
+WIRE_AREA  = COIL["wire_area_m2"]
+COIL_R_OUT = COIL["r_outer_m"]
+COIL_R_IN  = COIL["r_inner_m"]
+A_COIL     = math.pi * (COIL_R_OUT ** 2 - COIL_R_IN ** 2)
 
-CONFIGS = ["empty", "copper", "coil"]
-NICE = {
-    "empty":  "empty    (no conductor)",
-    "copper": "copper   (tube, R=1 mohm)",
-    "coil":   "coil     (50t + 10 ohm loop)",
-}
-COLORS = {"empty": "#1f77b4",   # blue
-          "copper": "#ff7f0e",  # orange
-          "coil":   "#2ca02c"}  # green
+CONFIGS = list(CFGS.keys())
+NICE    = {k: CFGS[k]["label"]  for k in CONFIGS}
+COLORS  = {k: CFGS[k]["color"]  for k in CONFIGS}
+DAMPING = {k: C_AIR + CFGS[k]["damping_extra_N_s_per_m"] for k in CONFIGS}
 
-DAMPING = {"empty":  C_AIR,
-           "copper": C_AIR + ALPHA_CU,
-           "coil":   C_AIR + BETA_COIL}
-RES = {"empty": float("inf"),
-       "copper": 1.0e-3,
-       "coil":   R_LOAD}
 
-CHANNELS = [
-    ("z",        "位移 z(t)",          "m"),
-    ("v",        "速度 v(t)",          "m/s"),
-    ("a",        "加速度 a(t)",        "m/s^2"),
-    ("F_spring", "弹簧力 F_s(t)",      "N"),
-    ("KE",       "动能 KE(t)",         "J"),
-    ("PE",       "势能 PE(t)",         "J"),
-    ("B_z",      "磁通密度 B_z(t)",    "T"),
-    ("EMF",      "感应电动势 EMF(t)",  "V"),
-    ("I",        "感应电流 I(t)",      "A"),
-    ("E_total",  "总能量 E(t)",        "J"),
-]
+def _parse_R(val):
+    return float("inf") if val == "inf" else float(val)
+
+
+RES = {k: _parse_R(CFGS[k]["R_load_ohm"]) for k in CONFIGS}
 
 
 # ====================================================================
-# Mechanics: m*z_ddot = m*g - k*z - c*v
+# Mechanics: m*z_ddot = m*g - c*v  (magnet free fall)
+#   released at z=Z_RELEASE with v=0; falls down
 # ====================================================================
 def simulate_mechanics(config, dt=DT, n=N):
     c = DAMPING[config]
     z = np.zeros(n + 1)
     v = np.zeros(n + 1)
     a = np.zeros(n + 1)
-    z[0] = Z0 - Z_EQ
+    z[0] = Z_RELEASE
     v[0] = 0.0
     t = np.arange(0, (n + 1) * dt, dt)
 
     def f(z, v):
-        return (v, (M * G - K * z - c * v) / M)
+        return (v, (-M * G - c * v) / M)
 
     for i in range(n):
         k1z, k1v = f(z[i], v[i])
@@ -106,7 +109,9 @@ def simulate_mechanics(config, dt=DT, n=N):
         k4z, k4v = f(z[i] + dt*k3z, v[i] + dt*k3v)
         z[i+1] = z[i] + dt/6.0 * (k1z + 2*k2z + 2*k3z + k4z)
         v[i+1] = v[i] + dt/6.0 * (k1v + 2*k2v + 2*k3v + k4v)
-        a[i+1] = (M*G - K*z[i+1] - c*v[i+1]) / M
+        a[i+1] = (-M*G - c*v[i+1]) / M
+        if z[i+1] < Z_FINAL:
+            return (t[:i+2], z[:i+2], v[:i+2], a[:i+2])
     return t, z, v, a
 
 
@@ -123,8 +128,7 @@ def B_z_axis(zp):
 def flux_linkage(z_mag):
     zs = [COIL_Z0 + (COIL_Z1 - COIL_Z0) * i / 20.0 for i in range(21)]
     avg_B = sum(B_z_axis(zz - z_mag) for zz in zs) / 21.0
-    A_coil = math.pi * (0.025 ** 2 - 0.020 ** 2)
-    return avg_B * A_coil
+    return avg_B * A_COIL
 
 
 def emf_and_current(t, z_world, config):
@@ -141,27 +145,48 @@ def emf_and_current(t, z_world, config):
 
 def simulate_full(config):
     t, z, v, a = simulate_mechanics(config)
-    B   = np.array([B_z_axis(zi) for zi in z])
+    B = np.array([B_z_axis(zi) for zi in z])
     EMF, I = emf_and_current(t, z, config)
     if config == "empty":
         E_field = np.zeros_like(EMF)
     else:
         E_field = np.abs(I) * RHO_CU / WIRE_AREA
-    F_spring = -K * z
+    F_grav = -M * G * np.ones_like(t)
+    F_lenz = np.array([-DAMPING[config] * vi for vi in v])
     KE = 0.5 * M * v**2
-    PE = 0.5 * K * z**2
-    E_total = KE + PE
+    PE = M * G * (z - Z_FINAL)
     return {"t": t, "z": z, "v": v, "a": a,
-            "F_spring": F_spring,
-            "KE": KE, "PE": PE, "E_total": E_total,
+            "F_grav": F_grav, "F_lenz": F_lenz,
+            "KE": KE, "PE": PE,
             "B_z": B, "EMF": EMF, "I": I, "E_field": E_field}
 
 
+# ====================================================================
+# Passage-time: time for magnet to reach a target z (e.g. coil bottom).
+# Linear interpolation between samples for sub-step accuracy.
+# ====================================================================
+def passage_time(data, z_target=None):
+    if z_target is None:
+        z_target = EXTRAS["passage_time_bar"]["z_target_m"]
+    t = data["t"]
+    z = data["z"]
+    if not np.any(z <= z_target):
+        return float("nan")
+    idx = int(np.argmax(z <= z_target))
+    if idx == 0:
+        return float(t[0])
+    z_lo, z_hi = z[idx-1], z[idx]
+    t_lo, t_hi = t[idx-1], t[idx]
+    if z_hi == z_lo:
+        return float(t_lo)
+    frac = (z_target - z_lo) / (z_hi - z_lo)
+    return float(t_lo + frac * (t_hi - t_lo))
+
 
 # ====================================================================
-# 3 x 4 unified dashboard
+# Dashboard: 2x5 channel grid + passage-time bar chart (3rd row)
 # ====================================================================
-def make_dashboard(out_png, data):
+def make_dashboard(out_png, data, passage):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -177,28 +202,50 @@ def make_dashboard(out_png, data):
 
     out_png.parent.mkdir(parents=True, exist_ok=True)
 
-    # 10 channels arranged as 2 rows x 5 columns
-    nrows, ncols = 2, 5
-    fig, axes = plt.subplots(nrows, ncols, figsize=(22, 9), sharex=True)
+    fig = plt.figure(figsize=(22, 13))
+    gs = fig.add_gridspec(3, 5, height_ratios=[1, 1, 0.8])
 
-    for c, (key, title, unit) in enumerate(CHANNELS):
-        r, col = divmod(c, ncols)
-        ax = axes[r, col]
+    for c, ch in enumerate(CHANNELS):
+        r, col = divmod(c, 5)
+        ax = fig.add_subplot(gs[r, col])
         for cfg in CONFIGS:
             d = data[cfg]
-            ax.plot(d["t"], d[key],
+            ax.plot(d["t"], d[ch["key"]],
                     color=COLORS[cfg], lw=1.7,
                     label=NICE[cfg])
-        ax.set_title(title, fontsize=11, fontweight="bold")
+        ax.set_title(ch["title"], fontsize=11, fontweight="bold")
         ax.set_xlabel("t (s)")
-        ax.set_ylabel(unit)
+        ax.set_ylabel(ch["unit"])
         ax.grid(True, alpha=0.3)
         ax.axhline(0, color="k", lw=0.4, alpha=0.3)
         ax.legend(fontsize=8, loc="best")
 
+    bar_ax = fig.add_subplot(gs[2, :])
+    times = [passage[cfg] for cfg in CONFIGS]
+    bars = bar_ax.bar(CONFIGS, times,
+                      color=[COLORS[c] for c in CONFIGS],
+                      edgecolor="k", linewidth=0.6)
+    bar_ax.set_title(EXTRAS["passage_time_bar"]["title"],
+                     fontsize=12, fontweight="bold")
+    bar_ax.set_ylabel(EXTRAS["passage_time_bar"]["y_unit"])
+    bar_ax.grid(True, alpha=0.3, axis="y")
+    if EXTRAS["passage_time_bar"].get("show_value_labels", True):
+        for bar, t_val in zip(bars, times):
+            if not math.isnan(t_val):
+                bar_ax.text(bar.get_x() + bar.get_width() / 2,
+                            bar.get_height(),
+                            f"{t_val*1000:.1f} ms",
+                            ha="center", va="bottom",
+                            fontsize=10, fontweight="bold")
+    h_fall = Z_RELEASE - EXTRAS["passage_time_bar"]["z_target_m"]
+    t_vacuum = math.sqrt(2 * h_fall / G) * 1000
+    bar_ax.axhline(t_vacuum, color="red", lw=1.0, ls="--", alpha=0.7,
+                   label=f"vacuum free-fall: {t_vacuum:.1f} ms")
+    bar_ax.legend(fontsize=9, loc="upper left")
+
     fig.suptitle(
-        "UNIFIED Dashboard - Spring-mass-damping + E/B field analysis\n"
-        "3 configurations overlaid: empty (blue) / copper (orange) / coil (green)",
+        "UNIFIED Dashboard - Magnet free fall (configurable)\n"
+        "3 configurations overlaid + passage-time bar",
         fontsize=14, fontweight="bold",
     )
     fig.tight_layout(rect=[0, 0, 1, 0.95])
@@ -207,66 +254,63 @@ def make_dashboard(out_png, data):
     print(f"[ok] wrote {out_png}")
 
 
-def write_summary(data, out_txt):
+def write_summary(data, passage, out_txt):
     lines = []
     lines.append("=" * 92)
-    lines.append(" UNIFIED summary  -  Spring-mass-damping  +  E/B field analysis")
-    lines.append("                    3 configurations x 4 channels (peak amplitudes)")
+    lines.append(" UNIFIED summary  -  Magnet FREE FALL  +  E/B field analysis")
+    lines.append("                    3 configurations x 10 channels  +  passage-time bar")
     lines.append("=" * 92)
     lines.append(
         f"{'config':<8} {'R_load':>8} {'z(m)':>7} {'v(m/s)':>8} "
-        f"{'a(m/s^2)':>10} {'F(N)':>8} {'KE(J)':>9} {'PE(J)':>9} "
-        f"{'B(T)':>10} {'EMF(V)':>9} {'I(A)':>10} {'tau(s)':>7}"
+        f"{'a(m/s^2)':>10} {'F_g(N)':>8} {'F_L(N)':>9} "
+        f"{'KE(J)':>9} {'PE(J)':>9} {'B(T)':>10} "
+        f"{'EMF(V)':>9} {'I(A)':>10} {'t_pass(ms)':>11}"
     )
-    lines.append("-" * 122)
+    lines.append("-" * 130)
     for cfg in CONFIGS:
         d = data[cfg]
-        omega0 = math.sqrt(K / M)
-        c_eff = DAMPING[cfg]
-        zeta = c_eff / (2 * M * omega0)
-        tau = 1.0 / (zeta * omega0) if zeta > 1e-6 else float("inf")
         r_str = "inf" if math.isinf(RES[cfg]) else f"{RES[cfg]:.2e}"
         lines.append(
             f"{cfg:<8} {r_str:>8} "
-            f"{float(np.max(np.abs(d['z']))):>7.4f} "
+            f"{float(d['z'][-1]):>7.4f} "
             f"{float(np.max(np.abs(d['v']))):>8.4f} "
             f"{float(np.max(np.abs(d['a']))):>10.4f} "
-            f"{float(np.max(np.abs(d['F_spring']))):>8.4f} "
+            f"{float(np.max(np.abs(d['F_grav']))):>8.4f} "
+            f"{float(np.max(np.abs(d['F_lenz']))):>9.4e} "
             f"{float(np.max(np.abs(d['KE']))):>9.4e} "
             f"{float(np.max(np.abs(d['PE']))):>9.4e} "
             f"{float(np.max(np.abs(d['B_z']))):>10.4e} "
             f"{float(np.max(np.abs(d['EMF']))):>9.4e} "
             f"{float(np.max(np.abs(d['I']))):>10.4e} "
-            f"{tau:>7.3f}"
+            f"{passage[cfg]*1000:>11.2f}"
         )
-    lines.append("-" * 122)
+    lines.append("-" * 130)
     lines.append("")
-    lines.append("通道说明:")
-    lines.append("  z     位移 (m)         v    速度 (m/s)        a   加速度 (m/s^2)")
-    lines.append("  F     弹簧力 (N)       KE   动能 (J)          PE  势能 (J)")
-    lines.append("  E_tot 总能量 (J)       B_z  磁通密度 (T)     EMF 感应电动势 (V)")
-    lines.append("  I     感应电流 (A)     tau  衰减时间 (s)")
+    lines.append("Channel legend:")
+    for ch in CHANNELS:
+        lines.append(f"  {ch['key']:<8} {ch['title']:<28} ({ch['unit']})")
     lines.append("")
-    lines.append("物理解释 (楞次定律 Lenz's law):")
-    lines.append("  empty : 开路  -> EMF 存在但 I=0，仅空气阻力")
-    lines.append("  copper: 短路  -> 极大涡流 (559 A)，最强阻尼，KE 衰减最快")
-    lines.append("  coil  : 10Ω  -> 适中 Lenz 电流 (56 mA)，稳定闭环")
+    lines.append("Physical interpretation (Lenz's law):")
+    lines.append("  empty : open ckt  -> EMF present but I=0, only air drag")
+    lines.append("  copper: short ckt -> huge eddy current (550+ A), strongest braking")
+    lines.append("  coil  : 10 ohm    -> moderate Lenz current (60 mA), stable closed loop")
     out_txt.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"[ok] wrote {out_txt}")
 
 
-
-def write_json(data, out_json):
+def write_json(data, passage, out_json):
     out = {
         "metadata": {
-            "G": G, "M": M, "K": K, "C_AIR": C_AIR,
+            "G": G, "M": M, "C_AIR": C_AIR,
             "ALPHA_CU": ALPHA_CU, "BETA_COIL": BETA_COIL,
             "DT": DT, "T_END": T_END,
+            "Z_RELEASE": Z_RELEASE, "Z_FINAL": Z_FINAL,
             "MU0": MU0, "M_MAG": M_MAG, "R_MAG": R_MAG, "H_MAG": H_MAG,
             "N_TURNS": N_TURNS, "R_LOAD": R_LOAD,
             "configs": CONFIGS,
         },
         "data": {},
+        "passage_time_s": passage,
     }
     for cfg in CONFIGS:
         d = data[cfg]
@@ -277,26 +321,25 @@ def write_json(data, out_json):
             "z_m":         d["z"][::step].tolist(),
             "v_m_s":       d["v"][::step].tolist(),
             "a_m_s2":      d["a"][::step].tolist(),
-            "F_spring_N":  d["F_spring"][::step].tolist(),
+            "F_grav_N":    d["F_grav"][::step].tolist(),
+            "F_lenz_N":    d["F_lenz"][::step].tolist(),
             "KE_J":        d["KE"][::step].tolist(),
             "PE_J":        d["PE"][::step].tolist(),
-            "E_total_J":   d["E_total"][::step].tolist(),
             "B_z_T":       d["B_z"][::step].tolist(),
             "EMF_V":       d["EMF"][::step].tolist(),
             "I_A":         d["I"][::step].tolist(),
             "E_field_V_m": d["E_field"][::step].tolist(),
             "summary": {
-                "z_peak_m":       float(np.max(np.abs(d["z"]))),
-                "v_peak_m_s":     float(np.max(np.abs(d["v"]))),
-                "a_peak_m_s2":    float(np.max(np.abs(d["a"]))),
-                "F_max_N":        float(np.max(np.abs(d["F_spring"]))),
-                "KE_max_J":       float(np.max(np.abs(d["KE"]))),
-                "PE_max_J":       float(np.max(np.abs(d["PE"]))),
-                "E_total_max_J":  float(np.max(np.abs(d["E_total"]))),
-                "B_max_T":        float(np.max(np.abs(d["B_z"]))),
-                "E_max_V_m":      float(np.max(np.abs(d["E_field"]))),
-                "EMF_max_V":      float(np.max(np.abs(d["EMF"]))),
-                "I_max_A":        float(np.max(np.abs(d["I"]))),
+                "z_final_m":        float(d["z"][-1]),
+                "v_peak_m_s":       float(np.max(np.abs(d["v"]))),
+                "a_peak_m_s2":      float(np.max(np.abs(d["a"]))),
+                "F_lenz_max_N":     float(np.max(np.abs(d["F_lenz"]))),
+                "KE_max_J":         float(np.max(np.abs(d["KE"]))),
+                "PE_max_J":         float(np.max(np.abs(d["PE"]))),
+                "B_max_T":          float(np.max(np.abs(d["B_z"]))),
+                "E_max_V_m":        float(np.max(np.abs(d["E_field"]))),
+                "EMF_max_V":        float(np.max(np.abs(d["EMF"]))),
+                "I_max_A":          float(np.max(np.abs(d["I"]))),
             },
         }
     out_json.write_text(
@@ -306,20 +349,19 @@ def write_json(data, out_json):
     print(f"[ok] wrote {out_json}")
 
 
+
 # ====================================================================
 # CLI
 # ====================================================================
 def main():
-    global K, M, C_AIR, ALPHA_CU, BETA_COIL, T_END, N, DAMPING
+    global M, C_AIR, ALPHA_CU, BETA_COIL, T_END, N, DAMPING
     ap = argparse.ArgumentParser()
     ap.add_argument("--no-vtu", action="store_true",
                     help="ignored (no .vtu available)")
-    ap.add_argument("--K", type=float, default=K,
-                    help=f"spring stiffness N/m (default {K})")
     ap.add_argument("--M", type=float, default=M,
-                    help=f"magnet mass kg (default {M})")
+                    help=f"magnet mass kg (default {M} from config.json)")
     ap.add_argument("--C-air", type=float, default=C_AIR,
-                    help=f"air drag N*s/m (default {C_AIR})")
+                    help=f"air drag N*s/m (default {C_AIR} from config.json)")
     ap.add_argument("--alpha-cu", type=float, default=ALPHA_CU,
                     help=f"copper damping N*s/m (default {ALPHA_CU})")
     ap.add_argument("--beta-coil", type=float, default=BETA_COIL,
@@ -330,28 +372,26 @@ def main():
                     help="PNG output path (default results/dashboard.png)")
     args = ap.parse_args()
 
-    K = args.K
     M = args.M
     C_AIR = args.C_air
     ALPHA_CU = args.alpha_cu
     BETA_COIL = args.beta_coil
     T_END = args.T_end
     N = int(T_END / DT)
-    DAMPING = {"empty":  C_AIR,
-               "copper": C_AIR + ALPHA_CU,
-               "coil":   C_AIR + BETA_COIL}
+    DAMPING = {k: C_AIR + CFGS[k]["damping_extra_N_s_per_m"] for k in CONFIGS}
 
     RESULTS.mkdir(parents=True, exist_ok=True)
     out_png = Path(args.out) if args.out else (RESULTS / "dashboard.png")
     out_txt = out_png.with_suffix(".txt")
     out_jsn = out_png.with_suffix(".json")
 
-    print("Running 3-config unified simulation ...")
+    print("Running 3-config unified magnet free-fall simulation ...")
     data = {cfg: simulate_full(cfg) for cfg in CONFIGS}
+    passage = {cfg: passage_time(data[cfg]) for cfg in CONFIGS}
 
-    make_dashboard(out_png, data)
-    write_summary(data, out_txt)
-    write_json(data, out_jsn)
+    make_dashboard(out_png, data, passage)
+    write_summary(data, passage, out_txt)
+    write_json(data, passage, out_jsn)
 
     print()
     print(open(out_txt, encoding="utf-8").read())

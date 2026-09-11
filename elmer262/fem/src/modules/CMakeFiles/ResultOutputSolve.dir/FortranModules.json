@@ -1,0 +1,22 @@
+{
+	"modules" : 
+	{
+		"dxfile.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/dxfile.mod",
+			"is-private" : false
+		},
+		"vtklegacyfile.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/vtklegacyfile.mod",
+			"is-private" : false
+		},
+		"vtuxmlfile.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/vtuxmlfile.mod",
+			"is-private" : false
+		}
+	},
+	"references" : {},
+	"usages" : {}
+}

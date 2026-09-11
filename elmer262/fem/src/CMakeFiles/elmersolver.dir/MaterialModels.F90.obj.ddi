@@ -1,0 +1,28 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\MaterialModels.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/materialmodels.mod",
+					"is-interface" : true,
+					"logical-name" : "materialmodels.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "modeldescription.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

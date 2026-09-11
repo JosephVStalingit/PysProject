@@ -1,0 +1,39 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\modules\\\\CMakeFiles\\\\ElasticSolve.dir\\\\ElasticSolve.F90.obj",
+			"provides" : [],
+			"requires" : 
+			[
+				{
+					"logical-name" : "adaptive.mod"
+				},
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "integration.mod"
+				},
+				{
+					"logical-name" : "linearalgebra.mod"
+				},
+				{
+					"logical-name" : "mainutils.mod"
+				},
+				{
+					"logical-name" : "materialmodels.mod"
+				},
+				{
+					"logical-name" : "stresslocal.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

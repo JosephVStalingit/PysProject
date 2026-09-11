@@ -2,8 +2,5 @@
 $ AirInside = 1
 $ Magnet = 2
 $ Air = 3
-$ Spring = 4
-$ Anchor = 5
 ! ----- names for boundaries -----
 $ MagneticInfinity = 1
-$ AnchorFixed = 2

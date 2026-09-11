@@ -1,0 +1,22 @@
+{
+	"modules" : 
+	{
+		"maxwell.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/maxwell.mod",
+			"is-private" : false
+		},
+		"maxwellaxis.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/maxwellaxis.mod",
+			"is-private" : false
+		},
+		"maxwellgeneral.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/maxwellgeneral.mod",
+			"is-private" : false
+		}
+	},
+	"references" : {},
+	"usages" : {}
+}

@@ -1,0 +1,4 @@
+ninja_dyndep_version = 1.0
+build fem//tests//mgdyn_lamstack_lowfreq_transient//CMakeFiles//mgdyn_lamstack_lowfreq_transient_currents.dir//currents.f90.obj | fmodules/toroidcurrents2.mod: dyndep | fmodules/defutils.mod fmodules/types.mod
+  restat = 1
+

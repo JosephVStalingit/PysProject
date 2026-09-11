@@ -1,0 +1,4 @@
+ninja_dyndep_version = 1.0
+build fem//src//modules//CMakeFiles//RichardsSolver.dir//RichardsSolver.F90.obj | fmodules/porousmaterials.mod: dyndep | fmodules/coordinatesystems.mod fmodules/defutils.mod fmodules/solverutils.mod fmodules/types.mod
+  restat = 1
+

@@ -1,0 +1,18 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\tests\\\\1sttime\\\\CMakeFiles\\\\1sttime_Source.dir\\\\Source.f90.obj",
+			"provides" : [],
+			"requires" : 
+			[
+				{
+					"logical-name" : "lists.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

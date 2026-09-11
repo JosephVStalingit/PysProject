@@ -1,0 +1,25 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\CoordinateSystems.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/coordinatesystems.mod",
+					"is-interface" : true,
+					"logical-name" : "coordinatesystems.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

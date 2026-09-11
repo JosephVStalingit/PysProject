@@ -1,0 +1,52 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\DefUtils.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/defutils.mod",
+					"is-interface" : true,
+					"logical-name" : "defutils.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "cutfemutils.mod"
+				},
+				{
+					"logical-name" : "elementdescription.mod"
+				},
+				{
+					"logical-name" : "elementutils.mod"
+				},
+				{
+					"logical-name" : "integration.mod"
+				},
+				{
+					"logical-name" : "linearalgebra.mod"
+				},
+				{
+					"logical-name" : "meshgenerate.mod"
+				},
+				{
+					"logical-name" : "meshutils.mod"
+				},
+				{
+					"logical-name" : "pelementmaps.mod"
+				},
+				{
+					"logical-name" : "solverutils.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

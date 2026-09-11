@@ -1,0 +1,30 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\modules\\\\CMakeFiles\\\\CircuitsAndDynamics.dir\\\\CircuitsAndDynamics.F90.obj",
+			"provides" : [],
+			"requires" : 
+			[
+				{
+					"logical-name" : "circmatinitmod.mod"
+				},
+				{
+					"logical-name" : "circuitsmod.mod"
+				},
+				{
+					"logical-name" : "circuitutils.mod"
+				},
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "mgdynmaterialutils.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

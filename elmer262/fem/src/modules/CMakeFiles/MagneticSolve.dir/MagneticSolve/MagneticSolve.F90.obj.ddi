@@ -1,0 +1,30 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\modules\\\\CMakeFiles\\\\MagneticSolve.dir\\\\MagneticSolve\\\\MagneticSolve.F90.obj",
+			"provides" : [],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "differentials.mod"
+				},
+				{
+					"logical-name" : "maxwell.mod"
+				},
+				{
+					"logical-name" : "maxwellaxis.mod"
+				},
+				{
+					"logical-name" : "maxwellgeneral.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

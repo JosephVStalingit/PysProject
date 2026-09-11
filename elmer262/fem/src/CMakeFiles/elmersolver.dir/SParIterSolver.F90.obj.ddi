@@ -1,0 +1,37 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\SParIterSolver.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/sparitersolve.mod",
+					"is-interface" : true,
+					"logical-name" : "sparitersolve.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "itersolve.mod"
+				},
+				{
+					"logical-name" : "listmatrix.mod"
+				},
+				{
+					"logical-name" : "lists.mod"
+				},
+				{
+					"logical-name" : "sparitercomm.mod"
+				},
+				{
+					"logical-name" : "spariterprecond.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

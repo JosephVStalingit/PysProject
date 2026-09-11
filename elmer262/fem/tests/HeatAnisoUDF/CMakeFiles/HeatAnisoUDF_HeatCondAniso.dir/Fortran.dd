@@ -1,0 +1,3 @@
+ninja_dyndep_version = 1.0
+build fem//tests//HeatAnisoUDF//CMakeFiles//HeatAnisoUDF_HeatCondAniso.dir//HeatCondAniso.F90.obj: dyndep | fmodules/defutils.mod
+

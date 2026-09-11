@@ -1,0 +1,95 @@
+{
+    "_comment": "Source of truth for oscilloscope.py + solenoid3d.py experiments. The experiment is now 'magnet free fall through a coil'. Three body configurations (coil/bore body): empty (air), copper (solid Cu tube, R=1mohm), coil (stranded coil + R_load). Per-config physics constants (g, m, drag, R_load) live in [physics]; per-coil-geometry (z range, radius, turns) live in [coil]; FEM inputs are picked up by solenoid3d.py from [mesh] and [geometry].",
+    "experiment": {
+        "name": "magnet_free_fall",
+        "description": "Permanent cylindrical magnet (M=1.2e6 A/m, R=15mm, H=15mm) is dropped from rest above the coil. We track the trajectory, magnetic flux through the coil, induced EMF, and the corresponding induction braking current. Three body configurations quantify Lenz's-law braking for empty/copper/coil setups.",
+        "z_release_m": 0.110,
+        "z_final_m": -0.050,
+        "t_end_s": 0.50,
+        "dt_s": 1.0e-4
+    },
+    "physics": {
+        "G": 9.81,
+        "M_kg": 0.5,
+        "C_air": 0.05,
+        "alpha_cu": 0.5,
+        "beta_coil": 0.6,
+        "R_load_ohm": 10.0
+    },
+    "magnet": {
+        "M_mag_A_per_m": 1.20e6,
+        "R_mag_m": 0.015,
+        "H_mag_m": 0.015,
+        "z0_m": 0.060,
+        "z1_m": 0.090
+    },
+    "coil": {
+        "z0_m": -0.020,
+        "z1_m": 0.020,
+        "r_outer_m": 0.025,
+        "r_inner_m": 0.020,
+        "N_turns": 50,
+        "rho_cu_ohm_m": 1.68e-8,
+        "wire_area_m2": 5.0e-7
+    },
+    "configs": {
+        "empty": {
+            "label": "empty    (no conductor)",
+            "color": "#1f77b4",
+            "R_load_ohm": "inf",
+            "damping_extra_N_s_per_m": 0.0,
+            "body_name": "AirInside",
+            "sif_suffix": "no-coil"
+        },
+        "copper": {
+            "label": "copper   (tube, R=1 mohm)",
+            "color": "#ff7f0e",
+            "R_load_ohm": 1.0e-3,
+            "damping_extra_N_s_per_m": 0.5,
+            "body_name": "CopperTube",
+            "sif_suffix": "copper-tube"
+        },
+        "coil": {
+            "label": "coil     (50t + 10 ohm loop)",
+            "color": "#2ca02c",
+            "R_load_ohm": 10.0,
+            "damping_extra_N_s_per_m": 0.6,
+            "body_name": "StrandedCoil",
+            "sif_suffix": "stranded-coil"
+        }
+    },
+    "channels": [
+        {"key": "z",        "title": "position z(t)",          "unit": "m"},
+        {"key": "v",        "title": "velocity v(t)",          "unit": "m/s"},
+        {"key": "a",        "title": "acceleration a(t)",      "unit": "m/s^2"},
+        {"key": "F_grav",   "title": "gravity F_g(t)",         "unit": "N"},
+        {"key": "F_lenz",   "title": "Lenz drag F_L(t)",       "unit": "N"},
+        {"key": "KE",       "title": "kinetic energy KE(t)",   "unit": "J"},
+        {"key": "PE",       "title": "grav. PE  PE(t)",        "unit": "J"},
+        {"key": "B_z",      "title": "B-field on axis B_z(t)", "unit": "T"},
+        {"key": "EMF",      "title": "induced EMF(t)",         "unit": "V"},
+        {"key": "I",        "title": "induced current I(t)",   "unit": "A"}
+    ],
+    "extras": {
+        "passage_time_bar": {
+            "title": "Passage time through coil  (s)",
+            "description": "Bar chart of the time each configuration takes the magnet to travel from z_release down to z_coil_z1 (coil bottom face). Higher = magnet falls slower, i.e. stronger Lenz braking.",
+            "z_target_m": -0.020,
+            "y_unit": "s",
+            "show_value_labels": true
+        }
+    },
+    "mesh": {
+        "lc_min_m": 0.003,
+        "lc_max_m": 0.010,
+        "lc_coil_m": 0.0012,
+        "lc_others_m": 0.004
+    },
+    "geometry": {
+        "R_air_m": 0.080,
+        "air_z0_m": -0.080,
+        "air_z1_m": 0.110,
+        "spring_removed": true,
+        "anchor_removed": true
+    }
+}

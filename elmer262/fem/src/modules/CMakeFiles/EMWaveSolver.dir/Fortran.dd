@@ -1,0 +1,4 @@
+ninja_dyndep_version = 1.0
+build fem//src//modules//CMakeFiles//EMWaveSolver.dir//EMWaveSolver.F90.obj | fmodules/emwavesolverutils.mod: dyndep | fmodules/defutils.mod fmodules/meshutils.mod
+  restat = 1
+

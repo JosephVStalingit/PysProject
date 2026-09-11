@@ -1,0 +1,28 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\modules\\\\CMakeFiles\\\\EMWaveSolver.dir\\\\EMWaveSolver.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/emwavesolverutils.mod",
+					"is-interface" : true,
+					"logical-name" : "emwavesolverutils.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "meshutils.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

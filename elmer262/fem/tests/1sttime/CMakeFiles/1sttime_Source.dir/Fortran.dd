@@ -1,0 +1,3 @@
+ninja_dyndep_version = 1.0
+build fem//tests//1sttime//CMakeFiles//1sttime_Source.dir//Source.f90.obj: dyndep | fmodules/lists.mod
+

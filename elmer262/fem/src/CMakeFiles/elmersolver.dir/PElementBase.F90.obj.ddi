@@ -1,0 +1,31 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\PElementBase.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/pelementbase.mod",
+					"is-interface" : true,
+					"logical-name" : "pelementbase.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "messages.mod"
+				},
+				{
+					"logical-name" : "pelementmaps.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

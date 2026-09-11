@@ -1,0 +1,5 @@
+ninja_dyndep_version = 1.0
+build umfpack//src//amd//CMakeFiles//amdf77.dir//amd.f.obj: dyndep
+
+build umfpack//src//amd//CMakeFiles//amdf77.dir//amdbar.f.obj: dyndep
+

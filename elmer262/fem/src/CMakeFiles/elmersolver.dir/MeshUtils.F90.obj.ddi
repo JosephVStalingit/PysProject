@@ -1,0 +1,58 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\MeshUtils.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/meshutils.mod",
+					"is-interface" : true,
+					"logical-name" : "meshutils.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "bandwidthoptimize.mod"
+				},
+				{
+					"logical-name" : "coordinatesystems.mod"
+				},
+				{
+					"logical-name" : "elementdescription.mod"
+				},
+				{
+					"logical-name" : "elementutils.mod"
+				},
+				{
+					"logical-name" : "geometryfitting.mod"
+				},
+				{
+					"logical-name" : "interpolation.mod"
+				},
+				{
+					"logical-name" : "listmatrix.mod"
+				},
+				{
+					"logical-name" : "lists.mod"
+				},
+				{
+					"logical-name" : "meshallocations.mod"
+				},
+				{
+					"logical-name" : "mortarutils.mod"
+				},
+				{
+					"logical-name" : "parallelutils.mod"
+				},
+				{
+					"logical-name" : "pelementmaps.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

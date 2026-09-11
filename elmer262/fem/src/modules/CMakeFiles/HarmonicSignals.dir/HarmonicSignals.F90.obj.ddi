@@ -1,0 +1,25 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\modules\\\\CMakeFiles\\\\HarmonicSignals.dir\\\\HarmonicSignals.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/harmutils.mod",
+					"is-interface" : true,
+					"logical-name" : "harmutils.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

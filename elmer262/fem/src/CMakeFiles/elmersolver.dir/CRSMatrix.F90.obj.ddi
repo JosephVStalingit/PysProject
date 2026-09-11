@@ -1,0 +1,28 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\CRSMatrix.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/crsmatrix.mod",
+					"is-interface" : true,
+					"logical-name" : "crsmatrix.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "lists.mod"
+				},
+				{
+					"logical-name" : "spariterglobals.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

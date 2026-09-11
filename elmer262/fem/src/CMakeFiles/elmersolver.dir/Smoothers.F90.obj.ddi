@@ -1,0 +1,37 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\Smoothers.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/smoothers.mod",
+					"is-interface" : true,
+					"logical-name" : "smoothers.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "crsmatrix.mod"
+				},
+				{
+					"logical-name" : "directsolve.mod"
+				},
+				{
+					"logical-name" : "lists.mod"
+				},
+				{
+					"logical-name" : "meshutils.mod"
+				},
+				{
+					"logical-name" : "parallelutils.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

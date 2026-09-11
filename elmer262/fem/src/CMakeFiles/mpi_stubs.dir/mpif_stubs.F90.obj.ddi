@@ -1,0 +1,13 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\mpi_stubs.dir\\\\mpif_stubs.F90.obj",
+			"provides" : [],
+			"requires" : []
+		}
+	],
+	"version" : 0
+}

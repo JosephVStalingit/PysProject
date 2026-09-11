@@ -1,0 +1,34 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\Lists.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/lists.mod",
+					"is-interface" : true,
+					"logical-name" : "lists.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "generalutils.mod"
+				},
+				{
+					"logical-name" : "pelementmaps.mod"
+				},
+				{
+					"logical-name" : "spariterglobals.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

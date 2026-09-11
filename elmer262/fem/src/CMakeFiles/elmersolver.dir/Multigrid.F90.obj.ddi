@@ -1,0 +1,52 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\Multigrid.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/multigrid.mod",
+					"is-interface" : true,
+					"logical-name" : "multigrid.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "clusteringmethods.mod"
+				},
+				{
+					"logical-name" : "crsmatrix.mod"
+				},
+				{
+					"logical-name" : "directsolve.mod"
+				},
+				{
+					"logical-name" : "elementdescription.mod"
+				},
+				{
+					"logical-name" : "elementutils.mod"
+				},
+				{
+					"logical-name" : "itersolve.mod"
+				},
+				{
+					"logical-name" : "meshutils.mod"
+				},
+				{
+					"logical-name" : "modeldescription.mod"
+				},
+				{
+					"logical-name" : "smoothers.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

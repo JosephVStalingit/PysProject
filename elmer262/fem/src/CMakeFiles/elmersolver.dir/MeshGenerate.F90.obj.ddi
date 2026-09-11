@@ -1,0 +1,43 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\MeshGenerate.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/meshgenerate.mod",
+					"is-interface" : true,
+					"logical-name" : "meshgenerate.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "generalutils.mod"
+				},
+				{
+					"logical-name" : "loadmod.mod"
+				},
+				{
+					"logical-name" : "meshremeshing.mod"
+				},
+				{
+					"logical-name" : "meshutils.mod"
+				},
+				{
+					"logical-name" : "modeldescription.mod"
+				},
+				{
+					"logical-name" : "solverutils.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

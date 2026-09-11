@@ -27,9 +27,10 @@ if (-not $PY) {
 }
 Write-Host "    -> using $PY" -ForegroundColor Cyan
 
-# Locate Elmer 26.2 (compiled locally)
+# Locate Elmer 26.2 (now bundled inside the project for Docker portability)
 $ELMER_HOME = $null
 foreach ($cand in @(
+    (Join-Path $PSScriptRoot 'elmer262'),
     "C:\elmer262",
     "D:\elmer262",
     "$env:LOCALAPPDATA\elmer262",
@@ -39,8 +40,8 @@ foreach ($cand in @(
     }
 }
 if (-not $ELMER_HOME) {
-    Write-Host "  err  Elmer 26.2 not found (expected C:\elmer262)" -ForegroundColor Red
-    Write-Host "        compile from elmerfem-release-26.2.1 with MSYS2 mingw64 toolchain" -ForegroundColor Yellow
+    Write-Host "  err  Elmer 26.2 not found (expected ./elmer262 or C:\elmer262)" -ForegroundColor Red
+    Write-Host "        project bundles ./elmer262/ for Docker portability" -ForegroundColor Yellow
     exit 1
 }
 Write-Host "    -> ELMER_HOME=$ELMER_HOME" -ForegroundColor Cyan
@@ -105,7 +106,7 @@ if ($LASTEXITCODE -ne 0) {
 # 5. Oscilloscope tests (spring-magnet damping 3-config)
 Write-Host ""
 Write-Host "[5/5] Oscilloscope tests" -ForegroundColor Cyan
-& $PY -c "import sys; sys.path.insert(0, '.'); from tests.test_oscilloscope import test_damping_monotonic, test_period_in_range, test_peak_decreasing, test_decay_rate, test_oscilloscope_png, test_summary_txt; test_damping_monotonic(); test_period_in_range(); test_peak_decreasing(); test_decay_rate(); test_oscilloscope_png(); test_summary_txt(); print('all oscilloscope tests passed')"
+& $PY -c "import sys; sys.path.insert(0, '.'); from tests.test_oscilloscope import test_config_loaded, test_damping_monotonic, test_passage_time_monotonic, test_peak_velocity_decreasing, test_magnet_actually_falls, test_vacuum_reference, test_oscilloscope_png, test_summary_txt; test_config_loaded(); test_damping_monotonic(); test_passage_time_monotonic(); test_peak_velocity_decreasing(); test_magnet_actually_falls(); test_vacuum_reference(); test_oscilloscope_png(); test_summary_txt(); print('all oscilloscope tests passed')"
 if ($LASTEXITCODE -ne 0) {
     Write-Host "  err  test_oscilloscope.py failed" -ForegroundColor Red
     exit 1

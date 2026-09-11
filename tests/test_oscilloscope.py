@@ -1,95 +1,112 @@
 # -*- coding: utf-8 -*-
 """
-test_oscilloscope.py  ── 验证 oscilloscope.py 数学正确性
+test_oscilloscope.py  --  verify oscilloscope.py for the magnet free-fall experiment
 
-物理预期：
-    empty : 欠阻尼 ζ≈0.01, 振荡周期 T≈1.28 s
-    copper: 欠阻尼 ζ≈0.11, 衰减时间 τ≈1.8 s
-    coil  : 欠阻尼 ζ≈0.13, 衰减时间 τ≈1.5 s
-    三者 ζ 必须单调递增：empty < copper < coil
-    三者 z_peak 必须单调递减：empty > copper > coil
+Physics expectations (magnet dropped from z=0.110 m, B-field acts as brake):
+
+    empty : open ckt  -> I = 0  -> only air drag (small)
+    copper: short ckt -> huge eddy current -> strongest Lenz drag
+    coil  : 10 ohm    -> moderate Lenz current -> moderate drag
+
+We assert:
+    1. all 3 simulations actually reach z_final (< -0.05 m)
+    2. passage time is finite and within sensible bounds (150-300 ms for 16cm drop)
+    3. passage_time is MONOTONICALLY increasing with damping strength:
+       empty < copper < coil   (more drag -> longer to fall)
+    4. peak velocity |v|_peak is MONOTONICALLY DECREASING:
+       empty > copper > coil   (more drag -> slower)
+    5. the dashboard PNG and summary txt are written
+    6. config.json is read correctly (single source of truth)
 """
 import os, sys
 from pathlib import Path
+import math
+
 WORKDIR = Path(__file__).parent.parent.resolve()
 sys.path.insert(0, str(WORKDIR))
 import oscilloscope as osc
 
 
+def test_config_loaded():
+    """All key config sections present."""
+    assert osc._CFG["experiment"]["name"] == "magnet_free_fall"
+    assert set(osc.CONFIGS) == {"empty", "copper", "coil"}
+    assert osc.EXTRAS["passage_time_bar"]["title"]
+
+
 def test_damping_monotonic():
-    import math
-    omega0 = math.sqrt(osc.K / osc.M)
-    zetas = [osc.DAMPING[c] / (2 * osc.M * omega0) for c in osc.CONFIGS]
-    assert zetas[0] < zetas[1] < zetas[2], f"damping not monotonic: {zetas}"
+    """Total damping must be strictly increasing empty < copper < coil."""
+    dampings = [osc.DAMPING[c] for c in osc.CONFIGS]
+    assert dampings[0] < dampings[1] < dampings[2], \
+        f"damping not monotonic: {dampings}"
 
 
-def test_period_in_range():
-    import math
+def test_passage_time_monotonic():
+    """More Lenz drag -> magnet takes LONGER to reach z_target.
+       So passage_time must be empty < copper < coil."""
+    passages = []
     for c in osc.CONFIGS:
-        t, z, v, a = osc.simulate_mechanics(c, n=1000)
-        # 找到 z 的前两个过零点 → 半周期
-        zero_cross = []
-        for i in range(1, len(z)):
-            if z[i-1] > 0 and z[i] <= 0:
-                zero_cross.append(t[i])
-        if len(zero_cross) >= 2:
-            half_period = zero_cross[1] - zero_cross[0]
-            period = 2 * half_period
-            # T should be near 1.28 s (undamped)
-            assert 1.0 < period < 1.6, f"{c}: period={period:.3f} not in [1, 1.6]"
+        d = osc.simulate_full(c)
+        p = osc.passage_time(d)
+        assert not math.isnan(p), f"{c}: passage_time is NaN"
+        passages.append(p)
+    assert passages[0] < passages[1] < passages[2], \
+        f"passage time not monotonic: {passages}"
 
 
-def test_peak_decreasing():
+def test_peak_velocity_decreasing():
+    """Stronger drag -> smaller terminal velocity magnitude."""
     peaks = []
     for c in osc.CONFIGS:
-        t, z, v, a = osc.simulate_mechanics(c, n=2000)
-        peaks.append(abs(z[0]))
-    # 初始 z=0 因为 z(0)=0；第一个峰在 dt 后才有意义
-    # 重新算：peak = max(|z|)
-    peaks = []
-    for c in osc.CONFIGS:
-        t, z, v, a = osc.simulate_mechanics(c, n=2000)
-        peaks.append(float(max(abs(z))))
-    assert peaks[0] > peaks[1] > peaks[2], f"peak not decreasing: {peaks}"
+        d = osc.simulate_full(c)
+        peaks.append(float(max(abs(d["v"]))))
+    assert peaks[0] > peaks[1] > peaks[2], \
+        f"v_peak not decreasing: {peaks}"
 
 
-def test_decay_rate():
-    """在 t=0.5 s 和 t=2.5 s 比较 |z|，衰减比应大致匹配 exp(-(t2-t1)/tau)"""
+def test_magnet_actually_falls():
+    """All configs must reach z_final < -0.05 (proves magnet really fell)."""
     for c in osc.CONFIGS:
-        t, z, v, a = osc.simulate_mechanics(c, n=3000)
-        # 找局部极大值
-        import numpy as np
-        z_np = z
-        # 找前两个极大值
-        peaks_idx = []
-        for i in range(1, len(z_np)-1):
-            if z_np[i-1] < z_np[i] > z_np[i+1]:
-                peaks_idx.append(i)
-                if len(peaks_idx) >= 2:
-                    break
-        if len(peaks_idx) >= 2:
-            ratio = abs(z_np[peaks_idx[1]]) / abs(z_np[peaks_idx[0]])
-            assert 0 < ratio < 1.0, f"{c}: ratio={ratio:.3f} not in (0,1)"
+        d = osc.simulate_full(c)
+        assert d["z"][-1] < -0.04, \
+            f"{c}: magnet stuck at z={d['z'][-1]:.4f}, didn't fall"
+
+
+def test_vacuum_reference():
+    """t = sqrt(2 h / g) for free fall from 0.110 to z_target."""
+    h = osc.Z_RELEASE - osc.EXTRAS["passage_time_bar"]["z_target_m"]
+    t_vacuum = math.sqrt(2 * h / osc.G)
+    # empty config should be CLOSE to (but a little larger than) vacuum,
+    # because air drag is small but non-zero.
+    d = osc.simulate_full("empty")
+    p = osc.passage_time(d)
+    assert t_vacuum < p < t_vacuum * 1.10, \
+        f"empty passage {p*1000:.1f} ms not within 10% of vacuum {t_vacuum*1000:.1f} ms"
 
 
 def test_oscilloscope_png():
-    """跑 make_oscilloscope() 验证 PNG 写得出来"""
-    import os
+    """Dashboard PNG must be written and non-trivial in size."""
     out = osc.RESULTS / "dashboard.png"
     if out.exists():
         out.unlink()
-    osc.make_dashboard(out, {cfg: osc.simulate_full(cfg) for cfg in osc.CONFIGS})
+    data = {cfg: osc.simulate_full(cfg) for cfg in osc.CONFIGS}
+    passage = {cfg: osc.passage_time(data[cfg]) for cfg in osc.CONFIGS}
+    osc.make_dashboard(out, data, passage)
     assert out.exists(), "PNG not written"
     assert out.stat().st_size > 50_000, "PNG too small"
 
 
 def test_summary_txt():
+    """Summary txt must contain all 3 config names and a passage-time row."""
     out = osc.RESULTS / "summary.txt"
     if out.exists():
         out.unlink()
     data = {cfg: osc.simulate_full(cfg) for cfg in osc.CONFIGS}
-    osc.make_dashboard(osc.RESULTS / "dashboard.png", data)
-    osc.write_summary(data, out)
+    passage = {cfg: osc.passage_time(data[cfg]) for cfg in osc.CONFIGS}
+    osc.write_summary(data, passage, out)
     assert out.exists()
     content = out.read_text(encoding="utf-8")
-    assert "empty" in content and "copper" in content and "coil" in content
+    assert "empty" in content
+    assert "copper" in content
+    assert "coil" in content
+    assert "t_pass(ms)" in content

@@ -24,9 +24,10 @@
 $ErrorActionPreference = "Stop"
 Set-Location -Path $PSScriptRoot
 
-# ---- Locate the Elmer 26.1 install root --------------------------------
+# ---- Locate the Elmer 26.2 install root (bundled in ./elmer262) --------
 function Find-Elmer {
     foreach ($cand in @(
+        (Join-Path $PSScriptRoot 'elmer262'),
         "D:\Program Files\Elmer 26.1-Release",
         "C:\Program Files\Elmer 26.1-Release",
         "C:\Program Files\Elmer",
@@ -40,7 +41,8 @@ function Find-Elmer {
 }
 $ELMER_HOME = Find-Elmer
 if (-not $ELMER_HOME) {
-    Write-Host "  err  Elmer 26.1 not found - install from https://www.elmerfem.org/"
+    Write-Host "  err  Elmer 26.2 not found - expected ./elmer262 (bundled in project)"
+    Write-Host "        or install from https://www.elmerfem.org/"
     exit 1
 }
 Write-Host "    -> ELMER_HOME=$ELMER_HOME"

@@ -1,0 +1,37 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\SParIterComm.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/sparitercomm.mod",
+					"is-interface" : true,
+					"logical-name" : "sparitercomm.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "generalutils.mod"
+				},
+				{
+					"logical-name" : "loadmod.mod"
+				},
+				{
+					"logical-name" : "messages.mod"
+				},
+				{
+					"logical-name" : "spariterglobals.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

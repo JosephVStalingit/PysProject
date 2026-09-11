@@ -1,0 +1,13 @@
+ninja_dyndep_version = 1.0
+build fem//src//modules//CMakeFiles//SaveData.dir//SaveData//SaveBoundaryValues.F90.obj: dyndep | fmodules/defutils.mod fmodules/elementdescription.mod fmodules/integration.mod fmodules/lists.mod fmodules/solverutils.mod fmodules/types.mod
+
+build fem//src//modules//CMakeFiles//SaveData.dir//SaveData//SaveDependence.F90.obj: dyndep | fmodules/defutils.mod fmodules/lists.mod fmodules/saveutils.mod fmodules/types.mod
+
+build fem//src//modules//CMakeFiles//SaveData.dir//SaveData//SaveLine.F90.obj: dyndep | fmodules/bandwidthoptimize.mod fmodules/defutils.mod fmodules/elementdescription.mod fmodules/elementutils.mod fmodules/integration.mod fmodules/lists.mod fmodules/meshutils.mod fmodules/saveutils.mod fmodules/solverutils.mod fmodules/types.mod
+
+build fem//src//modules//CMakeFiles//SaveData.dir//SaveData//SaveMaterials.F90.obj: dyndep | fmodules/defutils.mod fmodules/elementdescription.mod fmodules/integration.mod fmodules/lists.mod fmodules/solverutils.mod fmodules/types.mod
+
+build fem//src//modules//CMakeFiles//SaveData.dir//SaveData//SaveProjection.F90.obj: dyndep | fmodules/defutils.mod fmodules/types.mod
+
+build fem//src//modules//CMakeFiles//SaveData.dir//SaveData//SaveScalars.F90.obj: dyndep | fmodules/defutils.mod fmodules/elementutils.mod fmodules/interpolation.mod fmodules/meshutils.mod fmodules/saveutils.mod
+

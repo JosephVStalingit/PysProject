@@ -1,0 +1,49 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\Interpolation.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/interpolation.mod",
+					"is-interface" : true,
+					"logical-name" : "interpolation.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "coordinatesystems.mod"
+				},
+				{
+					"logical-name" : "elementdescription.mod"
+				},
+				{
+					"logical-name" : "generalutils.mod"
+				},
+				{
+					"logical-name" : "integration.mod"
+				},
+				{
+					"logical-name" : "listmatrix.mod"
+				},
+				{
+					"logical-name" : "messages.mod"
+				},
+				{
+					"logical-name" : "pelementmaps.mod"
+				},
+				{
+					"logical-name" : "spariterglobals.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

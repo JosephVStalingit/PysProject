@@ -1,0 +1,25 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\SParIterGlobals.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/spariterglobals.mod",
+					"is-interface" : true,
+					"logical-name" : "spariterglobals.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

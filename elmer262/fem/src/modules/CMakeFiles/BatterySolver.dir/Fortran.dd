@@ -1,0 +1,14 @@
+ninja_dyndep_version = 1.0
+build fem//src//modules//CMakeFiles//BatterySolver.dir//BatterySolver//BatteryPost.F90.obj: dyndep | fmodules/batterymodule.mod fmodules/defutils.mod
+
+build fem//src//modules//CMakeFiles//BatterySolver.dir//BatterySolver//BatteryUtils.F90.obj | fmodules/batterymodule.mod: dyndep | fmodules/defutils.mod
+  restat = 1
+
+build fem//src//modules//CMakeFiles//BatterySolver.dir//BatterySolver//ElectrolyteCons.F90.obj: dyndep | fmodules/batterymodule.mod fmodules/defutils.mod
+
+build fem//src//modules//CMakeFiles//BatterySolver.dir//BatterySolver//ElectrolytePot.F90.obj: dyndep | fmodules/batterymodule.mod fmodules/defutils.mod
+
+build fem//src//modules//CMakeFiles//BatterySolver.dir//BatterySolver//SolidPhaseCons.F90.obj: dyndep | fmodules/batterymodule.mod fmodules/defutils.mod fmodules/meshutils.mod
+
+build fem//src//modules//CMakeFiles//BatterySolver.dir//BatterySolver//SolidPhasePot.F90.obj: dyndep | fmodules/batterymodule.mod fmodules/defutils.mod
+

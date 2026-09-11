@@ -1,0 +1,31 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\OptimizationUtils.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/optimizationutils.mod",
+					"is-interface" : true,
+					"logical-name" : "optimizationutils.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "lists.mod"
+				},
+				{
+					"logical-name" : "messages.mod"
+				},
+				{
+					"logical-name" : "modeldescription.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

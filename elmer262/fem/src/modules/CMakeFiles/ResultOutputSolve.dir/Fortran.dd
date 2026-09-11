@@ -1,0 +1,16 @@
+ninja_dyndep_version = 1.0
+build fem//src//modules//CMakeFiles//ResultOutputSolve.dir//ResultOutputSolve//DXOutputSolver.F90.obj | fmodules/dxfile.mod: dyndep | fmodules/defutils.mod fmodules/elementdescription.mod fmodules/meshutils.mod
+  restat = 1
+
+build fem//src//modules//CMakeFiles//ResultOutputSolve.dir//ResultOutputSolve//ElmerPostOutputSolver.F90.obj: dyndep | fmodules/defutils.mod
+
+build fem//src//modules//CMakeFiles//ResultOutputSolve.dir//ResultOutputSolve//GidOutputSolver.F90.obj: dyndep | fmodules/defutils.mod fmodules/saveutils.mod
+
+build fem//src//modules//CMakeFiles//ResultOutputSolve.dir//ResultOutputSolve//ResultOutputSolver.F90.obj: dyndep | fmodules/ascbinoutpututils.mod fmodules/defutils.mod fmodules/saveutils.mod
+
+build fem//src//modules//CMakeFiles//ResultOutputSolve.dir//ResultOutputSolve//VtkOutputSolver.F90.obj | fmodules/vtklegacyfile.mod: dyndep | fmodules/defutils.mod fmodules/elementdescription.mod fmodules/meshutils.mod fmodules/saveutils.mod
+  restat = 1
+
+build fem//src//modules//CMakeFiles//ResultOutputSolve.dir//ResultOutputSolve//VtuOutputSolver.F90.obj | fmodules/vtuxmlfile.mod: dyndep | fmodules/ascbinoutpututils.mod fmodules/defutils.mod fmodules/elementdescription.mod fmodules/mainutils.mod fmodules/meshutils.mod fmodules/saveutils.mod fmodules/solverutils.mod
+  restat = 1
+

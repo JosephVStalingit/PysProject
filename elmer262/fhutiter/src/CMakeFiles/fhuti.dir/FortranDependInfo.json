@@ -1,0 +1,78 @@
+{
+	"bmi-installation" : null,
+	"compiler-frontend-variant" : "GNU",
+	"compiler-id" : "GNU",
+	"compiler-simulate-id" : "",
+	"config" : "Release",
+	"cxx-modules" : {},
+	"database-info" : null,
+	"dir-cur-bld" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fhutiter/src",
+	"dir-cur-src" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/fhutiter/src",
+	"dir-top-bld" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build",
+	"dir-top-src" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1",
+	"exports" : [],
+	"forward-modules-from-target-dirs" : [],
+	"include-dirs" : 
+	[
+		".",
+		"fhutiter\\src"
+	],
+	"language" : "Fortran",
+	"linked-target-dirs" : [],
+	"module-dir" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules",
+	"sources" : 
+	{
+		"fhutiter/src/CMakeFiles/fhuti.dir/huti_aux.F90.obj" : 
+		{
+			"language" : "Fortran",
+			"source" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/fhutiter/src/huti_aux.F90"
+		},
+		"fhutiter/src/CMakeFiles/fhuti.dir/huti_bicgstab.F90.obj" : 
+		{
+			"language" : "Fortran",
+			"source" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/fhutiter/src/huti_bicgstab.F90"
+		},
+		"fhutiter/src/CMakeFiles/fhuti.dir/huti_bicgstab_2.F90.obj" : 
+		{
+			"language" : "Fortran",
+			"source" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/fhutiter/src/huti_bicgstab_2.F90"
+		},
+		"fhutiter/src/CMakeFiles/fhuti.dir/huti_cg.F90.obj" : 
+		{
+			"language" : "Fortran",
+			"source" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/fhutiter/src/huti_cg.F90"
+		},
+		"fhutiter/src/CMakeFiles/fhuti.dir/huti_cgs.F90.obj" : 
+		{
+			"language" : "Fortran",
+			"source" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/fhutiter/src/huti_cgs.F90"
+		},
+		"fhutiter/src/CMakeFiles/fhuti.dir/huti_gmres.F90.obj" : 
+		{
+			"language" : "Fortran",
+			"source" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/fhutiter/src/huti_gmres.F90"
+		},
+		"fhutiter/src/CMakeFiles/fhuti.dir/huti_interfaces.F90.obj" : 
+		{
+			"language" : "Fortran",
+			"source" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/fhutiter/src/huti_interfaces.F90"
+		},
+		"fhutiter/src/CMakeFiles/fhuti.dir/huti_qmr.F90.obj" : 
+		{
+			"language" : "Fortran",
+			"source" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/fhutiter/src/huti_qmr.F90"
+		},
+		"fhutiter/src/CMakeFiles/fhuti.dir/huti_sfe.F90.obj" : 
+		{
+			"language" : "Fortran",
+			"source" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/fhutiter/src/huti_sfe.F90"
+		},
+		"fhutiter/src/CMakeFiles/fhuti.dir/huti_tfqmr.F90.obj" : 
+		{
+			"language" : "Fortran",
+			"source" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/fhutiter/src/huti_tfqmr.F90"
+		}
+	},
+	"submodule-ext" : ".smod",
+	"submodule-sep" : "@"
+}

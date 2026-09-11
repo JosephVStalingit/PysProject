@@ -1,0 +1,46 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\ElementDescription.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/elementdescription.mod",
+					"is-interface" : true,
+					"logical-name" : "elementdescription.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "coordinatesystems.mod"
+				},
+				{
+					"logical-name" : "h1basis.mod"
+				},
+				{
+					"logical-name" : "integration.mod"
+				},
+				{
+					"logical-name" : "linearalgebra.mod"
+				},
+				{
+					"logical-name" : "lists.mod"
+				},
+				{
+					"logical-name" : "messages.mod"
+				},
+				{
+					"logical-name" : "pelementbase.mod"
+				},
+				{
+					"logical-name" : "pelementmaps.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

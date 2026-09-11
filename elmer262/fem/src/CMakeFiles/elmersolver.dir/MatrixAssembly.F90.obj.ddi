@@ -1,0 +1,37 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\MatrixAssembly.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/matrixassembly.mod",
+					"is-interface" : true,
+					"logical-name" : "matrixassembly.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "bandmatrix.mod"
+				},
+				{
+					"logical-name" : "crsmatrix.mod"
+				},
+				{
+					"logical-name" : "linearalgebra.mod"
+				},
+				{
+					"logical-name" : "listmatrix.mod"
+				},
+				{
+					"logical-name" : "pelementmaps.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

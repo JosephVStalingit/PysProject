@@ -1,0 +1,25 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\HashTable.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/hashtable.mod",
+					"is-interface" : true,
+					"logical-name" : "hashtable.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "lists.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

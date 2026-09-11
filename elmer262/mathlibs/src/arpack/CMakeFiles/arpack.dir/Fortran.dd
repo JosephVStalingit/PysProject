@@ -1,0 +1,165 @@
+ninja_dyndep_version = 1.0
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//cgetv0.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//cnaitr.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//cnapps.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//cnaup2.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//cnaupd.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//cneigh.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//cneupd.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//cngets.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//csortc.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//cstatn.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//dgetv0.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//dlaqrb.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//dnaitr.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//dnapps.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//dnaup2.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//dnaupd.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//dnconv.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//dneigh.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//dneupd.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//dngets.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//dsaitr.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//dsapps.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//dsaup2.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//dsaupd.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//dsconv.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//dseigt.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//dsesrt.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//dseupd.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//dsgets.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//dsortc.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//dsortr.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//dstatn.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//dstats.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//dstqrb.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//sgetv0.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//slaqrb.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//snaitr.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//snapps.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//snaup2.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//snaupd.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//snconv.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//sneigh.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//sneupd.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//sngets.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//ssaitr.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//ssapps.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//ssaup2.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//ssaupd.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//ssconv.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//sseigt.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//ssesrt.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//sseupd.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//ssgets.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//ssortc.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//ssortr.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//sstatn.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//sstats.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//sstqrb.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//zgetv0.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//znaitr.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//znapps.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//znaup2.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//znaupd.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//zneigh.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//zneupd.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//zngets.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//zsortc.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//zstatn.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//cmout.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//cvout.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//dmout.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//dvout.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//icnteq.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//icopy.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//iset.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//iswap.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//ivout.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//second.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//smout.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//svout.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//zmout.f.obj: dyndep
+
+build mathlibs//src//arpack//CMakeFiles//arpack.dir//zvout.f.obj: dyndep
+

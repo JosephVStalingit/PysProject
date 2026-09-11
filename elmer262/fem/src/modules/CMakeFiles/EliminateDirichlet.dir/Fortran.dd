@@ -1,0 +1,3 @@
+ninja_dyndep_version = 1.0
+build fem//src//modules//CMakeFiles//EliminateDirichlet.dir//EliminateDirichlet.F90.obj: dyndep | fmodules/crsmatrix.mod fmodules/generalutils.mod fmodules/lists.mod fmodules/solverutils.mod fmodules/types.mod
+

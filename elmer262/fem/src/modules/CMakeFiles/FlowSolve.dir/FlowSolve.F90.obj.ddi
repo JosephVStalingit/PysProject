@@ -1,0 +1,39 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\modules\\\\CMakeFiles\\\\FlowSolve.dir\\\\FlowSolve.F90.obj",
+			"provides" : [],
+			"requires" : 
+			[
+				{
+					"logical-name" : "adaptive.mod"
+				},
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "elementdescription.mod"
+				},
+				{
+					"logical-name" : "freesurface.mod"
+				},
+				{
+					"logical-name" : "navierstokes.mod"
+				},
+				{
+					"logical-name" : "navierstokescylindrical.mod"
+				},
+				{
+					"logical-name" : "navierstokesgeneral.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

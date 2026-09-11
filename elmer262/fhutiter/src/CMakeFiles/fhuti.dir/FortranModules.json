@@ -1,0 +1,57 @@
+{
+	"modules" : 
+	{
+		"huti_aux.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/huti_aux.mod",
+			"is-private" : false
+		},
+		"huti_bicgstab.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/huti_bicgstab.mod",
+			"is-private" : false
+		},
+		"huti_bicgstab_2.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/huti_bicgstab_2.mod",
+			"is-private" : false
+		},
+		"huti_cg.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/huti_cg.mod",
+			"is-private" : false
+		},
+		"huti_cgs.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/huti_cgs.mod",
+			"is-private" : false
+		},
+		"huti_gmres.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/huti_gmres.mod",
+			"is-private" : false
+		},
+		"huti_interfaces.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/huti_interfaces.mod",
+			"is-private" : false
+		},
+		"huti_qmr.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/huti_qmr.mod",
+			"is-private" : false
+		},
+		"huti_sfe.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/huti_sfe.mod",
+			"is-private" : false
+		},
+		"huti_tfqmr.mod" : 
+		{
+			"bmi" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules/huti_tfqmr.mod",
+			"is-private" : false
+		}
+	},
+	"references" : {},
+	"usages" : {}
+}

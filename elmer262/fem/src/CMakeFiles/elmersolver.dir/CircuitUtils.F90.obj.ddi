@@ -1,0 +1,38 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\CircuitUtils.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/circmatinitmod.mod",
+					"is-interface" : true,
+					"logical-name" : "circmatinitmod.mod"
+				},
+				{
+					"compiled-module-path" : "fmodules/circuitsmod.mod",
+					"is-interface" : true,
+					"logical-name" : "circuitsmod.mod"
+				},
+				{
+					"compiled-module-path" : "fmodules/circuitutils.mod",
+					"is-interface" : true,
+					"logical-name" : "circuitutils.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "elementutils.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

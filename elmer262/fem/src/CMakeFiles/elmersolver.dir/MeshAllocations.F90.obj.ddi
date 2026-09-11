@@ -1,0 +1,37 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\MeshAllocations.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/meshallocations.mod",
+					"is-interface" : true,
+					"logical-name" : "meshallocations.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "elementdescription.mod"
+				},
+				{
+					"logical-name" : "elementutils.mod"
+				},
+				{
+					"logical-name" : "lists.mod"
+				},
+				{
+					"logical-name" : "messages.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

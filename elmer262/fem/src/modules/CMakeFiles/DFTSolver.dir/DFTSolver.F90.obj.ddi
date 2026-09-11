@@ -1,0 +1,24 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\modules\\\\CMakeFiles\\\\DFTSolver.dir\\\\DFTSolver.F90.obj",
+			"provides" : [],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "exchangecorrelations.mod"
+				},
+				{
+					"logical-name" : "linearalgebra.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

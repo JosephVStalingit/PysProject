@@ -1,0 +1,3 @@
+ninja_dyndep_version = 1.0
+build fem//tests//ElementUnitTest_edge_piola//CMakeFiles//ElementUnitTest_edge_piola_SingleEdgeElements.dir//SingleEdgeElements.F90.obj: dyndep | fmodules/defutils.mod
+

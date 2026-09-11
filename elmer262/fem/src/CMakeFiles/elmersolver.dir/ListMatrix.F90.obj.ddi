@@ -1,0 +1,28 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\ListMatrix.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/listmatrix.mod",
+					"is-interface" : true,
+					"logical-name" : "listmatrix.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "crsmatrix.mod"
+				},
+				{
+					"logical-name" : "generalutils.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

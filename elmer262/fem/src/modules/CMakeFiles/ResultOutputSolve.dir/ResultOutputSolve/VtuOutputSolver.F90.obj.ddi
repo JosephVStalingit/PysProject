@@ -1,0 +1,43 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\modules\\\\CMakeFiles\\\\ResultOutputSolve.dir\\\\ResultOutputSolve\\\\VtuOutputSolver.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/vtuxmlfile.mod",
+					"is-interface" : true,
+					"logical-name" : "vtuxmlfile.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "ascbinoutpututils.mod"
+				},
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "elementdescription.mod"
+				},
+				{
+					"logical-name" : "mainutils.mod"
+				},
+				{
+					"logical-name" : "meshutils.mod"
+				},
+				{
+					"logical-name" : "saveutils.mod"
+				},
+				{
+					"logical-name" : "solverutils.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

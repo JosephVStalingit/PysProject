@@ -1,0 +1,25 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\binio\\\\CMakeFiles\\\\binio.dir\\\\biniomod.f90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/binio.mod",
+					"is-interface" : true,
+					"logical-name" : "binio.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "kinds.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

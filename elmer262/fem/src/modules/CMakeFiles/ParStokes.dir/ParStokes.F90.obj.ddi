@@ -1,0 +1,46 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\modules\\\\CMakeFiles\\\\ParStokes.dir\\\\ParStokes.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/anisotropicmaterialmodels.mod",
+					"is-interface" : true,
+					"logical-name" : "anisotropicmaterialmodels.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "elementdescription.mod"
+				},
+				{
+					"logical-name" : "elementutils.mod"
+				},
+				{
+					"logical-name" : "linearalgebra.mod"
+				},
+				{
+					"logical-name" : "materialmodels.mod"
+				},
+				{
+					"logical-name" : "modeldescription.mod"
+				},
+				{
+					"logical-name" : "solverutils.mod"
+				},
+				{
+					"logical-name" : "stresslocal.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

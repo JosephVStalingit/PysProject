@@ -1,0 +1,20 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\ExchangeCorrelations.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/exchangecorrelations.mod",
+					"is-interface" : true,
+					"logical-name" : "exchangecorrelations.mod"
+				}
+			],
+			"requires" : []
+		}
+	],
+	"version" : 0
+}

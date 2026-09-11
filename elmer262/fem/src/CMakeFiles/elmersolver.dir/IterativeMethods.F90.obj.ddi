@@ -1,0 +1,31 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\IterativeMethods.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/iterativemethods.mod",
+					"is-interface" : true,
+					"logical-name" : "iterativemethods.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "crsmatrix.mod"
+				},
+				{
+					"logical-name" : "huti_interfaces.mod"
+				},
+				{
+					"logical-name" : "sparitercomm.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

@@ -1,0 +1,28 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\BandwidthOptimize.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/bandwidthoptimize.mod",
+					"is-interface" : true,
+					"logical-name" : "bandwidthoptimize.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "listmatrix.mod"
+				},
+				{
+					"logical-name" : "spariterglobals.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

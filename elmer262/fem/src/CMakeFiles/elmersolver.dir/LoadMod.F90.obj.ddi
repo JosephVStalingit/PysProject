@@ -1,0 +1,31 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\LoadMod.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/loadmod.mod",
+					"is-interface" : true,
+					"logical-name" : "loadmod.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "huti_interfaces.mod"
+				},
+				{
+					"logical-name" : "messages.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

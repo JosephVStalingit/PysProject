@@ -1,0 +1,12 @@
+ninja_dyndep_version = 1.0
+build fem//src//modules//CMakeFiles//MagneticSolve.dir//MagneticSolve//MagneticSolve.F90.obj: dyndep | fmodules/defutils.mod fmodules/differentials.mod fmodules/maxwell.mod fmodules/maxwellaxis.mod fmodules/maxwellgeneral.mod
+
+build fem//src//modules//CMakeFiles//MagneticSolve.dir//MagneticSolve//Maxwell.F90.obj | fmodules/maxwell.mod: dyndep | fmodules/elementdescription.mod fmodules/integration.mod
+  restat = 1
+
+build fem//src//modules//CMakeFiles//MagneticSolve.dir//MagneticSolve//MaxwellAxiS.F90.obj | fmodules/maxwellaxis.mod: dyndep | fmodules/elementdescription.mod fmodules/integration.mod fmodules/types.mod
+  restat = 1
+
+build fem//src//modules//CMakeFiles//MagneticSolve.dir//MagneticSolve//MaxwellGeneral.F90.obj | fmodules/maxwellgeneral.mod: dyndep | fmodules/elementdescription.mod fmodules/integration.mod
+  restat = 1
+

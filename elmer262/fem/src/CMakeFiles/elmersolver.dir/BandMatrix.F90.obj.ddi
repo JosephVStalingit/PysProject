@@ -1,0 +1,25 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\BandMatrix.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/bandmatrix.mod",
+					"is-interface" : true,
+					"logical-name" : "bandmatrix.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "generalutils.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

@@ -1,0 +1,36 @@
+{
+	"bmi-installation" : null,
+	"compiler-frontend-variant" : "GNU",
+	"compiler-id" : "GNU",
+	"compiler-simulate-id" : "",
+	"config" : "Release",
+	"cxx-modules" : {},
+	"database-info" : null,
+	"dir-cur-bld" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fem/src",
+	"dir-cur-src" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/fem/src",
+	"dir-top-bld" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build",
+	"dir-top-src" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1",
+	"exports" : [],
+	"forward-modules-from-target-dirs" : [],
+	"include-dirs" : 
+	[
+		".",
+		"fem\\src",
+		"C:\\Users\\JosephVStalin\\Desktop\\PysProject\\elmerfem-release-26.2.1\\fhutiter\\src",
+		"fem\\src\\binio",
+		"fhutiter\\src"
+	],
+	"language" : "Fortran",
+	"linked-target-dirs" : [],
+	"module-dir" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/build/fmodules",
+	"sources" : 
+	{
+		"fem/src/CMakeFiles/mpi_stubs.dir/mpif_stubs.F90.obj" : 
+		{
+			"language" : "Fortran",
+			"source" : "C:/Users/JosephVStalin/Desktop/PysProject/elmerfem-release-26.2.1/fem/src/mpif_stubs.F90"
+		}
+	},
+	"submodule-ext" : ".smod",
+	"submodule-sep" : "@"
+}

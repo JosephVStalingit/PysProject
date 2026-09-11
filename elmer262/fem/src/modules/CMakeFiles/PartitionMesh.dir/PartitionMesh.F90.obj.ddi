@@ -1,0 +1,24 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\modules\\\\CMakeFiles\\\\PartitionMesh.dir\\\\PartitionMesh.F90.obj",
+			"provides" : [],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "meshpartition.mod"
+				},
+				{
+					"logical-name" : "meshutils.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

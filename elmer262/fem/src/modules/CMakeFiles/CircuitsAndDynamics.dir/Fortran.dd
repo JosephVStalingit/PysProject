@@ -1,0 +1,3 @@
+ninja_dyndep_version = 1.0
+build fem//src//modules//CMakeFiles//CircuitsAndDynamics.dir//CircuitsAndDynamics.F90.obj: dyndep | fmodules/circmatinitmod.mod fmodules/circuitsmod.mod fmodules/circuitutils.mod fmodules/defutils.mod fmodules/mgdynmaterialutils.mod
+

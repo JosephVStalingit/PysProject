@@ -1,0 +1,20 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\binio\\\\CMakeFiles\\\\binio.dir\\\\kinds.f90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/kinds.mod",
+					"is-interface" : true,
+					"logical-name" : "kinds.mod"
+				}
+			],
+			"requires" : []
+		}
+	],
+	"version" : 0
+}

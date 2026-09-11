@@ -3,6 +3,38 @@
 本工程的所有显著变更记录于此。
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
+## [1.1.0] - 2026-09-11
+
+### Changed
+- **Experiment switched from spring-mass-damping to magnet free fall.**
+  The magnet is now released at z=0.110 m and falls under gravity +
+  air drag + Lenz drag.  No more spring / anchor / clamped-boundary.
+- `solenoid3d.py` rebuilt without spring + anchor primitives; physical
+  groups reduced to 3 (bore / magnet / air).
+- `oscilloscope.py` rewritten to load `config.json` as the single
+  source of truth and to compute the new ODE `m*z_ddot = m*g - c*v`.
+- `config.json` introduced as the canonical configuration: physics
+  constants, magnet / coil geometry, 3 body configs, channel list,
+  mesh sizes, plus the `passage_time_bar` extras block.
+- `run_tests.ps1` and `one_click.ps1` updated so the ELMER_HOME
+  search list now starts with `./elmer262` (project-bundled).
+
+### Added
+- **Bundled Elmer 26.2 inside the project**: `./elmer262/` (~250 MB)
+  removed from `C:\elmer262` and moved into the repo so the whole
+  thing is Docker-portable (just bind-mount the project dir).
+- **Passage-time bar chart** at the bottom of `dashboard.png`:
+  bars for empty / copper / coil showing how long the magnet takes
+  to fall from `z_release_m` to `z_target_m` (configurable in
+  `config.json` under `extras.passage_time_bar`).  A red dashed
+  line marks the vacuum free-fall reference `t = sqrt(2h/g)`.
+
+### Removed
+- `C:\elmer262` (Elmer 26.2 install)  --  now lives in `./elmer262`.
+- Spring (`Body 4`) and anchor (`Body 5`) primitives; "clamped"
+  boundary condition on the anchor plate.
+
+
 ## [1.0.0] - 2026-09-11
 
 ### 新增

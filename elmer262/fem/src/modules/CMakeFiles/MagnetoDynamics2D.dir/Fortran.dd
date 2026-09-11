@@ -1,0 +1,3 @@
+ninja_dyndep_version = 1.0
+build fem//src//modules//CMakeFiles//MagnetoDynamics2D.dir//MagnetoDynamics2D.F90.obj: dyndep | fmodules/circuitutils.mod fmodules/defutils.mod fmodules/mgdynmaterialutils.mod fmodules/zirkautils.mod
+

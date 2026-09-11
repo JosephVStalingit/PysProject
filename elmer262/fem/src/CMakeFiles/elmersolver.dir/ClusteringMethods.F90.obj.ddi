@@ -1,0 +1,34 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\ClusteringMethods.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/clusteringmethods.mod",
+					"is-interface" : true,
+					"logical-name" : "clusteringmethods.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "elementutils.mod"
+				},
+				{
+					"logical-name" : "lists.mod"
+				},
+				{
+					"logical-name" : "meshutils.mod"
+				},
+				{
+					"logical-name" : "spariterglobals.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

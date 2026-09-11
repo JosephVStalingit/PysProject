@@ -1,0 +1,31 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\modules\\\\CMakeFiles\\\\PoissonBEM.dir\\\\PoissonBEM.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/globmat.mod",
+					"is-interface" : true,
+					"logical-name" : "globmat.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "huti_sfe.mod"
+				},
+				{
+					"logical-name" : "types.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

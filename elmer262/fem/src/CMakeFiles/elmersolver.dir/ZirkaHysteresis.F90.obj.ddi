@@ -1,0 +1,36 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\ZirkaHysteresis.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/zirka.mod",
+					"is-interface" : true,
+					"logical-name" : "zirka.mod"
+				},
+				{
+					"compiled-module-path" : "fmodules/zirkautils.mod",
+					"is-interface" : true,
+					"logical-name" : "zirkautils.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "generalutils.mod"
+				},
+				{
+					"logical-name" : "mainutils.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

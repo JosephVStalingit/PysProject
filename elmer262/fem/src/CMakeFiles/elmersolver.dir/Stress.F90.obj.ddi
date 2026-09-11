@@ -1,0 +1,31 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "fem\\\\src\\\\CMakeFiles\\\\elmersolver.dir\\\\Stress.F90.obj",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "fmodules/stresslocal.mod",
+					"is-interface" : true,
+					"logical-name" : "stresslocal.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "defutils.mod"
+				},
+				{
+					"logical-name" : "elementutils.mod"
+				},
+				{
+					"logical-name" : "materialmodels.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

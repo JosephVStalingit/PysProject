@@ -1,95 +1,75 @@
 {
-    "_comment": "Source of truth for oscilloscope.py + solenoid3d.py experiments. The experiment is now 'magnet free fall through a coil'. Three body configurations (coil/bore body): empty (air), copper (solid Cu tube, R=1mohm), coil (stranded coil + R_load). Per-config physics constants (g, m, drag, R_load) live in [physics]; per-coil-geometry (z range, radius, turns) live in [coil]; FEM inputs are picked up by solenoid3d.py from [mesh] and [geometry].",
+    "_comment": "config.json -- input to solenoid3d.py.\n\n    Layout:\n      experiment  : global experiment metadata\n      physics     : shared physics (gravity, mass, air drag, magnet properties)\n      mesh        : mesh sizes\n      geometry    : air-domain extents\n      curves      : LIST of curve blocks, ONE per body geometry. To add a new\n                    curve, simply add another named entry under [curves]. Each\n                    block must carry:  label, color, z_release_m, N_turns,\n                    R_load_ohm, damping_extra_N_s_per_m, body_name, sif_suffix.\n                    Wire-related keys (wire_diameter_m,\n                    wire_conductivity_S_per_m) are read when N_turns > 0.",
     "experiment": {
         "name": "magnet_free_fall",
-        "description": "Permanent cylindrical magnet (M=1.2e6 A/m, R=15mm, H=15mm) is dropped from rest above the coil. We track the trajectory, magnetic flux through the coil, induced EMF, and the corresponding induction braking current. Three body configurations quantify Lenz's-law braking for empty/copper/coil setups.",
-        "z_release_m": 0.110,
-        "z_final_m": -0.050,
-        "t_end_s": 0.50,
-        "dt_s": 1.0e-4
+        "description": "Permanent cylindrical magnet released from rest above the coil. We track trajectory, flux, EMF, induced current and the Lenz braking force for multiple coil configurations.",
+        "z_release_default_m": 0.11,
+        "z_final_default_m": -0.05,
+        "t_end_default_s": 0.5,
+        "dt_s": 0.0001
     },
     "physics": {
         "G": 9.81,
         "M_kg": 0.5,
-        "C_air": 0.05,
-        "alpha_cu": 0.5,
-        "beta_coil": 0.6,
-        "R_load_ohm": 10.0
+        "C_air": 0.05
     },
     "magnet": {
-        "M_mag_A_per_m": 1.20e6,
+        "M_mag_A_per_m": 1200000.0,
         "R_mag_m": 0.015,
         "H_mag_m": 0.015,
-        "z0_m": 0.060,
-        "z1_m": 0.090
+        "z0_m": 0.06,
+        "z1_m": 0.09
     },
-    "coil": {
-        "z0_m": -0.020,
-        "z1_m": 0.020,
-        "r_outer_m": 0.025,
-        "r_inner_m": 0.020,
-        "N_turns": 50,
-        "rho_cu_ohm_m": 1.68e-8,
-        "wire_area_m2": 5.0e-7
+    "mesh": {
+        "lc_min_m": 0.003,
+        "lc_max_m": 0.01,
+        "lc_coil_m": 0.0012,
+        "lc_others_m": 0.004
     },
-    "configs": {
+    "geometry": {
+        "R_air_m": 0.08,
+        "air_z0_m": -0.08,
+        "air_z1_m": 0.11
+    },
+    "curves": {
         "empty": {
-            "label": "empty    (no conductor)",
+            "_comment": "OPEN CIRCUIT -- no conductor, no turns. Free-fall reference (no Lenz).",
+            "label": "empty   (no conductor)",
             "color": "#1f77b4",
+            "z_release_m": 0.11,
+            "N_turns": 0,
+            "wire_diameter_m": null,
+            "wire_conductivity_S_per_m": null,
             "R_load_ohm": "inf",
             "damping_extra_N_s_per_m": 0.0,
             "body_name": "AirInside",
             "sif_suffix": "no-coil"
         },
-        "copper": {
-            "label": "copper   (tube, R=1 mohm)",
-            "color": "#ff7f0e",
-            "R_load_ohm": 1.0e-3,
-            "damping_extra_N_s_per_m": 0.5,
-            "body_name": "CopperTube",
-            "sif_suffix": "copper-tube"
-        },
         "coil": {
-            "label": "coil     (50t + 10 ohm loop)",
+            "_comment": "CLOSED COIL -- 50 turns of 0.7 mm copper wire, 10 ohm load.",
+            "label": "coil   (50t, 0.7mm Cu, R=10Ω)",
             "color": "#2ca02c",
+            "z_release_m": 0.11,
+            "N_turns": 50,
+            "wire_diameter_m": 0.0007,
+            "wire_conductivity_S_per_m": 59600000.0,
             "R_load_ohm": 10.0,
             "damping_extra_N_s_per_m": 0.6,
             "body_name": "StrandedCoil",
             "sif_suffix": "stranded-coil"
+        },
+        "coil_high_R": {
+            "_comment": "HIGH-RESISTANCE COIL -- same 50 turns of 0.7 mm Cu wire but with 100 ohm load instead of 10 ohm. Demonstrates R_load sweep -> lower I -> less Lenz braking.",
+            "label": "coil   (50t, 0.7mm Cu, R=100Ω)",
+            "color": "#d62728",
+            "z_release_m": 0.11,
+            "N_turns": 50,
+            "wire_diameter_m": 0.0007,
+            "wire_conductivity_S_per_m": 59600000.0,
+            "R_load_ohm": 100.0,
+            "damping_extra_N_s_per_m": 0.6,
+            "body_name": "StrandedCoil",
+            "sif_suffix": "stranded-coil"
         }
-    },
-    "channels": [
-        {"key": "z",        "title": "position z(t)",          "unit": "m"},
-        {"key": "v",        "title": "velocity v(t)",          "unit": "m/s"},
-        {"key": "a",        "title": "acceleration a(t)",      "unit": "m/s^2"},
-        {"key": "F_grav",   "title": "gravity F_g(t)",         "unit": "N"},
-        {"key": "F_lenz",   "title": "Lenz drag F_L(t)",       "unit": "N"},
-        {"key": "KE",       "title": "kinetic energy KE(t)",   "unit": "J"},
-        {"key": "PE",       "title": "grav. PE  PE(t)",        "unit": "J"},
-        {"key": "B_z",      "title": "B-field on axis B_z(t)", "unit": "T"},
-        {"key": "EMF",      "title": "induced EMF(t)",         "unit": "V"},
-        {"key": "I",        "title": "induced current I(t)",   "unit": "A"}
-    ],
-    "extras": {
-        "passage_time_bar": {
-            "title": "Passage time through coil  (s)",
-            "description": "Bar chart of the time each configuration takes the magnet to travel from z_release down to z_coil_z1 (coil bottom face). Higher = magnet falls slower, i.e. stronger Lenz braking.",
-            "z_target_m": -0.020,
-            "y_unit": "s",
-            "show_value_labels": true
-        }
-    },
-    "mesh": {
-        "lc_min_m": 0.003,
-        "lc_max_m": 0.010,
-        "lc_coil_m": 0.0012,
-        "lc_others_m": 0.004
-    },
-    "geometry": {
-        "R_air_m": 0.080,
-        "air_z0_m": -0.080,
-        "air_z1_m": 0.110,
-        "spring_removed": true,
-        "anchor_removed": true
     }
 }

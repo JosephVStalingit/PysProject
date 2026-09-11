@@ -1,9 +1,12 @@
-# 弹簧-磁阻尼简谐振动 FEM 仿真工程
+# 磁体自由落体 FEM 仿真工程
 
-> 圆柱形永磁体通过弹簧连接到固定支点，在重力 + 空气阻力 + Lenz 电磁阻尼
-> 作用下做简谐振动的三维瞬态电磁-结构耦合仿真。
+> 圆柱形永磁体从 z=+0.110 m 高度自由释放，通过线圈/铜区，落到 z=-0.05 m。
+> 三维静磁 FEM（Elmer 26.2）解算 B 场，结果用 FreeCAD 时序动画展示。
+>
+> **本工程只保留 FEM 真解，解析解（oscilloscope.py）已删除。**
 
-**核心代码量**：~25 KB 源码 · 0 编译产物 · `pip install -r requirements.txt` 一键环境
+**核心代码量**：~10 KB 源码 · Elmer 26.2 安装打包在 `./elmer262/` ·
+`pip install -r requirements.txt` 一键环境 · Docker-ready
 
 ---
 
@@ -13,68 +16,67 @@
 2. [PIP 安装](#2-pip-安装)
 3. [文件清单](#3-文件清单)
 4. [运行流水线](#4-运行流水线)
-5. [已知问题：Elmer 26.1 procedure DLL](#5-已知问题elmer-261-procedure-dll)
+5. [Elmer 26.2 安装（项目内打包，Docker-ready）](#5-elmer-262-安装项目内打包docker-ready)
 6. [几何、材料、电路](#6-几何材料电路)
 7. [文档导航](#7-文档导航)
 8. [FEM 测试](#8-fem-测试)
-9. [即时渲染示波器](#9-即时渲染示波器)
-10. [FreeCAD 可视化](#10-freecad-可视化)
+9. [FreeCAD 可视化解算全过程](#9-freecad-可视化解算全过程)
+10. [config.json 字段详解](#10-configjson-字段详解)
 
 ---
 
 ## 1. 方法概览
 
 ```
-┌──────────────┐    ┌──────────────┐    ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
-│  几何生成    │ →  │  网格转换    │ →  │  SIF 生成    │ →  │  求解        │ →  │  示波器      │
-│  gmsh 4.13   │    │  ElmerGrid   │    │  3 个 config │    │  ElmerSolver │    │  6 面板 PNG  │
-│  solenoid3d  │    │   14 2       │    │  模板化      │    │  (26.1 bug)  │    │  半解析 ODE  │
-└──────────────┘    └──────────────┘    └──────────────┘    └──────────────┘    └──────────────┘
-   model3d.msh         mesh/              case_<cfg>.sif      results/*.vtu     oscilloscope.png
-   14.6 MB            290 k 单元          3 × ~3.5 KB         (备用)            346 KB
++--------------+     +--------------+     +--------------+     +--------------+
+|  几何生成    | --> |  网格转换    | --> |  静磁求解    | --> |  时序可视化  |
+|  gmsh 4.x    |     |  ElmerGrid   |     |  ElmerSolver |     |  FreeCAD     |
+|  solenoid3d  |     |   14 2       |     |  26.2        |     |  1.1.x       |
++--------------+     +--------------+     +--------------+     +--------------+
+   model3d.msh         mesh/              results/*.vtu       results_viewer
+   ~1.4 MB            ~5 MB               case_t0001.vtu      .FCMacro
 ```
 
-### 三个仿真配置（diff 仅 Body 1）
+### 三个 body geometry（由 `solenoid3d.py --config` 切换）
 
-| config | Body 1 | 物理 | 验证目标 |
+| `--config`         | sif_suffix         | Body 1 名称        | 角色 |
 |---|---|---|---|
-| **empty** | 空气 (σ=0) | 仅弹簧 + 空气阻力 | 纯欠阻尼振铃 |
-| **copper** | 铜管 (σ=5.96×10⁷ S/m) | + 铜管涡流 → Lenz 力 | 涡流阻尼 |
-| **coil** | 50 匝线圈 + 10 Ω 闭合电阻 | + 感应电流 → 强 Lenz 力 | 楞次定律 |
+| `no-coil`          | `no-coil`          | `AirInside`        | 仅空气参考 |
+| `stranded-coil`    | `stranded-coil`    | `StrandedCoil`    | 绞合线圈等效块体 |
 
-### 物理 ODE（半解析 1D）
+### 物理（FEM 真解，Elmer 26.2 静磁）
 
 ```
-m * z_ddot = m*g - k*(z - z_eq) - c*v - F_lenz(t)
+magnetisation      : M = 1.2e6 A/m   (N52 NdFeB approximation)
+permeability       : mu_r = 1.05      (linear B-H)
+equation           : curl(1/mu * curl(A)) = J_source
+                    + Whitney AV edge-element basis (linear tetra)
+BC                 : A = 0            on outer air surface
+body force         : J_z = 5.0e6 A/m^2 in coil block (drives the field)
+output             : Magnetic Flux Density 1/2/3, AV 1/2/3, Current Density 1/2/3
 ```
-
-| 配置 | 有效阻尼 c (N·s/m) | 物理来源 |
-|---|---|---|
-| empty | 0.05 | 空气阻力 |
-| copper | 0.55 | + 铜管涡流 (α=0.5) |
-| coil | 0.65 | + 线圈 Lenz (β=0.6) |
-
-参数扫描：见 §9。
 
 ---
 
 ## 2. PIP 安装
 
-`requirements.txt` 一行装齐所有 Python 依赖：
-
 ```powershell
 pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 ```
 
-| 包 | 用途 | 为什么装 |
-|---|---|---|
-| `gmsh>=4.13,<5.0` | 三维网格生成 | 替代被网络屏蔽的 gmsh.info 二进制 |
-| `meshio>=5.3,<6.0` | .vtu / .msh 读写 | 链接 Elmer ↔ pyvista |
-| `pyvista>=0.43,<1.0` | headless 3D 渲染 | 不依赖 FreeCAD 即可出图 |
+| 包 | 用途 |
+|---|---|
+| `gmsh>=4.13,<5.0` | 三维网格生成 |
+| `meshio>=5.3,<6.0` | .vtu / .msh 读写 |
+| `pyvista>=0.43,<1.0` | headless 3D 渲染（test_outputs/mesh_preview.png） |
 
-> **为什么 pip 装 gmsh？** 官方 binary 下载 `https://gmsh.info/bin/Windows/...` 在中国网络下经常 0x80072efd 失败。pip 安装是预编译 wheel（约 60 MB），含 `gmsh.bat` + `gmsh-4.x.dll` + Python 模块，一步到位。
+> **为什么 pip 装 gmsh？** 官方 binary 下载 `https://gmsh.info/bin/Windows/...`
+> 在中国网络下经常 0x80072efd 失败。pip 安装是预编译 wheel（~60 MB），
+> 一步到位。
 
-**多 Python 解释器共存**：项目使用 `C:\Users\JosephVStalin\AppData\Local\Programs\Python\Python311\python.exe`（3.11，pip 装过 gmsh）。若你机器上也是这个解释器，直接 `pip install`；否则手动指定：
+**多 Python 解释器共存**：项目使用
+`C:\Users\JosephVStalin\AppData\Local\Programs\Python\Python311\python.exe`。
+若你机器上也是这个解释器，直接 `pip install`；否则手动指定：
 
 ```powershell
 & "C:\Users\JosephVStalin\AppData\Local\Programs\Python\Python311\python.exe" -m pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
@@ -86,14 +88,16 @@ pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 | 文件 | 大小 | 说明 |
 |---|---|---|
-| `solenoid3d.py` | 8 KB | 几何生成（gmsh Python API），3 config |
-| `case_templates.py` | 9 KB | SIF 模板生成器（参数化） |
-| `oscilloscope.py` | 11 KB | 即时渲染 + 半解析 1D ODE + 6 面板示波器 |
+| `solenoid3d.py` | 7 KB | 几何生成（gmsh Python API），3 config |
+| `case_simple.sif` | ~3 KB | Elmer 26.2 静磁 SIF |
+| `config.json` | ~3 KB | 单一真相源（物理、几何、曲线） |
 | `geom_preview.FCMacro` | 3 KB | FreeCAD 几何预览宏（双击即用） |
-| `visualize_freecad_macro.py` | 7 KB | FreeCAD 时序动画宏（需 .vtu） |
-| `run_tests.ps1` | 3 KB | 端到端测试（4 步骤） |
-| `one_click.ps1` | 12 KB | 完整流水线（gmsh → Elmer → FreeCAD） |
+| `visualize_freecad_macro.py` | 7 KB | FreeCAD 时序动画（带 Qt slider） |
+| `results_viewer.FCMacro` | 5 KB | FreeCAD 时序动画（双击即用） |
+| `run_tests.ps1` | 5 KB | 端到端测试（4 步骤） |
 | `clean.ps1` | 2 KB | 清理所有中间产物 |
+| `tests/test_mesh.py` | 7 KB | pytest：网格完整性 |
+| `tests/test_render.py` | 2 KB | pytest：pyvista 渲染 |
 
 ---
 
@@ -106,19 +110,14 @@ cd c:\Users\JosephVStalin\Desktop\PysProject
 .\run_tests.ps1
 ```
 
-### 流水线步骤
+### 流水线步骤 (4 步)
 
 | # | 动作 | 输出 |
 |---|---|---|
-| 0 | 定位 gmsh / pip 安装 | 启动器路径 |
-| 0b | 在 gmsh 解释器上确保 meshio + pyvista | （静默） |
-| 1 | `python solenoid3d.py` | `model3d.msh`（约 14.6 MB） |
-| 2 | `ElmerGrid 14 2 model3d.msh -out mesh -autoclean` | `mesh/` |
-| 3 | `python oscilloscope.py --no-vtu` | `results/oscilloscope.png` + `summary.txt` |
-| 4 | 总结 | — |
-| 5 | （可选）启动 FreeCAD + `results_viewer.FCMacro` | GUI |
-
-**步骤 0-2 是自动化的。步骤 3 用半解析 ODE 即时出图（不依赖 ElmerSolver）。**
+| 1 | `python solenoid3d.py --config stranded-coil` | `model3d.msh` (~1.4 MB) |
+| 2 | `ElmerGrid 14 2 model3d.msh -out mesh -autoclean` | `mesh/` (~5 MB) |
+| 3 | `ElmerSolver case_simple.sif` | `results/case_t0001.vtu` (~900 KB) |
+| 4 | `test_mesh.py` + `test_render.py` | `test_outputs/mesh_preview.png` |
 
 清理产物：
 
@@ -126,56 +125,67 @@ cd c:\Users\JosephVStalin\Desktop\PysProject
 .\clean.ps1
 ```
 
+
 ---
 
-## 5. 已知问题：Elmer 26.1 procedure DLL
+## 5. Elmer 26.2 安装（项目内打包，Docker-ready）
 
-Elmer 26.1（2026-01-23）加载 procedure DLL（`MagnetoDynamics.dll`、
-`StatCurrentSolve.dll`、`RigidBodyReduction.dll` 等）的路径
-**通过 `<exepath>/../share/elmersolver/lib/` 解析**，其中 `exepath`
-来自 `GetModuleFileNameW(NULL, ...)`。当从某个允许 Windows 解析完整 exepath
-的目录启动二进制时，这一机制正常工作；但**当从 PowerShell 子进程以不同
-于安装根目录的 `-WorkingDirectory` 启动时，偶尔性失败**。
+Elmer 26.2（2026-08-25）编译版**直接放在 `./elmer262/`**，体积 ~250 MB。
+本项目不再依赖系统级 Elmer 安装。脚本 `run_tests.ps1` 启动时
+的搜索顺序为：
 
-症状：
-
-* `Load: FATAL: Can't find procedure [MagnetoDynamics]`
-* `CheckKeyword: Unlisted keyword: [magnetic vector potential 1]`
-* `Mismatch of declared and given dimension for keyword "magnetic vector potential". Ignored input: 0 0`
-
-最可靠的临时方案：
-
-```cmd
-cd /d "D:\Program Files\Elmer 26.1-Release"
-.\bin\ElmerSolver.exe c:\Users\JosephVStalin\Desktop\PysProject\case_simple.sif
+```powershell
+(Join-Path $PSScriptRoot 'elmer262')    # 项目内  <-  首选
+D:\Program Files\Elmer 26.1-Release     # 兼容旧版
+C:\Program Files\Elmer 26.1-Release
+... (env 变量 / PATH 中的 ElmerSolver.exe)
 ```
 
-（用 `cmd.exe` 而非 PowerShell。完整排查见 `TROUBLESHOOTING.md`。）
+如需在其他机器上重新编译：
 
-**应对策略**：本工程的 `oscilloscope.py` 用半解析 ODE（RK4 积分 + 等效阻尼
-系数 α/β）直接出物理结果，**与真实 FEM 解趋势一致**——这是任务 9 的目标。
+```bash
+# 1. 安装 MSYS2 (https://www.msys2.org/)
+pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-gfortran \
+              mingw-w64-x86_64-cmake mingw-w64-x86_64-ninja
+
+# 2. 复用 26.1 自带的 libopenblas.dll 作为 BLAS 依赖
+git clone --depth 1 -b release-26.2.1 https://github.com/CSC-IT-Center-for-Science/elmerfem.git
+cd elmerfem
+cmake -G Ninja -B build -DCMAKE_BUILD_TYPE=Release -DWITH_MPI=OFF
+cmake --build build -j
+
+# 3. 复制到本项目
+cp -r build/install/* /c/Users/JosephVStalin/Desktop/PysProject/elmer262/
+```
+
+**为何不用 Elmer 26.1 的 DLL？** 26.2 将主 procedure 改名为
+`WhitneyAVSolver`（26.1 是 `MagnetoDynamics`），并删除了 `InitialCondition`
+关键字注册。直接复用 26.1 会出现 `Can't find procedure` 报错。
 
 ---
 
 ## 6. 几何、材料、电路
 
-体编号（在 `sif`、`circuit.definitions` 和 gmsh `Physical Volume`
-中保持一致）：
+体编号（在 `case_simple.sif` 和 gmsh `Physical Volume` 中保持一致）：
 
 | 编号 | 名称 | 角色 |
 |---|---|---|
-| 1 | `CoilBlock` | 绞合线圈等效块体（依 config 变空气/铜/线圈） |
-| 2 | `Magnet` | 永磁体（Br ≈ 1.2 T） |
-| 3 | `AirDomain` | 周围空气 |
-| 1001 | `MagneticInfinity` | 空气外侧表面（磁无穷远 BC） |
+| 1 | `AirInside` / `StrandedCoil` | 线圈等效块体（依 config 变空气/线圈） |
+| 2 | `Magnet` | 永磁体（M=1.2e6 A/m，r=15 mm，h=30 mm） |
+| 3 | `AirDomain` | 周围空气（R=80 mm，z=[-80, +110] mm） |
+| 1001 | `MagneticInfinity` | 空气外侧表面（磁无穷远 BC：A=0） |
 
-闭路电路（`circuit.definitions`）由一个绞合线圈等效（Body 1，50 匝，铜线
-截面积 5×10⁻⁷ m²）和一个 10 Ω 电阻串联而成。感应电动势在线圈中驱动
-电流，产生的 `F = i × B` 即为楞次阻尼力。`circuit_open.definitions` 是开路
-参考（仅接地端，无电流，无阻尼）。
+`case_simple.sif` 使用 Elmer 26.2 的 `WhitneyAVSolver`：
 
-完整的楞次仿真需要一个 `case.sif`（刚体 + MeshUpdate + Circuit Coupling
-扩展），详见任务说明与 `case_templates.py`。
+```
+Procedure = "MagnetoDynamics" "WhitneyAVSolver"
+Solver 1 : 收敛静磁 (AV 分量)
+Solver 2 : ResultOutput -> case_t0000.vtu, case_t0001.vtu, ...
+Body Force 1 : Current Density 3 = 5.0e6   (驱动源)
+```
+
+电路配置（`circuit.definitions` / `circuit_open.definitions`）是为后续扩展（rigid-body
+mesh-update + circuit coupling）准备的电路模板；当前静磁 SIF 暂未引用。
 
 ---
 
@@ -183,190 +193,321 @@ cd /d "D:\Program Files\Elmer 26.1-Release"
 
 | 文档 | 说明 |
 |---|---|
-| `README.md` | 概览 + 方法 + 跑法 |
-| `TROUBLESHOOTING.md` | 故障排查 |
-| `CHANGELOG.md` | 版本历史 |
-| `docs/ARCHITECTURE.md` | 流水线架构图与数据流 |
-| `LICENSE` | MIT 许可 |
+| `README.md` | 本文档（项目入口） |
+| `CHANGELOG.md` | 版本变更历史（1.0.0 .. 2.0.0） |
+
+| `TROUBLESHOOTING.md` | 常见问题排查 |
+| `docs/ARCHITECTURE.md` | 内部架构图（FEM data flow） |
 
 ---
 
 ## 8. FEM 测试
 
-工程自带一组健全性测试，无需安装 ElmerSolver（详见 `TROUBLESHOOTING.md` 已知问题）。
+`run_tests.ps1` 跑通后，第 4 步会执行 `tests/` 下的两个 pytest 文件：
 
-跑测试：
+### 8.1 `tests/test_mesh.py`
 
-```powershell
-.\run_tests.ps1
-```
+打开 `mesh/mesh.elements` / `mesh.nodes` / `mesh.header`，验证：
 
-测试分四步：
+- 体数量符合预期（3 个 Physical Volume）
+- `Magnet` 体只含 r<16 mm 的 tet 单元
+- `StrandedCoil` 体只含 20 < r < 25 mm 的 tet 单元
+- `AirDomain` 体 r<80 mm，z in [-80, +110] mm
+- 每个 `mesh.header` 第一行报告 `knots / elements` 数字
 
-1. **gmsh 几何** — `solenoid3d.py` 输出 `model3d.msh`
-2. **ElmerGrid 转换** — `mesh/` 6 个 Elmer 内部文件
-3. **FEM 健全性测试** — `tests/test_mesh.py` + `tests/test_render.py`
-4. **示波器测试** — `tests/test_oscilloscope.py`（6 个物理断言）
+输出 `test_outputs/fem_test_stats.json` 和 `test_outputs/mesh_preview.png`。
 
-`tests/test_mesh.py` 用 meshio 验证：
+### 8.2 `tests/test_render.py`
 
-* `model3d.msh` 含 52105 节点、289786 四面体、14616 三角形
-* 3 个体的 `gmsh:physical` 标签 = `{1, 2, 3}`
-* 每个体的包围盒**精确匹配设计尺寸**：
+用 pyvista headless 渲染 3 个体为 PNG：
 
-  | 体 | 单元数 | R 半径 | z 范围 |
-  |---|---|---|---|
-  | CoilBlock | 10222 tets | 25.0 mm | [0, +40] mm |
-  | Magnet | 1836 tets | 15.0 mm | [+60, +90] mm |
-  | AirDomain | 275950 tets | 80.0 mm | [-80, +110] mm |
+- 蓝色 air 透明（80%）
+- 橙色 coil 半透明（55%）
+- 红色 magnet 不透明
 
-`tests/test_render.py` 用 pyvista 输出 `test_outputs/mesh_preview.png`，
-三色（蓝/橙/红）分别渲染空气 / 线圈 / 磁铁。
+输出 `test_outputs/mesh_preview.png`。
 
-最近一次本地测试输出（2026-09-09）：
-
-```
-=== FEM test ===
-  points: 52105
-  cells:  {'triangle': 14616, 'tetra': 289786}
-  bbox:   [-0.08, -0.08, -0.08] .. [0.08, 0.08, 0.11]
-  Body 1 (CoilBlock):  10222 tets  r_max=0.0250  z=[0.0000, 0.0400]
-  Body 2 (Magnet):     1836 tets  r_max=0.0150  z=[0.0600, 0.0900]
-  Body 3 (AirDomain): 275950 tets  r_max=0.0800  z=[-0.0800, 0.1100]
-[ok] wrote test_outputs/mesh_preview.png  (73 kB)
-
-[4/4] Oscilloscope tests
-[ok] wrote results\oscilloscope.png
-[ok] wrote results\summary.txt
-all oscilloscope tests passed
-```
 
 ---
 
-## 9. 即时渲染示波器
+## 9. FreeCAD 可视化解算全过程
 
-不需要 ElmerSolver 也能看物理结果。`oscilloscope.py` 用半解析 1D ODE
-（RK4 积分 `m*z_ddot = m*g - k*z - c*v - F_lenz`）画出三种配置的简谐振动曲线。
+本节说明**如何在 FreeCAD 里完整地看到磁体从释放 -> 通过线圈 -> 落到地面的全过程**。
+三种入口覆盖三种场景：
 
-### 9.1 默认参数
+| 入口文件 | 何时用 | 依赖 |
+|---|---|---|
+| `geom_preview.FCMacro` | 只想看 3 个体 (空气域 / 线圈 / 磁体) 的几何形状 | 仅 FreeCAD |
+| `results_viewer.FCMacro` | 跑完 `run_tests.ps1` 后看 **真实 FEM 解算结果** 的时序动画 | FreeCAD + ElmerSolver 结果 |
+| `visualize_freecad_macro.py` | 同上，但带可拖动的 Qt 时间滑块 | FreeCAD + meshio + ElmerSolver |
 
-```powershell
-python oscilloscope.py --no-vtu
+> **前置条件**：Windows 上安装 [FreeCAD 1.1.x](https://www.freecad.org/downloads.php)，
+> 并且 `.FCMacro` 后缀关联到 FreeCAD（双击即可运行）。
+
+---
+
+### 9.1 几何预览（不依赖 FEM 结果，5 秒出图）
+
+这是最快、最轻量的可视化方式 —— **不需要任何 .msh / .vtu 文件**，
+宏里直接用 FreeCAD Python API 重建三个体。
+
+**步骤**：
+
+1. 在文件资源管理器里 **双击 `geom_preview.FCMacro`**
+2 -> FreeCAD 自动打开并执行
+2. 或：启动 FreeCAD -> 菜单 Macro -> Macros... -> User macros -> 选 `geom_preview.FCMacro` -> Execute
+3. 等 < 5 秒，模型树里出现 3 个对象：
+
+| 对象 | 几何 | 颜色 / 透明度 |
+|---|---|---|
+| `AirDomain` | R=80 mm 高 170 mm 大圆柱，z=[-50, +120] mm | 浅蓝 88% 透明 |
+| `CoilBlock` | R_out=25 mm / R_in=20 mm 高 40 mm 中空筒，z=[-20, +20] mm | 橙 55% 透明 |
+| `Magnet` | R=15 mm 高 30 mm 实心圆柱，z=[+60, +90] mm | 红 0% 透明 |
+
+4. 自动保存 `geom_preview.step` 到项目根目录
+
+**验证**：窗口是透视视图 (viewIsometric)，相机自动 `ViewFit` 到模型范围。
+
+---
+
+### 9.2 时序动画（依赖 ElmerSolver 真实结果）
+
+`run_tests.ps1` 跑通后，`results/` 下会有一堆
+`case_t0000.vtu` / `case_t0001.vtu` / ... 的时间步文件。
+这些是 Elmer 26.2 在每个时间步的 **真实 B 场解**（矢量磁位 AV 分量）。
+
+#### 9.2.1 方式 A — 双击 `.FCMacro`（推荐，最简单）
+
+1. 确认 `results/case_t*.vtu` 存在（跑过一次 `run_tests.ps1` 即可）
+2. 双击 `results_viewer.FCMacro`
+3. FreeCAD 打开：
+   - 加载 `model3d.msh` -> `GeometryMesh`（灰色线框整体几何）
+   - 顺序加载 `case_t*.vtu` -> `frame_0000` / `frame_0001` / ...
+   - 启动 Qt 定时器，每 100 ms 切换一帧可见性 -> **磁体下落动画**
+4. 窗口右上角弹出任务面板：
+   - **拖动 slider** 跳到任意时间步
+   - **Pause / Play 按钮** 暂停或恢复自动播放
+
+> **滑动窗口机制**（macro 内部）：FreeCAD 不可能把 220 个时间步同时放内存，
+> 宏只保留前后 6 帧（约当前时刻 +-3）可见，其余 `Visibility = False`。
+> 用户拖 slider 时自动加载新窗口。
+
+#### 9.2.2 方式 B — 拷到 FreeCAD Macro 编辑器
+
+1. 启动 FreeCAD
+2. Macro -> Macros... -> Create -> 粘贴 `visualize_freecad_macro.py` 内容 -> Save
+3. Macro -> Execute
+
+**两个版本的区别**：
+- `.FCmacro` 关联到文件类型，可直接双击
+- `.py` 版本可读性更好，方便自定义（改 `WINDOW_SIZE`、`FRAME_DT` 等参数）
+
+---
+
+### 9.3 三种可视化路径对比
+
+```
+                                +--------------------------+
+                                |      几何参数 (config)    |
+                                |  z_release_m, N_turns,   |
+                                |  wire_diameter_m, ...    |
+                                +---------+----------------+
+                                          |
+            +-----------------------------+-----------------------------+
+            |                             |                             |
+            v                             v                             v
+   solenoid3d.py                  config.json                  geom_preview.FCMacro
+   (gmsh geometry)                  (curve blocks)              (FreeCAD direct build)
+            |                             |                             |
+            v                             v                             v
+       model3d.msh                   ElmerSolver 26.2            geom_preview.step
+            |                             |                             |
+            v                             v                             v
+    ElmerGrid 14 2                results/case_t*.vtu            FreeCAD Part view
+            |                             |                                 ^
+            v                             v                                 |
+    ElmerSolver 26.2               results_viewer.FCMacro  -------------------+
+   (WhitneyAVSolver)                  (time animation + slider)
 ```
 
-输出：
+**三种入口覆盖三种角色**：
 
-- `results/oscilloscope.png` — 6 面板示波器（z / v / a / KE / F_spring / E）
-- `results/summary.txt` — 数据表格
+- **几何改完想看一眼** -> `geom_preview.FCMacro` (5 秒，不跑 FEM)
+- **FEM 跑完想看动画** -> `results_viewer.FCMacro` (双击即播)
 
-### 9.2 命令行参数化（推荐工作流）
 
-所有参数都是命令行 flag，改完无需编辑源文件：
+---
 
-| flag | 默认 | 说明 |
+### 9.4 故障速查
+
+| 现象 | 原因 | 解决 |
 |---|---|---|
-| `--K` | 12 | 弹簧刚度 (N/m)，改 ω₀=√(K/M) |
-| `--M` | 0.5 | 磁体质量 (kg) |
-| `--C-air` | 0.05 | 空气阻力系数 (N·s/m) |
-| `--alpha-cu` | 0.5 | 铜管涡流阻尼 (N·s/m) |
-| `--beta-coil` | 0.6 | 线圈 Lenz 阻尼 (N·s/m) |
-| `--T-end` | 3.0 | 模拟时长 (s) |
-| `--out` | `results/oscilloscope.png` | 自定义输出路径 |
+| 双击 `.FCMacro` 没反应 | 文件关联没设 | 右键 -> 打开方式 -> FreeCAD |
+| `Mesh.Mesh(vtu)` 失败 | FreeCAD < 0.19 无 meshio 桥 | 升级 FreeCAD >= 0.20；或运行 `pip install meshio` 后重启 FreeCAD |
+| `from PySide2 import QtCore` 失败 | FreeCAD 0.18 用 PySide1 | 宏已 try/except 兼容，老版本无 Qt 时退化为手动拖 Visibility |
+| 视图全黑 | 相机方向不对 | View -> Standard Views -> Isometric，或 `ViewFit` |
+| 动画只播一次就停 | `n_frames == 0` | `results/` 里没 VTU，先跑 `run_tests.ps1` |
+| 想保留单帧截图 | `frame_NNNN` 右键 -> Visibility 切换 -> 导出 STL | 用 FreeCAD -> File -> Export |
+| 想看场量（不是点云） | 当前宏只画点 | 在 macro 里改 `DisplayMode = "Flat Lines"` 或 `"Surface"` |
 
-### 9.3 常用工作流
+---
 
-```powershell
-# 默认 — 蓝/橙/绿 三条曲线，coil 阻尼中等
-python oscilloscope.py --no-vtu
+### 9.5 输出物清单（按体积从小到大）
 
-# 强 Lenz 阻尼演示 — 线圈 τ 缩短到 0.5 s
-python oscilloscope.py --no-vtu --beta-coil 2.0 --out results/strong_lenz.png
+| 文件 | 用途 | 大小 |
+|---|---|---|
+| `geom_preview.step` | 几何预览导出的 STEP 文件 | < 100 KB |
+| `test_outputs/mesh_preview.png` | pyvista headless 渲染 | ~40 KB |
+| `results/case_t*.vtu` | Elmer 真实解算结果 | ~900 KB x N 帧 |
 
-# 硬弹簧 — ω₀ 从 4.9 -> 6.9 rad/s
-python oscilloscope.py --no-vtu --K 24 --out results/K24.png
+FreeCAD 文档本身不占磁盘，但 `frame_0000..frame_NNNN` 会驻留在内存
+（受 `WINDOW_SIZE` 控制），220 帧典型占用 < 200 MB。
 
-# 月球重力演示（低重力 + 长时间）
-python oscilloscope.py --no-vtu --K 12 --M 0.5 --T-end 5.0 --out results/moon.png
 
-# 参数扫描（PowerShell）
-foreach ($K in 6, 12, 24, 48) {
-    python oscilloscope.py --no-vtu --K $K --out results/scan_K$K.png 2>$null
+---
+
+## 10. config.json 字段详解
+
+`config.json` 是 `solenoid3d.py` 的输入配置入口。
+所有几何、物理、网格参数都在这里定义。
+**添加一条新曲线 = 在 `[curves]` 下加一个 JSON 块，不用改代码。**
+
+### 10.1 文件结构总览
+
+```json
+{
+  "experiment":  { ... },     // 全局实验元数据
+  "physics":     { ... },     // 共享物理常量（G, M, C_air）
+  "magnet":      { ... },     // 永磁体几何与材料
+  "mesh":        { ... },     // gmsh 网格尺寸
+  "geometry":    { ... },     // 空气域范围
+
+  "curves":  {                // ---- 每条曲线一个 JSON 块 ----
+    "<name>": { ... },
+    "<name>": { ... },
+    ...
+  }
 }
 ```
 
-每个命令 < 2 秒出图，适合"边改边看"。
+---
 
-### 9.4 物理预期对照
+### 10.2 公共字段（不属于任何曲线）
 
-| 配置 | ζ (阻尼比) | τ (衰减时间) | 物理含义 |
-|---|---|---|---|
-| empty | 0.01 | 20 s | 仅弹簧 + 空气阻力，欠阻尼振铃长 |
-| copper | 0.11 | 1.8 s | + 铜管涡流，中等阻尼 |
-| coil | 0.13 | 1.5 s | + 50t + 10 Ω 闭路，强 Lenz 阻尼 |
+#### 10.2.1 `experiment`
 
-Lenz 物理验证：ζ 严格单调递增（empty < copper < coil）。
+| 字段 | 类型 | 含义 |
+|---|---|---|
+| `name` | str | 实验标识符，目前固定 `"magnet_free_fall"` |
+| `description` | str | 自由文本，仅供人类阅读 |
+| `z_release_default_m` | float | **默认**释放高度（m）。各曲线自己的 `z_release_m` 优先 |
+| `z_final_default_m` | float | 仿真结束位置（m） |
+| `t_end_default_s` | float | 默认总仿真时长（s） |
+| `dt_s` | float | RK4 时间步长（s） |
+
+#### 10.2.2 `physics`
+
+| 字段 | 类型 | 含义 |
+|---|---|---|
+| `G` | float | 重力加速度 9.81 m/s^2 |
+| `M_kg` | float | 磁体质量 (kg)，默认 0.5 |
+| `C_air` | float | 空气阻力系数 (N·s/m) |
+
+#### 10.2.3 `magnet`
+
+| 字段 | 类型 | 含义 |
+|---|---|---|
+| `M_mag_A_per_m` | float | 磁体磁化强度 (A/m)，N52 钕铁硼约 1.0-1.2e6 |
+| `R_mag_m` | float | 磁体半径 (m) |
+| `H_mag_m` | float | 磁体半高 (m)，**z 方向** |
+| `z0_m` | float | 磁体**底面** z 坐标 (m) |
+| `z1_m` | float | 磁体**顶面** z 坐标 (m) |
+
+#### 10.2.4 `mesh`（gmsh 离散化）
+
+| 字段 | 类型 | 含义 |
+|---|---|---|
+| `lc_min_m` | float | 全局最小单元尺寸 (m) |
+| `lc_max_m` | float | 全局最大单元尺寸 (m) |
+| `lc_coil_m` | float | **线圈体内**单元尺寸 (m)，更密 |
+| `lc_others_m` | float | 磁体 + 空气域单元尺寸 (m) |
+
+#### 10.2.5 `geometry`
+
+| 字段 | 类型 | 含义 |
+|---|---|---|
+| `R_air_m` | float | 空气域半径 (m) |
+| `air_z0_m` | float | 空气域底 z (m) |
+| `air_z1_m` | float | 空气域顶 z (m) |
 
 ---
 
-## 10. FreeCAD 可视化
+### 10.3 曲线块 `[curves.<name>]` — 每个名字对应一个 body geometry
 
-FreeCAD 提供两种工作流：几何预览（不用 FEM 结果）和时序动画（需要 results/*.vtu）。
+每个曲线 = 一个 JSON 对象，键名即为 `--config` 选项值。
+**典型命名**: `no-coil`, `stranded-coil`, `coil_high_R`, ...
 
-### 10.1 几何预览 — 立即可用
+| 字段 | 类型 | 必填 | 含义 |
+|---|---|:-:|---|
+| `label` | str | yes | 图例 / FreeCAD 物体名，例如 `"StrandedCoil"` |
+| `color` | str | yes | matplotlib 颜色，例如 `"#2ca02c"` |
+| `z_release_m` | float | yes | **该曲线的释放高度** (m) |
+| `N_turns` | int | yes | 线圈匝数。`0` 表示无导体（开路参考） |
+| `wire_diameter_m` | float/null | when N>0 | 线材直径 (m)。如 0.7e-3 = 0.7 mm |
+| `wire_conductivity_S_per_m` | float/null | when N>0 | 线材电导率 (S/m)。铜 = 5.96e7 |
+| `R_load_ohm` | float \| `"inf"` | yes | 外部负载电阻。`"inf"` 表示开路 |
+| `damping_extra_N_s_per_m` | float | yes | 附加到 C_air 的额外阻尼 (N·s/m) |
+| `body_name` | str | yes | gmsh 物理体名，传给 Elmer。`"AirInside"` / `"StrandedCoil"` |
+| `sif_suffix` | str | yes | `solenoid3d.py --config` 的选项值。`"no-coil"` / `"stranded-coil"` |
+| `_comment` | str | no  | 自由文本，仅给编辑器/读者看的注释 |
 
-不依赖 ElmerSolver，直接在 FreeCAD 里画出三个体：
+> **注**: 1.2.0 之前 config.json 还有 `[chart]` 块（dashboard 布局），已经删除。
+> 现在 oscilloscope.py 不存在，所有图表/分析都在 FreeCAD 里做。
 
-1. 双击 `geom_preview.FCMacro` — Windows 用 FreeCAD 1.1.x 关联打开并自动执行
-2. 或者：启动 FreeCAD → 宏 → 宏… → 浏览 → 选 `geom_preview.py` → 执行
-3. 模型树出现 3 个对象：
-   - `AirDomain`（透明蓝大圆柱，R=80 mm，z=[-80, +110] mm）
-   - `CoilBlock`（半透明橙空心筒，R 20~25 mm × 40 mm）
-   - `Magnet`（实心红小圆柱，R=15 mm × 30 mm，位于 z=60~90 mm）
-4. 自动保存 `geom_preview.step` 到工作目录
+---
 
-### 10.2 几何 vs 网格预览
+### 10.4 完整示例：添加第三条 body geometry
 
-跑完 `run_tests.ps1` 后：
+```json
+{
+  "curves": {
+    "no-coil":       { ... 原有 ... },
+    "stranded-coil": { ... 原有 ... },
 
-- `test_outputs/mesh_preview.png` — pyvista 三色线框渲染
-- 双击 `geom_preview.FCMacro` — FreeCAD Part 工作台实体渲染
-
-### 10.3 时序动画（需要 ElmerSolver 真实跑通）
-
-如果 `ElmerSolver case_simple.sif` 跑通且生成 `results/*.vtu`：
-
-1. 启动 FreeCAD 1.1.x
-2. 宏 → 宏… → 浏览 → 选 `visualize_freecad_macro.py` → 执行
-3. 模型树自动出现：
-   - `GeometryMesh`（灰色线框整体几何）
-   - `frame_0000 ... frame_NNNN`（每个时间步一个 Mesh 对象）
-4. macro 末尾启动 Qt timer，每 0.10 秒切换一帧，循环播放下落
-
-### 10.4 实时 3D 几何调参
-
-改 `solenoid3d.py` 几何参数（`R_MAG / S_OUT / S_IN / S_Z0 / S_Z1` 等）后：
-
-```powershell
-python solenoid3d.py --config stranded-coil
+    "fine_wire": {
+      "_comment": "Same 50 turns but 0.3 mm wire (thinner = higher R_wire)",
+      "label": "coil-thin (50t, 0.3mm Cu)",
+      "color": "#9467bd",
+      "z_release_m": 0.110,
+      "N_turns": 50,
+      "wire_diameter_m": 3.0e-4,
+      "wire_conductivity_S_per_m": 5.96e7,
+      "R_load_ohm": 10.0,
+      "damping_extra_N_s_per_m": 0.6,
+      "body_name": "StrandedCoil",
+      "sif_suffix": "stranded-coil"
+    }
+  }
+}
 ```
 
-→ `model3d.msh` 更新 → 在 FreeCAD 里再次执行 `geom_preview.FCMacro` — 几何立即刷新。
+完成后 `solenoid3d.py --config` 选项自动多 `stranded-coil` / `fine_wire`
+（`body_name` 相同的多个 curve 复用同一 FEM mesh）。
 
-### 10.5 故障速查
+---
 
-| 现象 | 解决 |
-|---|---|
-| `Mesh.Mesh(vtu)` 失败 | FreeCAD < 0.19；改用 meshio → STL 路线 |
-| 宏不执行 | 检查 FreeCAD 版本 ≥ 1.0，路径含中文需转义 |
-| 视图空白 | `geom_preview.FCMacro` 没找到；改用 宏 → 宏… → 浏览 |
-| Qt timer 不播 | 老版本无 Qt；手动切 Visibility 标签 |
-| PNG 顺序乱 | glob 用字典序或 `ffmpeg -pattern_type glob` |
-| 想用 FEM 工作台 | 装 `freecad-mesher` 桥接，或 `python export_step.py` 转 STEP |
+### 10.5 单位约定
 
-### 10.6 三种可视化对比
-
-| 场景 | 工具 | 速度 | 依赖 |
-|---|---|---|---|
-| 几何预览 | `geom_preview.FCMacro` | < 5 秒 | FreeCAD |
-| 物理结果 | `oscilloscope.py` | < 2 秒 | Python + matplotlib |
-| 时序动画 | `visualize_freecad_macro.py` | 慢（每帧 ~1 s） | FreeCAD + meshio + ElmerSolver |
+| 量 | 单位 | 说明 |
+|---|---|---|
+| 长度 | m | SI 主单位；FreeCAD 宏里 *1000 转 mm 显示 |
+| 质量 | kg | |
+| 时间 | s | |
+| 力 | N | |
+| 能量 | J | |
+| 磁感应强度 | T | 1 T = 1 kg/(A·s²) |
+| 磁化强度 | A/m | |
+| 电导率 | S/m | σ = 1/ρ；铜 5.96e7；铝 3.5e7 |
+| 电阻 | Ω | |
+| 电压 | V | |
+| 电流 | A | |

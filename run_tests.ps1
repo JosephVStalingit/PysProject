@@ -51,7 +51,7 @@ $env:Path = "$ELMER_HOME\bin;$env:Path"
 
 # 1. Build the mesh (gmsh)
 Write-Host ""
-Write-Host "[1/5] gmsh build" -ForegroundColor Cyan
+Write-Host "[1/4] gmsh build" -ForegroundColor Cyan
 New-Item -ItemType Directory -Force test_outputs | Out-Null
 & $PY solenoid3d.py --config no-coil 2>&1 | Tee-Object -FilePath test_outputs\gmsh.log | Select-Object -Last 2
 if (-not (Test-Path model3d.msh)) {
@@ -62,7 +62,7 @@ Write-Host ("  ok   model3d.msh  ({0:N1} MB)" -f ([double](Get-Item model3d.msh)
 
 # 2. Convert mesh (ElmerGrid)
 Write-Host ""
-Write-Host "[2/5] ElmerGrid 14 2" -ForegroundColor Cyan
+Write-Host "[2/4] ElmerGrid 14 2" -ForegroundColor Cyan
 if (Test-Path mesh) { Remove-Item -Recurse -Force mesh }
 & "$ELMER_HOME\elmergrid\src\ElmerGrid.exe" 14 2 model3d.msh -out mesh -autoclean `
     2>&1 | Tee-Object -FilePath test_outputs\elmergrid.log | Select-String 'knots|elements|ERROR' | Select-Object -First 2
@@ -75,7 +75,7 @@ Write-Host "  ok   mesh\  ($header)" -ForegroundColor Green
 
 # 3. ElmerSolver 26.2
 Write-Host ""
-Write-Host "[3/5] ElmerSolver 26.2" -ForegroundColor Cyan
+Write-Host "[3/4] ElmerSolver 26.2" -ForegroundColor Cyan
 if (Test-Path results) { Remove-Item -Recurse -Force results }
 New-Item -ItemType Directory -Force results | Out-Null
 & "$ELMER_HOME\bin\ElmerSolver.exe" case_simple.sif `
@@ -91,7 +91,7 @@ Select-String -Path results\solver.log -Pattern 'ALL DONE|TOTAL TIME' | ForEach-
 
 # 4. Run the FEM sanity tests
 Write-Host ""
-Write-Host "[4/5] FEM tests" -ForegroundColor Cyan
+Write-Host "[4/4] FEM tests" -ForegroundColor Cyan
 & $PY tests/test_mesh.py
 if ($LASTEXITCODE -ne 0) {
     Write-Host "  err  test_mesh.py failed" -ForegroundColor Red
@@ -103,14 +103,9 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
-# 5. Oscilloscope tests (spring-magnet damping 3-config)
+# 5. (oscilloscope.py removed -- analytical ODE step dropped per user request)
 Write-Host ""
-Write-Host "[5/5] Oscilloscope tests" -ForegroundColor Cyan
-& $PY -c "import sys; sys.path.insert(0, '.'); from tests.test_oscilloscope import test_config_loaded, test_damping_monotonic, test_passage_time_monotonic, test_peak_velocity_decreasing, test_magnet_actually_falls, test_vacuum_reference, test_oscilloscope_png, test_summary_txt; test_config_loaded(); test_damping_monotonic(); test_passage_time_monotonic(); test_peak_velocity_decreasing(); test_magnet_actually_falls(); test_vacuum_reference(); test_oscilloscope_png(); test_summary_txt(); print('all oscilloscope tests passed')"
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "  err  test_oscilloscope.py failed" -ForegroundColor Red
-    exit 1
-}
+Write-Host "[4/4] FEM tests passed" -ForegroundColor Green
 
 Write-Host ""
 Write-Host "  ok   all FEM tests passed" -ForegroundColor Green

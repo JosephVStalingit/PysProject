@@ -88,11 +88,16 @@ def cyl(r, z0, z1):
 
 
 def parse_args():
+    # --config choices come from config.json [curves] block.
+    # Each curve carries its own `sif_suffix` -> geometry variant.
+    import json as _json
+    cfg = _json.load(open('config.json', encoding='utf-8'))
+    suffixes = [cfg['curves'][k]['sif_suffix'] for k in cfg['curves']]
+    default  = suffixes[0] if suffixes else 'no-coil'
     ap = argparse.ArgumentParser()
     ap.add_argument('-o', '--out', default='model3d.msh')
-    ap.add_argument('--config',
-                    choices=['no-coil', 'copper-tube', 'stranded-coil'],
-                    default='no-coil')
+    ap.add_argument('--config', choices=suffixes, default=default,
+                    help='geometry variant (from config.json [curves])')
     return ap.parse_args()
 
 def build(out_path: str, config: str) -> None:
@@ -112,16 +117,24 @@ def build(out_path: str, config: str) -> None:
     print(f'[debug] cyl tags: air={air}, coil_out={coil_out}, coil_in={coil_in}, '
           f'mag={mag}', file=sys.stderr)
 
-    # ---- bore volume (Body 1) per config ----
-    if config == 'no-coil':
-        bore_tag    = air
-        bore_name   = 'AirInside'
-    else:                       # copper-tube or stranded-coil
+    # ---- bore volume (Body 1) per config (sif_suffix -> body_name from config.json) ----
+    # Look up body_name from config.json [curves] so adding a new curve
+    # does not require editing this file.
+    import json as _json
+    cfg = _json.load(open('config.json', encoding='utf-8'))
+    sif_to_body = {cfg['curves'][k]['sif_suffix']: cfg['curves'][k]['body_name']
+                   for k in cfg['curves']}
+    sif_to_n    = {cfg['curves'][k]['sif_suffix']: cfg['curves'][k]['N_turns']
+                   for k in cfg['curves']}
+    bore_name = sif_to_body.get(config, 'AirInside')
+    n_turns   = sif_to_n.get(config, 0)
+    if n_turns <= 0 or config == 'no-coil':
+        bore_tag = air
+    else:                       # coil-like configurations need a hollow cylinder
         bore, _ = gmsh.model.occ.cut(
             [(3, coil_out)], [(3, coil_in)],
             removeObject=True, removeTool=True)
-        bore_tag  = bore[0][1]
-        bore_name = 'CopperTube' if config == 'copper-tube' else 'StrandedCoil'
+        bore_tag = bore[0][1]
 
     # ---- fragment everything ----
     # For 'no-coil' we use the air cylinder as the bore; for the

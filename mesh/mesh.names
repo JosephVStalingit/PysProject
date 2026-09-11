@@ -1,9 +1,9 @@
 ! ----- names for bodies -----
-$ AirDomain = 1
+$ AirInside = 1
 $ Magnet = 2
-$ CoilBlock = 3
-$ body4 = 4
-$ body5 = 5
-$ body6 = 6
+$ Air = 3
+$ Spring = 4
+$ Anchor = 5
 ! ----- names for boundaries -----
 $ MagneticInfinity = 1
+$ AnchorFixed = 2

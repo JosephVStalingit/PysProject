@@ -3,6 +3,36 @@
 本工程的所有显著变更记录于此。
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
+## [1.0.0] - 2026-09-11
+
+### 新增
+- **Elmer 26.2 作为静磁求解核心**
+  - 使用 MSYS2 mingw64 工具链 (gcc 16.1.0 + gfortran 16.1.0 + cmake 4.3.3 + ninja 1.13.2) 编译成功
+  - 复用 Elmer 26.1 安装的 libopenblas.dll 作为 BLAS / LAPACK 依赖
+  - 安装位置：C:\elmer262\bin\ElmerSolver.exe + C:\elmer262\elmergrid\src\ElmerGrid.exe + C:\elmer262\share\elmersolver\lib\* (procedure DLLs)
+- 简化的 `case_simple.sif` 配置
+  - 删除 Initial Condition 块（SOLVER.KEYWORDS 未注册 InitialCondition 关键字）
+  - Procedure = "MagnetoDynamics" "WhitneyAVSolver"（26.2 将主 procedure 改名为 WhitneyAVSolver）
+  - BC 用分量形式 Magnetic Vector Potential 1/2/3
+  - 添加 Body Force 1 (Current Density 3 = 5.0e6) 产生非零磁场解
+  - 添加 Solver 2 "ResultOutput" 导出 case.vtu
+- `solenoid3d.py` 修复 gmsh 4.x MSH 2.2 网格复化问题
+  - Mesh.ElementOrder=1 + Mesh.SecondOrderIncomplete=1 + Mesh.Algorithm3D=4 (MMG3D)
+  - 使 gmsh 输出线性网格 (type 2+4) 而不是高阶 (type 11+9)
+- `one_click.ps1` + `run_tests.ps1` 适配 Elmer 26.2 安装位置
+
+### 修复
+- 完整 FEM 流水线合龙（5 步全通过）
+- 追查 `Load.c` 源码确定 Elmer 26.2 procedure DLL 加载逻辑
+- 追查 `SOLVER.KEYWORDS` 确定 26.2 新调用占位符
+- 追查 `elements.def` 确定 element type 510 边界元使用问题
+
+### 已知问题
+- Elmer 26.2 `WhitneyAVSolver` 不直接支持 10-node tetra 网格。
+  PElementBase::TetraNodalPBasis 仅支持 {1,2,3,4} 节点，
+  对 type 510 (p2 10-node) 在 Piola transform 路径上报 "Unknown node"。
+  工作解：保持 linear mesh (type 504)，由 WhitneyAVSolver
+  内部 Piola transform 处理边基。
 
 ## [未发布]
 

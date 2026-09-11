@@ -1,6 +1,6 @@
 !------ Skeleton for body section -----
 Body 1
-  Name = AirDomain
+  Name = AirInside
 End
 
 Body 2
@@ -8,23 +8,23 @@ Body 2
 End
 
 Body 3
-  Name = CoilBlock
+  Name = Air
 End
 
 Body 4
-  Name = body4
+  Name = Spring
 End
 
 Body 5
-  Name = body5
-End
-
-Body 6
-  Name = body6
+  Name = Anchor
 End
 
 !------ Skeleton for boundary section -----
 Boundary Condition 1
   Name = MagneticInfinity
+End
+
+Boundary Condition 2
+  Name = AnchorFixed
 End
 

@@ -70,8 +70,8 @@ def build(out_path: str, config: str) -> None:
     gmsh.option.setNumber('General.ExpertMode', 1)
     gmsh.model.add('spring_oscillator')
 
-    gmsh.option.setNumber('Mesh.CharacteristicLengthMin', 0.0012)
-    gmsh.option.setNumber('Mesh.CharacteristicLengthMax', 0.004)
+    gmsh.option.setNumber('Mesh.CharacteristicLengthMin', 0.003)
+    gmsh.option.setNumber('Mesh.CharacteristicLengthMax', 0.010)
 
     # ---- primitives ----
     air       = cyl(R_AIR,  AIR_Z0,  AIR_Z1)
@@ -186,6 +186,18 @@ def build(out_path: str, config: str) -> None:
     size(mag_vols + air_vols + anch_vols, 0.004)
 
     # ---- write ----
+    # Generate a true first-order mesh so ElmerGrid can
+    # promote it to native second order (type 510 / 306)
+    # via its `-increase` flag.  Note: gmsh 4.x with HXT
+    # 3D algorithm (default) often leaves boundary nodes
+    # at order 2 even when Mesh.ElementOrder=1, so we also
+    # switch to the legacy Frontal-Delaunay algorithm for
+    # both surface and volume meshes.
+    gmsh.option.setNumber('Mesh.ElementOrder', 1)
+    gmsh.option.setNumber('Mesh.SecondOrderIncomplete', 1)
+    gmsh.option.setNumber('Mesh.HighOrderOptimize', 0)
+    gmsh.option.setNumber('Mesh.Algorithm', 6)        # Frontal-Delaunay 2D
+    gmsh.option.setNumber('Mesh.Algorithm3D', 4)     # MMG3D 3D (legacy)
     gmsh.option.setNumber('Mesh.MshFileVersion', 2.2)
     gmsh.option.setNumber('Mesh.Format', 1)
     gmsh.model.mesh.generate(3)

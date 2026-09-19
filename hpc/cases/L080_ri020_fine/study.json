@@ -1,0 +1,23 @@
+{
+  "length": 0.08,
+  "level": "fine",
+  "n_positions": 86,
+  "dz": 0.002,
+  "z_start": 0.135,
+  "z_end": -0.035,
+  "travel": 0.17,
+  "coil_z0": 0.0,
+  "coil_z1": 0.08,
+  "mag_z0": 0.1,
+  "mag_z1": 0.13,
+  "coil_r_inner": 0.02,
+  "coil_r_outer": 0.025,
+  "mag_radius": 0.015,
+  "gap": 0.005000000000000001,
+  "mesh": {
+    "lc_min_m": 0.0015,
+    "lc_magnet_m": 0.002,
+    "lc_coil_m": 0.0025000000000000005,
+    "lc_others_m": 0.012
+  }
+}

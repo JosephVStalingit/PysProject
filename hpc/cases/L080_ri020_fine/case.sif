@@ -1,0 +1,265 @@
+! ------------------------------------------------------------------
+!  case_transient.sif  --  TRANSIENT magnetostatics with a FALLING magnet
+!
+!  Physics
+!  -------
+!  A permanent magnet (Body 2, M = 1.2e6 A/m) is released at t=0 and
+!  translates downwards according to
+!        z(t) = z0 - 1/2 * g * t^2          (g = 9.81 m/s^2)
+!  which is imposed on the mesh through the RigidMeshMapper solver
+!  + the `Mesh Translate 3` body force (see Body Force 2).
+!
+!  The air mesh is deformed by the rigid motion of the magnet and
+!  relaxed towards the fixed outer boundary.
+!
+!  Elmer then solves the transient A-formulation
+!        sigma dA/dt + curl(1/mu curl A) = Js
+!  at every timestep with the WhitneyAVSolver (edge elements).
+!
+!  Reference syntax taken from the bundled Elmer 26.2 test cases:
+!      elmer262/fem/tests/mgdyn_transient/MGDynamicsTransient.sif
+!      elmer262/fem/tests/RigidMeshMapper1/case.sif
+!      elmer262/fem/tests/RigidMeshMapper2/case.sif
+!
+!  STATUS: replaces the previous steady-state `case_simple.sif`.
+! ------------------------------------------------------------------
+
+Header
+  Mesh DB "." "mesh"
+  Include Path ""
+  Results Directory "results"
+End
+
+Simulation
+  Max Output Level       = 8
+  Coordinate System      = Cartesian
+  Coordinate Mapping(3)  = 1 2 3
+
+  Simulation Type        = Transient
+  Timestepping Method    = BDF
+  BDF Order              = 1
+  ! The run must cover the WHOLE coil crossing: the magnet (30 mm tall,
+  ! starting at z = 60..90 mm) has to fall until its TAIL (top face) has
+  ! passed the coil bottom (z = 0), i.e. 90 mm of travel -> 0.135 s of
+  ! free fall.  150 steps of 1 ms = 0.15 s gives the complete transit.
+  Timestep Sizes = 2.000000e-03
+  Timestep Intervals = 86
+  Output Intervals(1)    = 1
+
+  Steady State Max Iterations = 1
+  Use Mesh Names         = False
+End
+
+! ============================================================
+!  Equations
+! ============================================================
+Equation 1
+  Name = "Magnetics"
+  Active Solvers(3) = 1 2 3
+  Mesh Update = Logical True
+End
+
+! ============================================================
+!  Solver 1 -- rigid mesh motion of the falling magnet
+!    `Exec Solver = Always` so the mapper runs at EVERY timestep
+!    (with `Before all` the magnet would only move once).
+! ============================================================
+Solver 1
+  Exec Solver = Always
+  Equation    = MeshDeform
+  Procedure   = "RigidMeshMapper" "RigidMeshMapper"
+  Variable    = MeshRelax
+
+  ! Displacements below are ABSOLUTE functions of time, therefore they
+  ! must NOT be accumulated (which would give -0.5 g t^2 summed per step).
+  Cumulative Displacements = Logical False
+
+  ! The mapper solves a Laplace problem for the `meshrelax` blending field
+  ! (0 at `Fixed Boundary` -> 1 at `Moving Boundary`), so a linear solver
+  ! must be configured here.
+  Linear System Solver = Iterative
+  Linear System Iterative Method = BiCGStab
+  Linear System Preconditioning = ILU0
+  Linear System Convergence Tolerance = 1.0e-8
+  Linear System Max Iterations = 500
+  Linear System Residual Output = 0
+End
+
+! ============================================================
+!  Solver 2 -- transient A-formulation (edge elements)
+! ============================================================
+Solver 2
+  Exec Solver = Always
+  Equation    = "MGDynamics"
+  Procedure   = "MagnetoDynamics" "WhitneyAVSolver"
+  Variable    = "Magnetic Vector Potential"
+
+  Use Piola Transform = Logical False
+  Use Tree Gauge      = Logical True
+
+  ! Post-processing is done inside the solver (fast path, as validated in
+  ! the previous steady-state case_simple.sif).  A separate
+  ! MagnetoDynamicsCalcFields solver with CG + no preconditioner was
+  ! ~100x slower and is therefore NOT used.
+  Calculate Current Density           = True
+  Calculate Magnetic Flux Density     = True
+  Calculate Magnetic Field Strength   = True
+
+  ! The AV system is LINEAR (constant permeability), so ONE Newton iteration
+  ! is sufficient - more just repeats the same solve.
+  !
+  ! DIRECT is used because the iterative route (BiCGStabL + ILU1) is faster
+  ! per step but diverges once the air mesh becomes distorted by the falling
+  ! magnet (see README section 12).  Add `Use Tree Gauge = True` +
+  ! `Use Piola Transform = False` for the iterative route.
+  Linear System Solver           = Direct
+  Linear System Direct Method    = UMFPACK
+  Linear System Convergence Tolerance = 1.0e-8
+  Linear System Max Iterations   = 1000
+
+  Nonlinear System Max Iterations = 1
+  Nonlinear System Convergence Tolerance = 1.0e-7
+  Steady State Convergence Tolerance = 1.0e-5
+End
+
+! ============================================================
+!  Solver 3 -- derived fields (B, H, J)
+!    Needed because WhitneyAVSolver does NOT emit the flux density
+!    in transient mode.  A DIRECT solver is used here: with the
+!    default CG + no preconditioner this took ~90 s per timestep.
+! ============================================================
+Solver 3
+  Exec Solver = Always
+  Equation    = "MGDynamicsCalc"
+  Procedure   = "MagnetoDynamics" "MagnetoDynamicsCalcFields"
+  Potential Variable = String "Magnetic Vector Potential"
+
+  Calculate Magnetic Flux Density       = True
+  Calculate Magnetic Field Strength     = True
+  Calculate Current Density             = True
+
+  Linear System Solver = "Iterative"
+  Linear System Iterative Method = CG
+  Linear System Preconditioning = ILU0
+  Linear System Max Iterations = 1000
+  Linear System Convergence Tolerance = 1.0e-8
+  Linear System Residual Output = 0
+  Steady State Convergence Tolerance = 0
+End
+
+! ============================================================
+!  Solver 4 -- VTU output
+!    No `Exec Solver` line: Elmer then invokes the writer at every
+!    saved step, producing case_t0001.vtu, case_t0002.vtu, ...
+!    (`Exec Solver = After all` would only save the FINAL state.)
+! ============================================================
+Solver 4
+  Equation    = "ResultOutput"
+  Procedure   = "ResultOutputSolve" "ResultOutputSolver"
+  Output File Name = case
+  VTU Format  = Logical True
+End
+
+! ============================================================
+!  Materials
+! ============================================================
+Material 1
+  Name = "CoilWinding"
+  Relative Permeability = 1.0
+  Electric Conductivity = 0.0
+End
+
+Material 2
+  Name = "NdFeBMagnet"
+  Relative Permeability = 1.05
+  Electric Conductivity = 1.0e-12
+  ! Permanent magnet: remanent magnetisation along +z.
+  ! Br = mu0 * M = 4*pi*1e-7 * 1.2e6 ~ 1.51 T
+  Magnetization 1 = Real 0.0
+  Magnetization 2 = Real 0.0
+  Magnetization 3 = Real 1.2e6
+End
+
+Material 3
+  Name = "Air"
+  Relative Permeability = 1.0
+  Electric Conductivity = 1.0e-12
+End
+
+! ============================================================
+!  Body forces
+! ============================================================
+! Body 1 -- the winding is OPEN CIRCUIT for an induction experiment.
+! There is NO source current: the only field source is the permanent magnet
+! (Material 2), and everything the coil sees is induced by the magnet.
+! The induced current is recovered afterwards as I = EMF / R_total.
+!
+! A non-zero `Current Density 3` here would put a STATIC ~1.2 T pedestal
+! on the coil which completely masks the (few 10 mT) magnet signal.
+Body Force 1
+  Name = "CoilCurrent"
+  Current Density 1 = 0.0
+  Current Density 2 = 0.0
+  Current Density 3 = 0.0
+End
+
+! Body 2 -- RIGID DOWNWARD TRANSLATION of the magnet (free fall)
+!   z(t) = z0 - 1/2 g t^2   ->   displacement = -1/2 g t^2
+!   MATC variable `tx` holds the current Time.
+Body Force 2
+  Name = "FallingMagnet"
+  Mesh Translate 3 = Variable Time
+    Real MATC "-1*(tx+0)"
+  ! NOTE: no `Mesh Relax` here.  The RigidMeshMapper solves its own
+  ! `meshrelax` blending field (1 at `Moving Boundary`, 0 at
+  ! `Fixed Boundary`), so overriding it here has no effect.
+  ! See README section 12 for the consequences on the achieved motion.
+End
+
+! ============================================================
+!  Bodies
+! ============================================================
+Body 1
+  Name     = "CoilBlock"
+  Equation = 1
+  Material = 1
+  Body Force = 1
+End
+
+Body 2
+  Name     = "Magnet"
+  Equation = 1
+  Material = 2
+  Body Force = 2
+End
+
+Body 3
+  Name     = "AirDomain"
+  Equation = 1
+  Material = 3
+End
+
+! ============================================================
+!  Boundaries
+! ============================================================
+! NOTE: `ElmerGrid ... -autoclean` renumbers boundary groups sequentially,
+! so the gmsh tags 1001 / 1002 become Elmer boundary indices 1 / 2.
+! Check mesh/mesh.names:   $ MagneticInfinity = 1
+!                          $ MagnetSurface    = 2
+
+! Outer air surface: magnetic infinity + held fixed in the mesh motion
+Boundary Condition 1
+  Name = "MagneticInfinity"
+  Target Boundaries(1) = 1
+  Magnetic Vector Potential 1 = 0.0
+  Magnetic Vector Potential 2 = 0.0
+  Magnetic Vector Potential 3 = 0.0
+  Fixed Boundary = Logical True
+End
+
+! Magnet surface: free to move with the rigid translation
+Boundary Condition 2
+  Name = "MagnetSurface"
+  Target Boundaries(1) = 2
+  Moving Boundary = Logical True
+End

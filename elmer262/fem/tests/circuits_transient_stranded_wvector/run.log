@@ -1,0 +1,156 @@
+ELMER SOLVER (v 26.2) STARTED AT: 2026/09/13 23:06:46
+ParCommInit: Initialize #PEs: 1
+MAIN: 
+MAIN: =============================================================
+MAIN: ElmerSolver finite element software, Welcome!
+MAIN: This program is free software licensed under (L)GPL
+MAIN: Copyright 1st April 1995 - , CSC - IT Center for Science Ltd.
+MAIN: Webpage http://www.csc.fi/elmer, Email elmeradm@csc.fi
+MAIN: Version: 26.2-unknown (Rev: unknown, Compiled: 2026-09-12)
+MAIN:  Running one task without MPI parallelization.
+MAIN:  Running with just one thread per task.
+MAIN: =============================================================
+OpenIncludeFile: Trying to include file: sif/6480-circuits.definitions
+OpenIncludeFile: Trying to include file: 6480/mesh.names
+MAIN: 
+MAIN: 
+MAIN: -------------------------------------
+MAIN: Reading Model: sif/6480.sif
+LoadInputFile: Scanning input file: sif/6480.sif
+LoadInputFile: Scanning only size info
+LoadInputFile: First time visiting
+LoadInputFile: Reading base load of sif file
+OpenIncludeFile: Trying to include file: sif/6480-circuits.definitions
+OpenIncludeFile: Trying to include file: 6480/mesh.names
+CheckKeyword: Found keyword type assuming suffix 1 for: exported variable 2
+CheckKeyword: Found keyword type assuming suffix 1 for: exported variable 2
+CheckKeyword: Found keyword type assuming suffix 1 for: exported variable 3
+CheckKeyword: Found keyword type assuming suffix 1 for: exported variable 3
+CheckKeyword: Found keyword type assuming suffix 1 for: exported variable 4
+CheckKeyword: Found keyword type assuming suffix 1 for: exported variable 4
+OpenIncludeFile: Trying to include file: sif/S1Harmonic.dat
+TEST CASE 1
+LoadInputFile: Loading input file: sif/6480.sif
+LoadInputFile: Reading base load of sif file
+OpenIncludeFile: Trying to include file: sif/6480-circuits.definitions
+OpenIncludeFile: Trying to include file: 6480/mesh.names
+CheckKeyword:  Unlisted keyword: [a {e}] in section: [initial condition 1]
+CheckKeyword:  Unlisted keyword: [a] in section: [initial condition 1]
+CheckKeyword:  Unlisted keyword: [polar decomposition determinant tolerance] in section: [solver 3]
+CheckKeyword:  Unlisted keyword: [polar decomposition max iterations] in section: [solver 3]
+CheckKeyword: Found keyword type assuming suffix 1 for: exported variable 2
+CheckKeyword: Found keyword type assuming suffix 1 for: exported variable 2
+CheckKeyword: Found keyword type assuming suffix 1 for: exported variable 3
+CheckKeyword: Found keyword type assuming suffix 1 for: exported variable 3
+CheckKeyword: Found keyword type assuming suffix 1 for: exported variable 4
+CheckKeyword: Found keyword type assuming suffix 1 for: exported variable 4
+CheckKeyword:  Unlisted keyword: [alpha reference] in section: [body 3]
+CheckKeyword:  Unlisted keyword: [beta reference] in section: [body 3]
+CheckKeyword:  Unlisted keyword: [coil use w vector] in section: [component 1]
+CheckKeyword:  Unlisted keyword: [w vector variable name] in section: [component 1]
+CheckKeyword:  Unlisted keyword: [electrode boundaries] in section: [component 1]
+CheckKeyword:  Unlisted keyword: [circuit equation voltage factor] in section: [component 1]
+CheckKeyword:  Unlisted keyword: [s1: frequency] in section: [body force 1]
+CheckKeyword:  Unlisted keyword: [s1: phase] in section: [body force 1]
+CheckKeyword:  Unlisted keyword: [s1: harmonic content] in section: [body force 1]
+OpenIncludeFile: Trying to include file: sif/S1Harmonic.dat
+CheckKeyword:  Unlisted keyword: [s1] in section: [body force 1]
+Loading user function library: [HarmonicSignals]...[Source]
+CheckKeyword:  Unlisted keyword: [a {e}] in section: [boundary condition 1]
+CheckKeyword:  Unlisted keyword: [body 3: alpha] in section: [boundary condition 2]
+CheckKeyword:  Unlisted keyword: [body 3: alpha] in section: [boundary condition 3]
+CheckKeyword:  Unlisted keyword: [w] in section: [boundary condition 4]
+CheckKeyword:  Unlisted keyword: [a {e}] in section: [boundary condition 4]
+CheckKeyword:  Unlisted keyword: [w] in section: [boundary condition 5]
+CheckKeyword:  Unlisted keyword: [a {e}] in section: [boundary condition 5]
+CheckKeyword:  Unlisted keyword: [body 3: beta] in section: [boundary condition 6]
+CheckKeyword:  Unlisted keyword: [body 3: beta] in section: [boundary condition 7]
+TEST CASE 1
+LoadInputFile: Number of BCs: 7
+LoadInputFile: Number of Body Forces: 1
+LoadInputFile: Number of Initial Conditions: 1
+LoadInputFile: Number of Materials: 3
+LoadInputFile: Number of Equations: 2
+LoadInputFile: Number of Solvers: 10
+LoadInputFile: Number of Bodies: 3
+      39 0.6134E-10
+ComputeChange: NS (ITER=3) (NRM,RELC): ( 0.73202123      2.0000000     ) :: direction alpha
+      39 0.1729E-10
+ComputeChange: NS (ITER=3) (NRM,RELC): ( 0.60491377      2.0000000     ) :: direction beta
+      88 0.7949E-10
+ComputeChange: NS (ITER=1) (NRM,RELC): ( 0.59118927      2.0000000     ) :: wire direction
+MAIN: 
+MAIN: -------------------------------------
+MAIN: Time: 1/3:   1.500E-03
+MAIN: -------------------------------------
+MAIN: 
+WARNING:: GetPermittivity: Permittivity not defined in material, defaulting to that of vacuum
+BiCGStabl:       30 0.9605E-08 0.9605E-08
+ComputeChange: NS (ITER=1) (NRM,RELC): ( 0.35342938E-03  2.0000000     ) :: mgdynamics
+WARNING:: MagnetoDynamicsCalcFields: Harmonic loss requires > Harmonic Loss Linear Coefficient < in material section!
+WARNING:: MagnetoDynamicsCalcFields: Harmonic loss requires > Harmonic Loss Quadratic Coefficient < in material section!
+WARNING:: GetPermittivity: Permittivity not defined in material, defaulting to that of vacuum
+      17 0.5861E-08
+ComputeChange: NS (ITER=1) (NRM,RELC): ( 0.17604770      2.0000000     ) :: mgdynamicscalc
+      17 0.3738E-08
+ComputeChange: NS (ITER=2) (NRM,RELC): ( 0.53684306      1.0122038     ) :: mgdynamicscalc
+      17 0.5956E-08
+ComputeChange: NS (ITER=3) (NRM,RELC): ( 0.15814947      1.0897774     ) :: mgdynamicscalc
+      17 0.3714E-08
+ComputeChange: NS (ITER=4) (NRM,RELC): (  7270.9459      1.9999130     ) :: mgdynamicscalc
+      19 0.3803E-08
+ComputeChange: NS (ITER=5) (NRM,RELC): (  300.32977      1.8413320     ) :: mgdynamicscalc
+      16 0.9605E-08
+ComputeChange: NS (ITER=6) (NRM,RELC): (  8305.4938      1.8604063     ) :: mgdynamicscalc
+MAIN: 
+MAIN: -------------------------------------
+MAIN: Time: 2/3:   3.000E-03
+MAIN: Estimated time left:  1.0 seconds
+MAIN: -------------------------------------
+MAIN: 
+BiCGStabl:       27 0.9874E-08 0.9874E-08
+ComputeChange: NS (ITER=1) (NRM,RELC): ( 0.12597022E-02  1.1236192     ) :: mgdynamics
+WARNING:: MagnetoDynamicsCalcFields: Harmonic loss requires > Harmonic Loss Linear Coefficient < in material section!
+WARNING:: MagnetoDynamicsCalcFields: Harmonic loss requires > Harmonic Loss Quadratic Coefficient < in material section!
+      17 0.5861E-08
+ComputeChange: NS (ITER=1) (NRM,RELC): ( 0.62747389      1.9996978     ) :: mgdynamicscalc
+      17 0.3738E-08
+ComputeChange: NS (ITER=2) (NRM,RELC): (  1.9134302      1.0122037     ) :: mgdynamicscalc
+      17 0.5956E-08
+ComputeChange: NS (ITER=3) (NRM,RELC): ( 0.56368054      1.0897774     ) :: mgdynamicscalc
+      17 0.3714E-08
+ComputeChange: NS (ITER=4) (NRM,RELC): (  25913.841      1.9999130     ) :: mgdynamicscalc
+      19 0.3803E-08
+ComputeChange: NS (ITER=5) (NRM,RELC): (  1070.3832      1.8413320     ) :: mgdynamicscalc
+      16 0.9605E-08
+ComputeChange: NS (ITER=6) (NRM,RELC): (  29600.997      1.8604063     ) :: mgdynamicscalc
+MAIN: 
+MAIN: -------------------------------------
+MAIN: Time: 3/3:   4.500E-03
+MAIN: -------------------------------------
+MAIN: 
+BiCGStabl:       24 0.9071E-08 0.9071E-08
+ComputeChange: NS (ITER=1) (NRM,RELC): ( 0.23068672E-02 0.58721132     ) :: mgdynamics
+WARNING:: MagnetoDynamicsCalcFields: Harmonic loss requires > Harmonic Loss Linear Coefficient < in material section!
+WARNING:: MagnetoDynamicsCalcFields: Harmonic loss requires > Harmonic Loss Quadratic Coefficient < in material section!
+      17 0.5861E-08
+ComputeChange: NS (ITER=1) (NRM,RELC): (  1.1490802      1.9998447     ) :: mgdynamicscalc
+      17 0.3738E-08
+ComputeChange: NS (ITER=2) (NRM,RELC): (  3.5040260      1.0122037     ) :: mgdynamicscalc
+      17 0.5956E-08
+ComputeChange: NS (ITER=3) (NRM,RELC): (  1.0322568      1.0897774     ) :: mgdynamicscalc
+      17 0.3714E-08
+ComputeChange: NS (ITER=4) (NRM,RELC): (  47455.367      1.9999130     ) :: mgdynamicscalc
+      19 0.3803E-08
+ComputeChange: NS (ITER=5) (NRM,RELC): (  1960.1658      1.8413320     ) :: mgdynamicscalc
+      16 0.9605E-08
+ComputeChange: NS (ITER=6) (NRM,RELC): (  54207.562      1.8604063     ) :: mgdynamicscalc
+CompareToReferenceSolution: Solver 6 PASSED:  Norm = 2.30686722E-03  RefNorm = 2.30685690E-03
+CompareToReferenceSolution: Relative Error to reference norm: 4.475470E-06
+CompareToReferenceSolution: Solver 7 PASSED:  Norm = 5.42075622E+04  RefNorm = 5.42075620E+04
+CompareToReferenceSolution: Relative Error to reference norm: 4.086358E-09
+CompareToReferenceSolution: PASSED all 2 tests!
+MAIN: *** Elmer Solver: ALL DONE ***
+MAIN: The end
+SOLVER TOTAL TIME(CPU,REAL):         2.67        1.93
+ELMER SOLVER FINISHED AT: 2026/09/13 23:06:48

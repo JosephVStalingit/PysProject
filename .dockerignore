@@ -1,0 +1,65 @@
+# Files NOT needed in Docker image
+.git/
+.gitignore
+.github/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+.Python
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+.vscode/
+.idea/
+
+# The bundled Windows Elmer 26.2 build tree: ~259 MB of .exe/.dll/.obj that
+# cannot run on Linux anyway.  Stage 1 of the Dockerfile compiles its own
+# Linux Elmer 26.2.1 instead.  (That tree is still the *source of truth* for
+# the cmake parity flags documented at the top of the Dockerfile, so keep it
+# in the repo -- just not in the build context.)
+elmer262/
+Dockerfile.old
+
+# HPC job scripts / notes: not part of the runtime image
+hpc/
+*.slurm
+
+# build artifacts (will be regenerated in container)
+mesh/
+results/
+model3d.msh
+
+# test_outputs: keep the verifier .py files (the image runs them), drop the
+# generated logs / plots / caches
+test_outputs/*.log
+test_outputs/*.png
+test_outputs/*.json
+test_outputs/*.vtu
+test_outputs/__pycache__/
+test_outputs/*.mp4
+
+# stray run logs
+*.log
+*.err
+spring_solve.log
+spring_solve.err
+
+# docs not required for runtime
+docs/
+README.md
+CHANGELOG.md
+TROUBLESHOOTING.md
+LICENSE
+ONE_LINER.txt
+
+# FreeCAD macros (require FreeCAD, not part of FEM pipeline)
+*.FCMacro
+
+# dev / CI
+Dockerfile
+docker-compose.yml
+.dockerignore
+Makefile

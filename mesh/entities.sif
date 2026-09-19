@@ -16,3 +16,7 @@ Boundary Condition 1
   Name = MagneticInfinity
 End
 
+Boundary Condition 2
+  Name = MagnetSurface
+End
+

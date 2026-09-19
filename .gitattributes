@@ -1,0 +1,55 @@
+# =============================================================================
+#  .gitattributes -- normalize line endings so the repo works on Linux too
+#
+#  WHY THIS EXISTS
+#    Every file in this repo was checked in with CRLF endings.  That is fine
+#    for the Windows PowerShell entrypoint, but shell scripts and Dockerfiles
+#    that carry CRLF FAIL on Linux:
+#
+#      $ bash -n run_tests.sh
+#      run_tests.sh: line 35: syntax error near unexpected token `"..."'
+#
+#    because the trailing `\` of a line continuation ends up followed by CR,
+#    which is not a newline.  The Docker image runs these scripts, and so does
+#    the HPC cluster, so the endings must be pinned rather than left to
+#    whatever the checking-out machine happens to do.
+# =============================================================================
+
+# Shell scripts and container/job definitions: ALWAYS LF.
+*.sh        text eol=lf
+*.slurm     text eol=lf
+*.bash      text eol=lf
+Dockerfile  text eol=lf
+*.dockerfile text eol=lf
+.dockerignore text eol=lf
+*.sif       text eol=lf
+
+# Windows entrypoints keep CRLF so they stay readable in Notepad / ISE.
+*.ps1       text eol=crlf
+*.psm1      text eol=crlf
+*.bat       text eol=crlf
+*.cmd       text eol=crlf
+
+# Python / config / docs: normalize to LF in the repo, native on checkout.
+*.py        text eol=lf
+*.json      text eol=lf
+*.md        text eol=lf
+*.txt       text eol=lf
+*.cfg       text eol=lf
+*.toml      text eol=lf
+*.lock      text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+*.FCMacro   text eol=lf
+
+# Binary-ish assets: never touch.
+*.vtu       binary
+*.msh       binary
+*.png       binary
+*.jpg       binary
+*.mp4       binary
+*.dll       binary
+*.exe       binary
+*.a         binary
+*.obj       binary
+*.mod       binary

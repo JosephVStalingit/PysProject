@@ -1,0 +1,465 @@
+r"""
+tests/test_sif_circuit.py -- lock down `make_sif.py --circuit closed`.
+
+WHY THIS EXISTS
+---------------
+`--circuit closed` is the first change in this repository where the SIF
+stops being a single shared template and starts depending on which curve
+is active.  That makes it the most dangerous piece of text surgery here:
+a wrong patch does not crash, it produces a SIF that loads and then gives
+physically meaningless numbers (or dies hours into an HPC job).
+
+Four concrete failure modes are pinned down below, all of them found by
+actually running the generator:
+
+  1. ROW-EATING REGEX.  The first draft wrote the solver list with
+     `[\d\s]+`, and `\s` matches newlines.  It swallowed the next line
+     and emitted
+         Active Solvers(3) = 1 2 3 4 5 6 7Mesh Update = Logical True
+     `test_active_solvers_line_survives` exists for exactly this.
+
+  2. STALE COUNT.  `Active Solvers(3)` was left as `(3)` while listing
+     seven solvers.  Elmer reads the count.
+
+  3. WRONG BOUNDARY INDICES.  The coil end faces are gmsh physical groups
+     1003 / 1004, but `ElmerGrid -autoclean` RENUMBERS boundary groups
+     sequentially, so the SIF must say 3 / 4.  Writing 1003 gives
+     "target boundary not found" at load time.
+
+  4. CURVE-INDEPENDENT SIGMA.  Material 1's conductivity must follow the
+     active curve (copper 5.96e7 vs aluminium 3.5e7), so it is rewritten
+     on every call and NOT guarded by the idempotency check.
+
+The reference for the whole design is upstream
+`fem/tests/circuits2D_transient_variable_resistor`, whose header says a
+resistor needs no hand-written element law because Elmer fills in V = R*I
+on the row of `v_component(2)`:
+
+    ! Now we define the variable resistor. It is similar to FE components
+    ! in the sense that Elmer will write the component equation to the row
+    ! of the voltage component (row 6).  So no need to write V=RI.
+
+These tests are dependency-free (no Elmer, no gmsh, no meshio) so they run
+anywhere the generator runs.
+"""
+from __future__ import annotations
+import json
+import os
+import re
+import subprocess
+import sys
+import tempfile
+
+try:
+    import pytest  # type: ignore
+except ImportError:
+    pytest = None   # type: ignore
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+MAKE_SIF = os.path.join(ROOT, 'make_sif.py')
+TEMPLATE = os.path.join(ROOT, 'case_transient.sif')
+CONFIG = os.path.join(ROOT, 'config.json')
+
+sys.path.insert(0, ROOT)
+
+CU_CLOSED = 'N50_L040_cu_closed'
+AL_CLOSED = 'N50_L040_al_closed'
+CU_OPEN = 'N50_L040_cu_open'
+EMPTY = 'empty'
+
+
+# ---------------------------------------------------------------------------
+#  helpers
+# ---------------------------------------------------------------------------
+def cfg() -> dict:
+    with open(CONFIG, encoding='utf-8') as f:
+        return json.load(f)
+
+
+def run(*args: str, expect_ok: bool = True):
+    """Run the real CLI in a temp dir.  Returns (returncode, stderr, dir).
+
+    The whole directory is handed back so callers can inspect the sibling
+    `circuits.definitions` that make_sif.py writes next to the SIF.  The
+    real CLI is used so argparse, curve validation and the config load are
+    exercised too.
+    """
+    tmp = tempfile.mkdtemp()
+    out = os.path.join(tmp, 'case.sif')
+    r = subprocess.run([sys.executable, MAKE_SIF, '--out', out, *args],
+                       cwd=ROOT, capture_output=True, text=True)
+    if expect_ok:
+        assert r.returncode == 0, f'make_sif.py {args} failed:\n{r.stdout}{r.stderr}'
+    return r.returncode, r.stderr, tmp
+
+
+def render(*args: str) -> str:
+    """Generate a SIF and return its text."""
+    _, _, tmp = run(*args)
+    with open(os.path.join(tmp, 'case.sif'), encoding='utf-8') as f:
+        return f.read()
+
+
+def definitions_text(*args: str) -> str:
+    """Generate a SIF and return the sibling circuits.definitions text."""
+    _, _, tmp = run(*args)
+    p = os.path.join(tmp, 'circuits.definitions')
+    assert os.path.exists(p), 'make_sif.py wrote no circuits.definitions'
+    with open(p, encoding='utf-8') as f:
+        return f.read()
+
+
+def template() -> str:
+    with open(TEMPLATE, encoding='utf-8') as f:
+        return f.read()
+
+
+def block(sif: str, kind: str, n: int) -> str:
+    """Text of `kind n` (e.g. Solver 5 / Component 2 / Body Force 3).
+
+    Terminated by the block's own `End` line rather than by the next block
+    of the same kind.  The naive "next same kind" version silently ran to
+    EOF for the LAST block of a kind (Solver 4 in the template, Solver 6 in
+    the closed SIF) and swept every later section into the comparison.
+    """
+    m = re.search(rf'(?m)^{kind}\s+{n}\s*$', sif)
+    assert m, f'{kind} {n} not found'
+    rest = sif[m.end():]
+    # [ \t] and not \s: \s* would swallow the trailing blank line, making
+    # the returned block depend on what FOLLOWS it.
+    e = re.search(r'(?m)^End[ \t]*$', rest)
+    end = m.end() + (e.end() if e else len(rest))
+    return sif[m.start():end]
+
+
+def value(sif_block: str, key: str):
+    """Value of `key` inside a block, or None.  Case-insensitive key."""
+    m = re.search(rf'(?mi)^\s*{re.escape(key)}\s*=\s*(.+?)\s*$', sif_block)
+    return m.group(1) if m else None
+
+
+def keys(sif_block: str) -> list:
+    out = []
+    for line in sif_block.splitlines():
+        s = line.strip()
+        if not s or s.startswith('!'):
+            continue
+        if '=' in s:
+            out.append(s.split('=', 1)[0].strip().lower())
+    return out
+
+# ---------------------------------------------------------------------------
+#  structure of the generated closed-circuit SIF
+# ---------------------------------------------------------------------------
+def test_closed_sif_includes_the_circuit_definitions():
+    """The MNA matrices must be loaded before CircuitsAndDynamics runs, so
+    the INCLUDE has to be near the top of the file."""
+    sif = render('--curve', CU_CLOSED, '--circuit', 'closed')
+    m = re.search(r'(?m)^INCLUDE\s+circuits\.definitions\s*$', sif)
+    assert m, 'no `INCLUDE circuits.definitions` in the closed SIF'
+    assert m.start() < sif.index('Header'), \
+        'the INCLUDE must precede the Header block'
+
+
+def test_active_solvers_line_survives():
+    """REGRESSION: `[\\d\\s]+` ate the newline and the next line, producing
+    `Active Solvers(3) = 1 2 3 4 5 6 7Mesh Update = Logical True`."""
+    sif = render('--curve', CU_CLOSED, '--circuit', 'closed')
+    hits = re.findall(r'(?m)^[ \t]*Active Solvers.*$', sif)
+    assert len(hits) == 1, f'expected one Active Solvers line, got {hits}'
+    line = hits[0]
+    assert 'Mesh Update' not in line, f'the regex ate the next line: {line!r}'
+    assert re.match(r'^[ \t]*Active Solvers\(\d+\)[ \t]*=[ \t]*'
+                    r'\d+(?: \d+)*[ \t]*$', line), f'malformed line: {line!r}'
+
+
+def test_active_solvers_count_matches_the_list():
+    """A stale `(3)` with seven solvers listed is what Elmer reads."""
+    sif = render('--curve', CU_CLOSED, '--circuit', 'closed')
+    m = re.search(r'(?m)^[ \t]*Active Solvers\((\d+)\)[ \t]*=[ \t]*(.+?)[ \t]*$',
+                  sif)
+    assert m, 'no Active Solvers line'
+    listed = m.group(2).split()
+    assert int(m.group(1)) == len(listed), \
+        f'count says {m.group(1)} but {len(listed)} solvers are listed'
+    assert listed == [str(i) for i in range(1, len(listed) + 1)], \
+        f'unexpected solver list: {listed}'
+
+
+def test_circuits_and_dynamics_solvers_present():
+    """Both halves of the circuit solver pair are required: one assembles
+    and solves, the other writes the per-component i/v output."""
+    sif = render('--curve', CU_CLOSED, '--circuit', 'closed')
+    assert '"CircuitsAndDynamics" "CircuitsAndDynamics"' in sif
+    assert '"CircuitsAndDynamics" "CircuitsOutput"' in sif
+
+
+def test_no_duplicate_keys_in_solver_blocks():
+    sif = render('--curve', CU_CLOSED, '--circuit', 'closed')
+    for n in (5, 6, 7):
+        b = block(sif, 'Solver', n)
+        ks = keys(b)
+        dupes = sorted({k for k in ks if ks.count(k) > 1})
+        assert not dupes, f'duplicate keys in Solver {n}: {dupes}'
+
+
+def test_the_coil_has_a_wire_direction_potential():
+    """FOUND BY RUNNING THE SIF (hpc/notes.md §13.9).
+
+    A coil `Component` with no wire-direction potential gets as far as the
+    first MagnetoDynamicsCalcFields call and then dies:
+
+        WARNING:: GetWPotentialVar: Could not obtain variable for potential "W"
+        Program received signal SIGSEGV ... magnetodynamicscalcfields_
+
+    The fix is upstream `WPotentialSolver` plus `W = 0/1` on the two end
+    faces.  Both must be present: the solver alone does nothing without the
+    Dirichlet pair, and the pair alone leaves W unsolved in the coil body.
+    """
+    sif = render('--curve', CU_CLOSED, '--circuit', 'closed')
+
+    w = block(sif, 'Solver', 5)
+    assert value(w, 'Procedure') == '"WPotentialSolver" "Wsolve"'
+    assert value(w, 'Variable') == 'W'
+    assert value(w, 'Exec Solver') == '"Before All"', \
+        'W must be solved before the A-field that depends on it'
+
+    assert value(block(sif, 'Boundary Condition', 3), 'W') == 'Real 1'
+    assert value(block(sif, 'Boundary Condition', 4), 'W') == 'Real 0'
+
+
+
+def test_coil_component_is_stranded_with_the_curve_turn_count():
+    c = cfg()['curves'][CU_CLOSED]
+    sif = render('--curve', CU_CLOSED, '--circuit', 'closed')
+    b = block(sif, 'Component', 1)
+    assert value(b, 'Coil Type') == 'String stranded'
+    assert value(b, 'Number of Turns') == f'Real {int(c["N_turns"])}'
+    assert value(b, 'Master Bodies') == 'Integer 1', \
+        'the coil is Body 1 in the template'
+
+
+def test_load_component_is_a_resistor_with_the_curve_resistance():
+    """This is the whole trick: a resistor is just a Component, and Elmer
+    fills in V = R*I itself."""
+    c = cfg()['curves'][CU_CLOSED]
+    sif = render('--curve', CU_CLOSED, '--circuit', 'closed')
+    b = block(sif, 'Component', 2)
+    assert value(b, 'Component Type') == 'String Resistor'
+    assert value(b, 'Resistance') == f'Real {float(c["R_load_ohm"])}'
+
+
+def test_material1_conductivity_follows_the_curve():
+    """sigma_wire is curve-dependent, so it must be rewritten every call --
+    copper and aluminium must NOT come out the same."""
+    cu = cfg()['curves'][CU_CLOSED]['wire_conductivity_S_per_m']
+    al = cfg()['curves'][AL_CLOSED]['wire_conductivity_S_per_m']
+    assert cu != al, 'the fixture is pointless if the two sigmas match'
+
+    def sigma(curve):
+        sif = render('--curve', curve, '--circuit', 'closed')
+        b = sif[sif.index('Material 1'):]
+        b = b[:b.index('End')]
+        return float(value(b, 'Electric Conductivity'))
+
+    assert abs(sigma(CU_CLOSED) - cu) < 1e-3 * cu
+    assert abs(sigma(AL_CLOSED) - al) < 1e-3 * al
+
+
+def test_coil_start_and_end_are_renumbered_not_raw_gmsh_tags():
+    """REGRESSION: gmsh tags 1003 / 1004 are renumbered by
+    `ElmerGrid -autoclean`, so the SIF must target 3 / 4.  Writing 1003
+    fails at load time with 'target boundary not found'."""
+    sif = render('--curve', CU_CLOSED, '--circuit', 'closed')
+    start, end = block(sif, 'Boundary Condition', 3), \
+        block(sif, 'Boundary Condition', 4)
+    assert value(start, 'Coil Start') == 'Logical True'
+    assert value(start, 'Target Boundaries') == '3', \
+        'target must be the renumbered index, not the gmsh tag 1003'
+    assert value(end, 'Coil End') == 'Logical True'
+    assert value(end, 'Target Boundaries') == '4', \
+        'target must be the renumbered index, not the gmsh tag 1004'
+
+
+def test_circuit_body_force_has_no_external_drive():
+    """The magnet's motion is the only source.  A non-zero source would put
+    a static pedestal on the field and mask the induced signal."""
+    sif = render('--curve', CU_CLOSED, '--circuit', 'closed')
+    b = block(sif, 'Body Force', 3)
+    assert value(b, 'Name') == '"Circuit"', \
+        f'Body Force 3 is not the circuit block: {b!r}'
+    assert value(b, 'testsource') == 'Real 0.0', \
+        'the circuit source must be 0 V -- no external drive'
+
+
+# ---------------------------------------------------------------------------
+#  the sibling circuits.definitions (the MNA matrices)
+# ---------------------------------------------------------------------------
+def test_definitions_file_is_written_next_to_the_sif():
+    """The SIF says `INCLUDE circuits.definitions`, which Elmer resolves
+    relative to the SIF's own directory -- so the two must travel together."""
+    text = definitions_text('--curve', CU_CLOSED, '--circuit', 'closed')
+    assert text.strip(), 'circuits.definitions is empty'
+
+
+def test_definitions_declares_one_circuit_with_the_mna_matrices():
+    d = definitions_text('--curve', CU_CLOSED, '--circuit', 'closed')
+    assert re.search(r'(?m)^\$\s*Circuits\s*=\s*1\s*$', d), \
+        'no `$ Circuits = 1`'
+    for key in ('C.1.variables', 'C.1.A', 'C.1.B', 'C.1.Mre', 'C.1.Mim'):
+        assert re.search(rf'(?m)^\$\s*{re.escape(key)}\s*=', d), \
+            f'missing MNA key {key}'
+    assert re.search(r'(?m)^\$\s*C\.1\.variables\s*=\s*6\s*$', d), \
+        'the series loop needs exactly 6 unknowns'
+
+
+def test_definitions_names_the_coil_and_the_load_unknowns():
+    """i/v_component(1) is the coil, i/v_component(2) is the resistor -- the
+    names are how Elmer binds the SIF `Component` blocks to the equations."""
+    d = definitions_text('--curve', CU_CLOSED, '--circuit', 'closed')
+    for name in ('i_component(1)', 'v_component(1)',
+                 'i_component(2)', 'v_component(2)'):
+        assert f'"{name}"' in d, f'{name} not declared in the circuit'
+    assert re.search(r'(?m)^\$\s*C\.1\.source\.1\s*=\s*"testsource"\s*$', d), \
+        'the circuit must declare its (zero-volt) source'
+
+
+def test_definitions_does_not_fill_the_rows_elmer_owns():
+    r"""Elmer writes V=RI into the row of each v_component(j).  If we also
+    wrote entries there, the component equation would be overwritten.
+
+        v_component(1) is unknown 4 -> column 3 -> row 3
+        v_component(2) is unknown 6 -> column 5 -> row 5
+    """
+    d = definitions_text('--curve', CU_CLOSED, '--circuit', 'closed')
+    for row in (3, 5):
+        hits = re.findall(rf'(?m)^\$\s*C\.1\.[AB]\(\s*{row}\s*,', d)
+        assert not hits, \
+            f'row {row} belongs to Elmer component equation, found {hits}'
+
+
+# ---------------------------------------------------------------------------
+#  the open path must not move at all
+# ---------------------------------------------------------------------------
+def test_open_path_is_byte_identical_to_the_template():
+    """`--curve <open curve>` and no `--circuit` at all must both reproduce
+    case_transient.sif exactly.  Anything else is an unrequested physics
+    change to the 6 open curves."""
+    tpl = template()
+    assert render('--curve', CU_OPEN, '--circuit', 'open') == tpl
+    assert render('--curve', CU_OPEN) == tpl
+    assert render('--curve', EMPTY) == tpl
+
+
+def test_open_path_has_no_circuit_machinery():
+    sif = render('--curve', CU_OPEN, '--circuit', 'open')
+    for needle in ('CircuitsAndDynamics', 'Component 1', 'circuits.definitions',
+                   'Coil Start', 'Coil End', 'String stranded',
+                   'String Resistor'):
+        assert needle not in sif, f'open SIF leaked closed-circuit {needle!r}'
+
+
+def test_open_path_leaves_the_coil_conductivity_at_zero():
+    """sigma = 0 is what makes the open curve a genuine open circuit."""
+    sif = render('--curve', CU_OPEN, '--circuit', 'open')
+    b = sif[sif.index('Material 1'):]
+    b = b[:b.index('End')]
+    assert float(value(b, 'Electric Conductivity')) == 0.0
+
+
+def test_closed_generation_is_deterministic():
+    a = render('--curve', CU_CLOSED, '--circuit', 'closed')
+    b = render('--curve', CU_CLOSED, '--circuit', 'closed')
+    assert a == b, 'two runs produced different SIFs'
+
+
+
+# ---------------------------------------------------------------------------
+#  blast radius -- only the circuit regions may move
+# ---------------------------------------------------------------------------
+def test_pre_existing_solver_and_bc_blocks_are_untouched():
+    """Solvers 1-4 and Boundary Conditions 1-2 must survive verbatim.  A
+    stray regex is exactly how a generator quietly rewrites the magnet."""
+    tpl = template()
+    sif = render('--curve', CU_CLOSED, '--circuit', 'closed')
+    for n in (1, 2, 3, 4):
+        assert block(sif, 'Solver', n).strip() == block(tpl, 'Solver', n).strip(), \
+            f'Solver {n} changed under --circuit closed'
+    for n in (1, 2):
+        assert block(sif, 'Boundary Condition', n).strip() == \
+            block(tpl, 'Boundary Condition', n).strip(), \
+            f'Boundary Condition {n} changed under --circuit closed'
+
+
+def test_shared_materials_and_bodies_are_untouched():
+    """Material 1's sigma is SUPPOSED to change; everything else in the
+    Materials/Body sections must not."""
+    tpl = template()
+    sif = render('--curve', CU_CLOSED, '--circuit', 'closed')
+    for mat in (2, 3):
+        assert block(tpl, 'Material', mat) == block(sif, 'Material', mat), \
+            f'Material {mat} changed'
+    for body in (1, 2, 3):
+        assert block(tpl, 'Body', body) == block(sif, 'Body', body), \
+            f'Body {body} changed'
+
+
+def test_equation_1_lists_exactly_the_solvers_that_exist():
+    sif = render('--curve', CU_CLOSED, '--circuit', 'closed')
+    m = re.search(r'(?m)^[ \t]*Active Solvers\((\d+)\)[ \t]*=[ \t]*'
+                  r'([\d ]+?)[ \t]*$', sif)
+    listed = [int(x) for x in m.group(2).split()]
+    defined = sorted(int(x) for x in re.findall(r'(?m)^Solver (\d+)\s*$', sif))
+    assert listed == [x for x in defined if x in listed], \
+        f'Active Solvers {listed} references a solver that does not exist ' \
+        f'(defined: {defined})'
+
+
+# ---------------------------------------------------------------------------
+#  refusal paths
+# ---------------------------------------------------------------------------
+def test_closed_without_curve_is_refused():
+    """The sigma and R_load come from the curve, so there is nothing to
+    close the loop with if no curve is named."""
+    rc, err, _ = run('--circuit', 'closed', expect_ok=False)
+    assert rc != 0, 'closed without --curve should be refused'
+    assert 'requires --curve' in err
+
+
+def test_closed_with_a_no_turn_curve_is_refused():
+    """`empty` has N_turns = 0 -- no conductor body to integrate over."""
+    rc, err, _ = run('--curve', EMPTY, '--circuit', 'closed', expect_ok=False)
+    assert rc != 0, 'closed with a no-conductor curve should be refused'
+    assert 'N_turns=0' in err
+
+
+def test_closed_with_an_infinite_load_is_refused():
+    """R_load = "inf" is the open circuit; pairing it with --circuit closed
+    is a contradiction."""
+    rc, err, _ = run('--curve', CU_OPEN, '--circuit', 'closed', expect_ok=False)
+    assert rc != 0, 'closed with R_load=inf should be refused'
+    assert 'R_load_ohm' in err
+
+
+def test_rejects_a_typo_curve_name():
+    rc, err, _ = run('--curve', 'N50_L040_cu_closd', expect_ok=False)
+    assert rc != 0, 'a misspelled curve should be refused'
+    assert 'not a valid curve' in err
+
+
+if __name__ == '__main__':
+    # standalone execution (no pytest needed)
+    print('=== make_sif.py --circuit tests ===')
+    fns = [(n, f) for n, f in sorted(globals().items())
+           if n.startswith('test_') and callable(f)]
+    failed = 0
+    for name, fn in fns:
+        try:
+            fn()
+            print(f'  [ok]   {name}')
+        except Exception as exc:                      # noqa: BLE001
+            failed += 1
+            print(f'  [FAIL] {name}: {exc}')
+    print(f'\n  {len(fns) - failed}/{len(fns)} passed')
+    sys.exit(1 if failed else 0)
+

@@ -1,0 +1,297 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+make_sif.py -- (re)generate case_transient.sif from config.json.
+
+config.json is meant to be the single source of truth, but the motion law
+lives inside the SIF as an Elmer MATC expression.  Rather than hand-editing
+two files, this script patches the MATC line from the config:
+
+    motion_mode = "spring"      -> damped-oscillator displacement (spring_model)
+    motion_mode = "free_fall"   -> -1/2 g t^2
+
+Usage:
+    python make_sif.py                       # write case_transient.sif
+    python make_sif.py --show                # dry-run, print the MATC line
+    python make_sif.py --out case_x.sif
+    python make_sif.py --solver hypre-ams    # iterative BiCGStab + AMS
+    python make_sif.py --curve N50_L040_cu_closed   # select a curve from config.json
+    python make_sif.py --curve empty         # the no-coil reference
+
+--solver picks the linear-algebra backend for Solver 2 (WhitneyAVSolver):
+
+    umfpack     direct sparse LU (template default).  Fast, but memory
+                grows ~O(n^2) and it dies around 100 000 mesh edges.
+    hypre-ams   iterative BiCGStab preconditioned by Hypre's AMS, the
+                curl-conforming preconditioner for H(curl) edge elements.
+                Needs an Elmer built with -DWITH_Hypre=TRUE; see
+                `hpc/build_elmer.sh hypre`.  No GPU required.
+
+--curve picks which entry in [curves] is the active study.  The SIF itself
+is still the SAME open-circuit A-formulation for every curve (Material 1
+sigma = 0, Body Force 1 all zero, no CoilSolver block).  The per-curve
+parameters (N_turns, sigma, R_load_ohm, circuit_state) are read by
+oscilloscope.py for the post-processing sweep.  Wiring circuit_state='closed'
+through to a true CoilSolver + Circuit block requires three more changes
+that are NOT yet implemented -- see config.json -> curves._comment_block
+and hpc/notes.md §12.
+"""
+from __future__ import annotations
+import argparse
+import json
+import re
+from pathlib import Path
+
+from spring_model import load_spring
+
+ROOT = Path(__file__).resolve().parent
+CFG_PATH = ROOT / "config.json"
+TEMPLATE = ROOT / "case_transient.sif"
+
+# ---------------------------------------------------------------------------
+#  Linear-solver backends
+# ---------------------------------------------------------------------------
+# Solver 2 (WhitneyAVSolver) is the expensive one.  The template asks for
+# UMFPACK -- a DIRECT sparse LU.  That is the fastest choice up to roughly
+# 100 000 mesh edges here, but its memory grows ~O(n^2) and on the HPC it
+# dies at exactly that point with
+#
+#     Error occurred in umf4num:   -1.0000000000000000
+#
+# The alternative is Elmer's Hypre interface, which requires an Elmer built
+# with `-DWITH_Hypre=TRUE` (see hpc/build_elmer.sh hypre).  The crucial
+# detail is the PRECONDITIONER.  Whitney elements are H(curl)-conforming,
+# so an ILU-style preconditioner does not work for them -- plain
+# BiCGStab + ILU1 genuinely diverges, which is what an earlier note in this
+# project recorded as "Elmer has no curl-conforming preconditioner".
+# That conclusion was wrong: Hypre's AMS (auxiliary-space Maxwell solver)
+# is built exactly for H(curl) and converges.  It was simply compiled out,
+# because WITH_Hypre defaults to FALSE.  Upstream validates this exact
+# combination in fem/tests/mgdyn_hypre_ams, whose header reads:
+#
+#     "This test case with BiCGStab as solver, AMS as preconditioner."
+#
+# Every keyword below is taken from that upstream test case:
+#
+#   linear system use hypre = logical true   route this solve to Hypre
+#   Linear System Preconditioning = AMS      the curl-conforming AMS
+#   Linear System Method Hypre Index = 7     outer Krylov method:
+#       2=AMS  6=PCG  7=BiCGStab  8=GMRES  9=FlexGMRES  10=LGMRES  11=COGMRES
+SOLVERS = ("umfpack", "hypre-ams")
+HYPRE_AMS_INDEX = 7          # BiCGStab, as in the upstream AMS test case
+
+# Solver 2's direct-solver block, as shipped by the template.  The WHOLE
+# four-line block is matched, not just the first two lines: leaving the
+# trailing `Convergence Tolerance` / `Max Iterations = 1000` behind would
+# duplicate those keys, and Elmer takes the LAST occurrence -- so the
+# iterative 5000 would be silently overridden back to 1000.
+_RE_DIRECT = re.compile(
+    r"(?m)^(?P<ind>[ \t]*)Linear System Solver[ \t]*=[ \t]*Direct[ \t]*\r?\n"
+    r"[ \t]*Linear System Direct Method[ \t]*=[ \t]*UMFPACK[ \t]*\r?\n"
+    r"[ \t]*Linear System Convergence Tolerance[ \t]*"
+    r"=[ \t]*[0-9.eE+-]+[ \t]*\r?\n"
+    r"[ \t]*Linear System Max Iterations[ \t]*=[ \t]*[0-9]+[ \t]*\r?\n")
+
+# The template justifies the DIRECT choice with a comment that becomes a lie
+# the moment we switch to Hypre, so it has to go with the block:
+#     ! DIRECT is used because the iterative route (BiCGStabL + ILU1) ...
+#     ! `Use Piola Transform = False` for the iterative route.
+# (The claim itself is only half true -- BiCGStab+ILU really does diverge
+# on Whitney elements, but AMS is the preconditioner that fixes it.)
+_STALE_DIRECT_NOTE = re.compile(
+    r"(?m)^[ \t]*! DIRECT is used because[^\n]*\r?\n"
+    r"(?:[ \t]*![^\n]*\r?\n)*?"
+    r"[ \t]*![^\n]*for the iterative route\.[^\n]*\r?\n")
+
+
+def patch_solver(sif: str, solver: str) -> str:
+    """Swap Solver 2's linear-system block for the requested backend."""
+    if solver == "umfpack":
+        if not _RE_DIRECT.search(sif):
+            raise SystemExit("[err] --solver umfpack: could not find the "
+                             "`Direct` / `UMFPACK` block in the template")
+        return sif                      # template already ships this
+
+    if solver != "hypre-ams":
+        raise SystemExit(f"[err] unknown solver '{solver}' "
+                         f"(use one of: {', '.join(SOLVERS)})")
+
+    m = _RE_DIRECT.search(sif)
+    if not m:
+        raise SystemExit("[err] --solver hypre-ams: could not find the "
+                         "`Direct` / `UMFPACK` block to replace")
+    # Drop the now-false justification for DIRECT.  Checked, not silently
+    # skipped, so template drift shows up here instead of shipping a SIF
+    # whose comment contradicts its solver.
+    sif, n_note = _STALE_DIRECT_NOTE.subn("", sif, count=1)
+    if n_note != 1:
+        raise SystemExit("[err] --solver hypre-ams: could not remove the "
+                         "stale `DIRECT is used because ...` comment")
+    m = _RE_DIRECT.search(sif)          # offsets moved after the deletion
+    i = m.group("ind")
+    repl = (
+        "\n".join(f"{i}{line}" for line in (
+            "! ------------------------------------------------------------",
+            "!  ITERATIVE / HYPRE AMS                                   ---",
+            "!  Escapes the O(n^2) memory wall that kills UMFPACK at     --",
+            "!  ~100 k edges, and AMS is the curl-conforming             --",
+            "!  preconditioner that H(curl) edge elements require        --",
+            "!  (plain BiCGStab+ILU diverges on Whitney elements).       --",
+            "! ------------------------------------------------------------",
+            "linear system use hypre          = Logical True",
+            "Linear System Solver             = Iterative",
+            "Linear System Symmetric          = Logical True",
+            "Linear System Preconditioning    = AMS",
+            f"Linear System Method Hypre Index = Integer {HYPRE_AMS_INDEX}",
+            # An iterative solve needs more headroom than a direct one, and
+            # the residual must be visible or a stall is undiagnosable.
+            "Linear System Convergence Tolerance = 1.0e-8",
+            "Linear System Max Iterations     = 5000",
+            "Linear System Residual Output    = 10",
+        ))
+        + "\n")
+    sif = sif[:m.start()] + repl + sif[m.end():]
+    return sif
+
+
+def motion_expr(cfg) -> tuple:
+    """Return (matc_expression, human_readable_description)."""
+    mode = cfg.get("experiment", {}).get("motion_mode", "free_fall")
+    if mode == "spring":
+        sp = load_spring(cfg)
+        expr = sp["matc_expr"]
+        desc = (f"spring-mass-damper: m={sp['m']} kg k={sp['k']} N/m "
+                f"c={sp['c']} N.s/m  T={sp['period']:.4f} s  "
+                f"Q={sp['Q']:.1f}  A={sp['amplitude']*1000:.1f} mm  "
+                f"z_eq={sp['z_eq_m']*1000:.2f} mm  "
+                f"released at z={sp['z_release_m']*1000:.1f} mm from rest")
+    elif mode == "free_fall":
+        g = float(cfg["physics"]["G"])
+        expr = f"-0.5*{g}*tx*tx"
+        desc = (f"free fall: z(t) = z0 - 1/2 * {g} * t^2  "
+                f"(z0 taken from the mesh, magnet bottom face is the reference)")
+    else:
+        raise SystemExit(f"[err] unknown motion_mode '{mode}' "
+                         f"(use 'spring' or 'free_fall')")
+    return expr, desc
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--out", default=str(TEMPLATE))
+    ap.add_argument("--show", action="store_true")
+    ap.add_argument("--solver", choices=SOLVERS, default="umfpack",
+                    help="linear-algebra backend for Solver 2 "
+                         "(default: umfpack)")
+    ap.add_argument("--curve", default=None,
+                    help="which entry in [curves] is the active study. "
+                         "Just affects which curve oscilloscope.py reads "
+                         "post-hoc -- the SIF itself is open-circuit for "
+                         "all curves today (see --help).  Default: keep "
+                         "the previously chosen curve; if none was chosen, "
+                         "do nothing.")
+    a = ap.parse_args()
+
+    cfg = json.loads(CFG_PATH.read_text(encoding="utf-8"))
+    expr, desc = motion_expr(cfg)
+
+    if a.show:
+        # Validate --curve against the curves block (skipping non-dict
+        # entries such as `_comment_block`).  Done here too so the
+        # user catches a typo even when they only ask for --show.
+        if a.curve is not None:
+            c = cfg['curves'].get(a.curve)
+            if not isinstance(c, dict):
+                raise SystemExit(
+                    f"[err] --curve {a.curve!r}: not a valid curve "
+                    f"(must be a dict entry, not a doc string). "
+                    f"Available: {[k for k, v in cfg['curves'].items() if isinstance(v, dict)]}")
+        print(f"motion_mode : {cfg['experiment']['motion_mode']}")
+        print(f"description : {desc}")
+        print(f"MATC        : {expr}")
+        print(f"solver      : {a.solver}")
+        if a.curve:
+            c = cfg['curves'][a.curve]
+            state = c.get('circuit_state') or ('open' if c.get('R_load_ohm') == 'inf' else 'closed')
+            print(f"curve       : {a.curve}  N={c.get('N_turns', 0)}  "
+                  f"R_load={c.get('R_load_ohm')}  state={state}")
+        return
+
+    src = TEMPLATE.read_text(encoding="utf-8")
+    new, n = re.subn(r'(Real MATC\s*)"[^"]*"', r'\1"' + expr + '"', src, count=1)
+    if n != 1:
+        raise SystemExit("[err] could not find `Real MATC \"...\"` in the template")
+
+    # time stepping is driven from config.json too
+    exp = cfg["experiment"]
+    dt = float(exp["dt_s"])
+    t_end = float(exp["t_end_default_s"])
+    nsteps = int(round(t_end / dt))
+    new, n1 = re.subn(r"Timestep Sizes\s*=\s*[0-9.eE+-]+",
+                      f"Timestep Sizes         = {dt:.6e}", new, count=1)
+    new, n2 = re.subn(r"Timestep Intervals\s*=\s*\d+",
+                      f"Timestep Intervals     = {nsteps}", new, count=1)
+    if n1 != 1 or n2 != 1:
+        raise SystemExit("[err] could not patch the timestep block")
+
+    # Force portable mesh / results paths.
+    #
+    # The template carries whatever absolute path the machine that last wrote
+    # it happened to have, e.g.
+    #     Mesh DB "c:\Users\JosephVStalin\Desktop\PysProject" "mesh"
+    #     Results Directory "c:\Users\JosephVStalin\Desktop\PysProject\results"
+    # which fails the moment the case is moved anywhere -- a Docker container
+    # reports `LoadMesh: Requested mesh > c:\...\mesh < does not exist!`, and
+    # HPC scratch directories hit the same wall.  Elmer resolves "." against
+    # its own working directory, so pinning both to relative paths makes the
+    # SIF location-independent.  Doing it here (rather than editing the
+    # template by hand) means it is re-applied on every regeneration.
+    new, n3 = re.subn(r'(Mesh DB\s*)"[^"]*"\s*"[^"]*"',
+                      r'\1"." "mesh"', new, count=1)
+    new, n4 = re.subn(r'(Results Directory\s*)"[^"]*"',
+                      r'\1"results"', new, count=1)
+    if n3 != 1 or n4 != 1:
+        raise SystemExit("[err] could not patch the `Mesh DB` / "
+                         "`Results Directory` block")
+
+    # Linear-solver backend.  Applied to the generated copy only: the
+    # template keeps the UMFPACK default, so this stays idempotent and
+    # `python make_sif.py` with no flags reproduces the original file.
+    new = patch_solver(new, a.solver)
+
+    # Validate --curve against the curves block (skipping non-dict entries
+    # such as `_comment_block`).  The SIF itself is curve-agnostic today
+    # -- this flag exists so HPC submission scripts and oscilloscope.py
+    # can be told which entry in [curves] is "current" without having
+    # to re-parse config.json themselves.  See hpc/notes.md §12.
+    if a.curve is not None:
+        c = cfg['curves'].get(a.curve)
+        if not isinstance(c, dict):
+            raise SystemExit(f"[err] --curve {a.curve!r}: not a valid curve "
+                             f"(must be a dict entry, not a doc string). "
+                             f"Available: {[k for k, v in cfg['curves'].items() if isinstance(v, dict)]}")
+    Path(a.out).write_text(new, encoding="utf-8")
+    print(f"[ok] wrote {a.out}")
+    print(f"     motion_mode : {cfg['experiment']['motion_mode']}")
+    if a.curve:
+        c = cfg['curves'][a.curve]
+        state = c.get('circuit_state') or ('open' if c.get('R_load_ohm') == 'inf' else 'closed')
+        print(f"     curve       : {a.curve}  "
+              f"N={c.get('N_turns', 0)}  R_load={c.get('R_load_ohm')}  "
+              f"state={state}")
+    print(f"     {desc}")
+    print(f"     MATC        : \"{expr}\"")
+    print(f"     dt = {dt:g} s  t_end = {t_end:g} s  "
+          f"-> {nsteps} timesteps")
+    print(f"     paths       : Mesh DB \".\" \"mesh\"   "
+          f"Results Directory \"results\"")
+    if a.solver == "umfpack":
+        print("     solver      : Solver 2 = Direct / UMFPACK")
+    else:
+        print(f"     solver      : Solver 2 = Iterative / Hypre AMS "
+              f"(Krylov index {HYPRE_AMS_INDEX} = BiCGStab)")
+        print("                   needs an Elmer built with -DWITH_Hypre=TRUE")
+
+
+if __name__ == "__main__":
+    main()

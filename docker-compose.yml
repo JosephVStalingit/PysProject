@@ -1,0 +1,45 @@
+# =============================================================================
+#  docker-compose.yml  --  one-command deployment of PysProject FEM pipeline
+# =============================================================================
+#  Usage:
+#    docker compose build                 # build image (Elmer is compiled in
+#                                         #   stage 1: ~20-35 min the first time)
+#    docker compose run --rm fem          # run the 5-step pipeline
+#    docker compose down                  # clean up
+#
+#  Offline machines: import the exported tarball instead of building
+#    docker load -i pysproject-3.5.0.tar
+#    docker compose up
+# =============================================================================
+
+services:
+  fem:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: pysproject:3.5.0
+    container_name: pysproject-fem
+    # Re-mount the working directory so output files persist on host
+    volumes:
+      - ./results:/app/results
+      - ./test_outputs:/app/test_outputs
+      - ./mesh:/app/mesh
+      - ./model3d.msh:/app/model3d.msh
+    working_dir: /app
+    environment:
+      - PYTHONUNBUFFERED=1
+      # Elmer is compiled into the image at /opt/elmer by Dockerfile stage 1.
+      # Both LD_LIBRARY_PATH entries are required: the solver plugins live in
+      # share/elmersolver/lib but need libelmersolver.so from lib/elmersolver.
+      - ELMER_HOME=/opt/elmer
+      - ELMER_LIB=/opt/elmer/share/elmersolver/lib
+      - LD_LIBRARY_PATH=/opt/elmer/lib/elmersolver:/opt/elmer/share/elmersolver/lib
+    healthcheck:
+      test: ["CMD", "python", "-c", "import gmsh; gmsh.initialize(); gmsh.finalize()"]
+      interval: 60s
+      timeout: 30s
+      retries: 3
+      start_period: 15s
+    # restart: on-failure
+    # Useful environment overrides (set in .env file):
+    #   GMSH_VERBOSE=1

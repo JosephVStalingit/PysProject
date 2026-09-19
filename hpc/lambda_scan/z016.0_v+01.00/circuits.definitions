@@ -1,0 +1,61 @@
+! ---------------------------------------------------------------------------
+!  circuits.definitions -- MNA circuit for the closed-circuit FEM
+!  written by make_sif.py for a conductor curve
+!
+!  Topology:  [0 V source] -- [coil component 1] -- [load component 2]
+!  Reused from upstream fem/tests/circuits2D_transient_variable_resistor
+!  (which is known to converge); the only change is the 0 V source.
+!
+!  Unknowns (1-based names, 0-based matrix columns):
+!    1  i_testsource     col 0
+!    2  v_testsource     col 1
+!    3  i_component(1)   col 2      <- the coil current
+!    4  v_component(1)   col 3      <- the coil terminal voltage
+!    5  i_component(2)   col 4      <- the load current
+!    6  v_component(2)   col 5      <- the load voltage
+!
+!  Rows 3 and 5 (0-based) are written BY ELMER -- they are the rows of
+!  v_component(1) and v_component(2).  Do not add entries there, or the
+!  component equations will be overwritten.
+! ---------------------------------------------------------------------------
+$ Circuits = 1
+
+$ C.1.perm = zeros(6)
+$ C.1.perm(0) = 0
+$ C.1.perm(1) = 1
+$ C.1.perm(2) = 2
+$ C.1.perm(3) = 3
+$ C.1.perm(4) = 4
+$ C.1.perm(5) = 5
+
+$ C.1.variables = 6
+$ C.1.A = zeros(6,6)
+$ C.1.B = zeros(6,6)
+$ C.1.Mre = zeros(6,6)
+$ C.1.Mim = zeros(6,6)
+
+! Unknown names.  i_component(1)/v_component(1) are the stranded coil,
+! i_component(2)/v_component(2) the load resistor.
+$ C.1.name.1 = "i_testsource"
+$ C.1.name.2 = "v_testsource"
+$ C.1.name.3 = "i_component(1)"
+$ C.1.name.4 = "v_component(1)"
+$ C.1.name.5 = "i_component(2)"
+$ C.1.name.6 = "v_component(2)"
+
+! Source 1 is "testsource", defined in Body Force "Circuit" (= 0 V).
+$ C.1.B(0,1) = 1
+$ C.1.source.1 = "testsource"
+
+! KVL around the loop:  -v_testsource + v_coil + v_load = 0
+$ C.1.B(1,1) = -1
+$ C.1.B(1,3) = 1
+$ C.1.B(1,5) = 1
+
+! KCL at the source node:  i_testsource - i_coil = 0
+$ C.1.B(2,0) = 1
+$ C.1.B(2,2) = -1
+
+! KCL at the source node:  i_testsource - i_load = 0
+$ C.1.B(4,0) = 1
+$ C.1.B(4,4) = -1

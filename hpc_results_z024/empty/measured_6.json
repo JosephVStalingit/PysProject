@@ -1,0 +1,18 @@
+{
+  "case": "empty",
+  "n_steps": 900,
+  "t_end": 0.9,
+  "z_min_m": 0.0085953127115,
+  "z_max_m": 0.048217773175,
+  "z_mid_m": 0.02840654294325,
+  "z_amplitude_m": 0.01981123023175,
+  "z_period_s": 0.3,
+  "v_max_m_per_s": 0.4154398499999985,
+  "a_max_m_per_s2": 9.176191749999065,
+  "i_peak_A": 0.0,
+  "i_peak_t_s": 0.001,
+  "emf_peak_V": 0.0,
+  "emf_peak_t_s": 0.001,
+  "R_wire_ohm": 0.0,
+  "R_load_ohm": Infinity
+}

@@ -1,0 +1,597 @@
+! ------------------------------------------------------------------
+!  case_transient.sif  --  TRANSIENT magnetostatics, magnet on a SPRING
+!
+!  Physics
+!  -------
+!  A permanent magnet (Body 2, M = 1.2e6 A/m) hangs from a spring and is
+!  released at t = 0.  The motion is a PRESCRIBED translation whose law is
+!  selected by config.json -> experiment.motion_mode:
+!
+!      motion_mode = "spring"      damped harmonic oscillator -- the mode
+!                                  currently selected.  The mesh holds the
+!                                  spring at its EQUILIBRIUM length and the
+!                                  magnet at its release position, so the
+!                                  imposed displacement starts at zero.
+!                                  Parameters live in config.json -> [spring].
+!      motion_mode = "free_fall"   z(t) = -1/2 * g * t^2
+!
+!  Either law is imposed on the mesh through the RigidMeshMapper solver
+!  + the `Mesh Translate 3` body force (see Body Force 2).  `make_sif.py`
+!  writes the matching MATC expression and the timestep block; both the
+!  expression below and `Timestep Intervals` are its output, not
+!  hand-maintained.
+!
+!  The air mesh is deformed by the rigid motion of the magnet and
+!  relaxed towards the fixed outer boundary.
+!
+!  Elmer then solves the transient A-formulation
+!        sigma dA/dt + curl(1/mu curl A) = Js
+!  at every timestep with the WhitneyAVSolver (edge elements).
+!
+!  Reference syntax taken from the bundled Elmer 26.2 test cases:
+!      elmer262/fem/tests/mgdyn_transient/MGDynamicsTransient.sif
+!      elmer262/fem/tests/RigidMeshMapper1/case.sif
+!      elmer262/fem/tests/RigidMeshMapper2/case.sif
+!
+!  STATUS: replaces the previous steady-state `case_simple.sif`.
+! ------------------------------------------------------------------
+
+! MNA circuit for the closed-circuit FEM (make_sif.py, a conductor curve)
+INCLUDE circuits.definitions
+
+Header
+  Mesh DB "." "mesh"
+  Include Path ""
+  Results Directory "results"
+End
+
+Simulation
+  Max Output Level       = 10
+  Coordinate System      = Cartesian
+  Coordinate Mapping(3)  = 1 2 3
+
+  Simulation Type        = Transient
+  Timestepping Method    = BDF
+  BDF Order              = 1
+  ! The run must cover the WHOLE coil crossing: the magnet (30 mm tall,
+  ! starting at z = 60..90 mm) has to fall until its TAIL (top face) has
+  ! passed the coil bottom (z = 0), i.e. 90 mm of travel -> 0.135 s of
+  ! free fall.  150 steps of 1 ms = 0.15 s gives the complete transit.
+  Timestep Sizes         = 1.000000e-03
+  Timestep Intervals     = 20
+  Output Intervals(1)    = 1
+
+  Steady State Max Iterations = 1
+  Use Mesh Names         = False
+End
+
+! ============================================================
+!  Equations
+! ============================================================
+Equation 1
+  Name = "Magnetics"
+  Active Solvers(9) = 5 6 7 1 9 2 3 10 11
+  Mesh Update = Logical True
+  Wire direction = Logical True
+End
+Equation 2
+  Name = "MagneticsNoCoil"
+  Active Solvers(9) = 5 6 7 1 9 2 3 10 11
+  Mesh Update = Logical True
+End
+
+! ============================================================
+!  Solver 1 -- rigid mesh motion of the falling magnet
+!    `Exec Solver = Always` so the mapper runs at EVERY timestep
+!    (with `Before all` the magnet would only move once).
+! ============================================================
+Solver 1
+  Exec Solver = Always
+  Equation    = MeshDeform
+  Procedure   = "RigidMeshMapper" "RigidMeshMapper"
+  Variable    = MeshRelax
+
+  ! Displacements below are ABSOLUTE functions of time, therefore they
+  ! must NOT be accumulated (which would give -0.5 g t^2 summed per step).
+  Cumulative Displacements = Logical False
+
+  ! The mapper solves a Laplace problem for the `meshrelax` blending field
+  ! (0 at `Fixed Boundary` -> 1 at `Moving Boundary`), so a linear solver
+  ! must be configured here.
+  Linear System Solver = Iterative
+  Linear System Iterative Method = BiCGStab
+  Linear System Preconditioning = ILU0
+  Linear System Convergence Tolerance = 1.0e-8
+  Linear System Max Iterations = 500
+  Linear System Residual Output = 0
+End
+
+! ============================================================
+!  Solver 2 -- transient A-formulation (edge elements)
+! ============================================================
+Solver 2
+  Exec Solver = Always
+  Equation    = "MGDynamics"
+  Procedure   = "MagnetoDynamics" "WhitneyAVSolver"
+  Export Lagrange Multiplier = Logical True
+  NonLinear System Relaxation Factor = 1
+  Variable    = "Magnetic Vector Potential"
+
+  Use Piola Transform = Logical False
+  Use Tree Gauge      = Logical True
+
+  ! Post-processing is done inside the solver (fast path, as validated in
+  ! the previous steady-state case_simple.sif).  A separate
+  ! MagnetoDynamicsCalcFields solver with CG + no preconditioner was
+  ! ~100x slower and is therefore NOT used.
+  Calculate Current Density           = True
+  Calculate Magnetic Flux Density     = True
+  Calculate Magnetic Field Strength   = True
+
+  ! The AV system is LINEAR (constant permeability), so ONE Newton iteration
+  ! is sufficient - more just repeats the same solve.
+  !
+  ! DIRECT is used because the iterative route (BiCGStabL + ILU1) is faster
+  ! per step but diverges once the air mesh becomes distorted by the falling
+  ! magnet (see README section 12).  Add `Use Tree Gauge = True` +
+  ! `Use Piola Transform = False` for the iterative route.
+  Linear System Solver           = Direct
+  Linear System Direct Method    = UMFPACK
+  Linear System Convergence Tolerance = 1.0e-8
+  Linear System Max Iterations   = 1000
+
+  Nonlinear System Max Iterations = 1
+  Nonlinear System Convergence Tolerance = 1.0e-7
+  Steady State Convergence Tolerance = 1.0e-5
+End
+
+! ============================================================
+!  Solver 3 -- derived fields (B, H, J)
+!    Needed because WhitneyAVSolver does NOT emit the flux density
+!    in transient mode.  A DIRECT solver is used here: with the
+!    default CG + no preconditioner this took ~90 s per timestep.
+! ============================================================
+Solver 3
+  Exec Solver = Always
+  Equation    = "MGDynamicsCalc"
+  Procedure   = "MagnetoDynamics" "MagnetoDynamicsCalcFields"
+  Potential Variable = String "Magnetic Vector Potential"
+
+  Calculate Magnetic Flux Density       = True
+  Calculate Magnetic Field Strength     = True
+  Calculate Current Density             = True
+
+  Linear System Solver = "Iterative"
+  Linear System Iterative Method = CG
+  Linear System Preconditioning = ILU0
+  Linear System Max Iterations = 1000
+  Linear System Convergence Tolerance = 1.0e-8
+  Linear System Residual Output = 0
+  Steady State Convergence Tolerance = 0
+End
+
+! ============================================================
+!  Solver 4 -- VTU output
+!    No `Exec Solver` line: Elmer then invokes the writer at every
+!    saved step, producing case_t0001.vtu, case_t0002.vtu, ...
+!    (`Exec Solver = After all` would only save the FINAL state.)
+! ============================================================
+Solver 4
+  Equation    = "ResultOutput"
+  Procedure   = "ResultOutputSolve" "ResultOutputSolver"
+  Output File Name = case
+  VTU Format  = Logical True
+End
+
+! ============================================================
+!  Solvers 5..11 -- stranded-coil circuit coupling
+!  (inserted by make_sif.py for every curve with N_turns > 0)
+!    Solver 5   DirectionSolver Alpha  -- first local axis
+!    Solver 6   DirectionSolver Beta   -- second local axis
+!    Solver 7   RotMSolver             -- builds RotM E from Alpha x Beta
+!    Solver 8   WPotentialSolver (scalar W)  -- the coil wire-direction
+!                                              field, pinned 1/0 on
+!                                              CoilStart/CoilEnd.  REPLACED
+!                                              with CoilSolver (W vector)
+!                                              when --path coilsolver is on;
+!                                              in that mode Solvers 5..7 are
+!                                              still emitted but unused.
+!    Solver 9   CircuitsAndDynamics    -- the MNA circuit assembly + solve
+!    Solver 10  CircuitsOutput         -- per-component i/v per step
+!    Solver 11  SaveScalars            -- writes results/circuit.csv
+!
+!  Solvers 5..8 all run `Before All`: they compute the coil's local frame
+!  and wire direction ONCE, before the timestepping starts.  A stranded
+!  winding has no intrinsic wire direction, which is why the frame has to
+!  be solved for; a `massive` (solid) coil would not need 5..7, but it also
+!  has no `Number of Turns`, and its W conduction axis is pinned to global
+!  z.
+!
+!  --path coilsolver path replaces Solver 8 with `CoilSolver` (W vector):
+!    see upstream Elmerfem/tests/circuits_transient_stranded_full_coil/sif/coil.sif
+!    Solvers 1-4 there.  Coil body becomes non-conductive (Dummy material)
+!    and the resistance is taken EXPLICITLY from `Component 1 Resistance`,
+!    so `r_component(1) = R_wire(N)` is exact (mesh-independent).
+!
+!  Reference (Wsolve / scalar-W path): upstream fem/tests/circuits_transient_stranded/sif/6480.sif, Solvers 1-5 there.
+! ============================================================
+Solver 5
+  Exec Solver = "Before all"
+  Procedure = "DirectionSolver" "DirectionSolver"
+  Equation = "Direction Alpha"
+  Variable = Alpha
+
+  Linear System Solver = Iterative
+  Linear System Iterative Method = BiCGStab
+  Linear System Max Iterations = 5000
+  Linear System Convergence Tolerance = 1.0e-10
+  Linear System Abort Not Converged = True
+  Linear System Residual Output = 1000
+End
+
+Solver 6
+  Exec Solver = "Before all"
+  Procedure = "DirectionSolver" "DirectionSolver"
+  Equation = "Direction Beta"
+  Variable = Beta
+
+  Linear System Solver = Iterative
+  Linear System Iterative Method = BiCGStab
+  Linear System Max Iterations = 5000
+  Linear System Convergence Tolerance = 1.0e-10
+  Linear System Abort Not Converged = True
+  Linear System Residual Output = 1000
+End
+
+Solver 7
+  Exec Solver = "Before All"
+  Equation = "Transformation matrix"
+  Procedure = "CoordinateTransform" "RotMSolver"
+  Variable = -nooutput Dummy
+  Optimize Bandwidth = False
+  Polar Decomposition Determinant Tolerance = Real 1.0e-9
+  Polar Decomposition Max Iterations = Integer 100
+  Exported Variable 1 = -nooutput RotM E[RotM E:9]
+  Exported Variable 2 = -nooutput Alpha Vector E[Alpha Vector E:3]
+  Exported Variable 3 = -nooutput Beta Vector E[Beta Vector E:3]
+  Exported Variable 4 = -nooutput Gamma Vector E[Gamma Vector E:3]
+  Discontinuous Galerkin = True
+End
+
+Solver 8
+
+  Exec Solver = "Before All"
+  Equation = "Wire direction"
+  Procedure = "CoilSolver" "CoilSolver"
+
+  Steady State Convergence Tolerance = 1e-06
+  Linear System Solver = "Iterative"
+  Linear System Preconditioning = ILU1
+  Linear System Max Iterations = 500
+  Linear System Convergence Tolerance = 1e-10
+  Linear System Iterative Method = BiCGStabl
+  Linear System Residual Output = 20
+
+  Normalize Coil Current = Logical True
+  Fix Input Current Density = True
+  ! NO `Coil Closed = Logical True` -- our coil has a radial slit.
+  Narrow Interface = Logical True
+  Save Coil Set = Logical True
+  Save Coil Index = Logical True
+  Calculate Elemental Fields = Logical True
+  Nonlinear System Consistent Norm = True
+End
+
+Solver 9
+  ! `Before timestep`, NOT `Always`  -- and this is load-bearing.
+  !
+  ! Elmer executes the per-timestep solvers in NUMERIC order, not in the
+  ! order they appear in `Active Solvers`:
+  !     ElmerSolver.F90:2644  DO i=1,nSolvers ... AHEAD_ALL  (pre-loop)
+  !     MainUtils.F90:3310    DO k=1,nSolvers ... EXEC_ALWAYS (each step)
+  ! MagnetoDynamicsCalcFields is Solver 3 and solvers 1/2/3 are the
+  ! template's, so the circuit can never be numbered below it.  With
+  ! `Always` it is only reached AFTER CalcFields -- which then SEGFAULTS on
+  ! the NULL Lagrange multiplier that the circuit has not created yet.
+  ! A circular dependency; see hpc/notes.md 15.7.
+  !
+  ! `Before timestep` puts it in the SOLVER_EXEC_AHEAD_TIME pre-pass, which
+  ! runs before the Always loop.  Verified: with this the whole chain
+  ! executes and the transient completes.
+  Exec Solver = "Before timestep"
+  Equation = "Circuits"
+  Procedure = "CircuitsAndDynamics" "CircuitsAndDynamics"
+  Variable = X
+  No Matrix = Logical True
+End
+
+! Writes the per-component currents and voltages to the results file,
+! so the induced coil current i_component(1) can be compared against
+! the post-hoc EMF/R estimate oscilloscope.py produces.
+!
+! Same `Before timestep` reason as Solver 9 -- and it must stay NUMBERED
+! above it, because the pre-pass also runs in numeric order and the output
+! has to follow the assembly.
+Solver 10
+  Exec Solver = "Before timestep"
+  Equation = "Circuits Output"
+  Procedure = "CircuitsAndDynamics" "CircuitsOutput"
+  Export Circuit Variables = Logical True
+End
+
+! ============================================================
+!  Solver 11 -- SaveScalars: the per-step circuit time series
+! ============================================================
+!  WITHOUT `Export Circuit Variables` ON SOLVER 10 NOTHING IS EXPORTED.
+!  CircuitUtils.F90:1540 is a hard gate:
+!
+!      IF( .NOT. ListGetLogical( Solver % Values, &
+!          'Export Circuit Variables', Found ) ) RETURN
+!
+!  and until it was set, `crt i` / `crt v` were never created, so no
+!  circuit quantity ever reached a file -- only the log, and only at
+!  Level 10 (see below).  That is how the induced current stayed
+!  invisible through every earlier debugging round.
+!
+!  SaveScalars then flattens them into results/circuit.csv, one row per
+!  step, with the columns named in results/circuit.csv.names:
+!
+!      1 crt i 1      4 crt v 2      10 i_component(1)   <- COIL CURRENT
+!      2 crt i 2      5 eddy current power
+!      3 crt v 1      6 electromagnetic field energy
+!      7 res: time    ...            17 p_dc_component(2)
+!
+!  NOTE the `res:` SIMULATION-list scalars that CircuitsAndDynamics adds
+!  (CircuitsAndDynamics.F90:2820) are ALSO written.  `SimListAddAndOutput
+!  ConstReal` calls Info() at Level 10 but calls ListAddConstReal()
+!  UNCONDITIONALLY, so the CSV is complete even if the log is quiet --
+!  the log is only a secondary cross-check.
+Solver 11
+  Exec Solver = "After timestep"
+  Equation = "SaveScalars"
+  Procedure = "SaveData" "SaveScalars"
+  Filename = "circuit.csv"
+  Output Format = Ascii
+  File Append = Logical False
+  Variable 1 = "crt i"
+  Operator 1 = "mean"
+  Variable 2 = "crt v"
+  Operator 2 = "mean"
+End
+
+! ============================================================
+!  Materials
+! ============================================================
+Material 1
+  Name = "CoilWinding"
+  Relative Permeability = 1.0
+  Electric Conductivity = 1.0000000e-12
+End
+
+Material 2
+  Name = "NdFeBMagnet"
+  Relative Permeability = 1.05
+  Electric Conductivity = 1.0e-12
+  ! Permanent magnet: remanent magnetisation along +z.
+  ! Br = mu0 * M = 4*pi*1e-7 * 1.2e6 ~ 1.51 T
+  Magnetization 1 = Real 0.0
+  Magnetization 2 = Real 0.0
+  Magnetization 3 = Real 1.2e6
+End
+
+Material 3
+  Name = "Air"
+  Relative Permeability = 1.0
+  Electric Conductivity = 1.0e-12
+End
+
+! ============================================================
+!  Body forces
+! ============================================================
+! Body 1 -- the winding is OPEN CIRCUIT for an induction experiment.
+! There is NO source current: the only field source is the permanent magnet
+! (Material 2), and everything the coil sees is induced by the magnet.
+! The induced current is recovered afterwards as I = EMF / R_total.
+!
+! A non-zero `Current Density 3` here would put a STATIC ~1.2 T pedestal
+! on the coil which completely masks the (few 10 mT) magnet signal.
+Body Force 1
+  Name = "CoilCurrent"
+  Current Density 1 = 0.0
+  Current Density 2 = 0.0
+  Current Density 3 = 0.0
+  testsource = Real 2.000000e+00
+  Circuit Current Variable Id = Integer 2
+  Stranded Coil N_j = Real 5.0000000000e+05
+End
+
+! Body 2 -- RIGID TRANSLATION of the magnet along z (spring oscillation)
+!   the MATC expression below is written by make_sif.py from
+!   config.json -> experiment.motion_mode (currently "spring", the damped
+!   harmonic oscillator; see the file header for the two modes).
+!   MATC variable `tx` holds the current Time.
+Body Force 2
+  Name = "OscillatingMagnet"
+  Mesh Translate 3 = Real -2.1000000000e-02
+  ! NOTE: no `Mesh Relax` here.  The RigidMeshMapper solves its own
+  ! `meshrelax` blending field (1 at `Moving Boundary`, 0 at
+  ! `Fixed Boundary`), so overriding it here has no effect.
+  ! See README section 12 for the consequences on the achieved motion.
+End
+
+! ============================================================
+!  Bodies
+! ============================================================
+Body 1
+  Name     = "CoilBlock"
+  Equation = 1
+  Material = 1
+  Body Force = 1
+  ! The local frame RotMSolver builds out of the two direction
+  ! solves: Alpha runs radially outward, Beta runs axially, so
+  ! gamma = alpha x beta = -theta-hat, the solenoid's wire
+  ! direction (hpc/notes.md 13.12).
+  Alpha reference (3) = Real 1 0 0
+  Beta reference (3) = Real 0 0 1
+End
+
+Body 2
+  Name     = "Magnet"
+  Equation = 2
+  Material = 2
+  Body Force = 2
+End
+
+Body 3
+  Name     = "AirDomain"
+  Equation = 2
+  Material = 3
+End
+
+
+! ============================================================
+!  Components -- stranded coil + resistive load
+!  (inserted by make_sif.py for a conductor curve)
+! ============================================================
+Component 1
+  Name = String "CoilWinding"
+  Master Bodies = Integer 1
+  Coil Type = String stranded
+  Number of Turns = Real 100
+  Electrode Boundaries(2) = Integer 3 4
+
+  ! ---- the two keys MagnetoDynamicsCalcFields DEMANDS for a stranded
+  ! coil in 3D.  Both are read from the Component and Fatal() if absent
+  ! (fem/src/modules/MagnetoDynamics/CalcFields.F90, CASE ('stranded')):
+  !
+  !   Circuit Current Variable Id : which circuit unknown carries this
+  !     coil's current.  It is used as `LagrangeVar % Values(IvarId)`
+  !     when the coil current is turned into a current density.
+  !   Stranded Coil N_j : the TURN DENSITY N/A_coil, i.e. turns per unit
+  !     cross-sectional area.  The source sets `ItoJCoeff = N_j`, so
+  !     J = N_j * I with J in A/m^2 and I in A -- hence 1/m^2.
+  ! --path wsolve:    Stranded Coil N_j is needed; Elmer uses it for the
+  !                   volume-integrated resistance too (N_j**2 V/sigma).
+  ! --path coilsolver: Elmer computes N_j itself from Number of Turns /
+  !                   A_coil (verified locally, hpc/notes.md 19.1).
+  Circuit Current Variable Id = Integer 2
+  Stranded Coil N_j = Real 5.0000000000e+05
+
+  ! ---- --path coilsolver keys (no-ops on Wsolve path) ----------------
+  ! Coil Use W Vector + W Vector Variable Name : tell CoilSolver which
+  !   internal field carries the wire-vector coil current (exported as
+  !   CoilCurrent e, fed back into the A-formulation as J = N_j * I * w).
+  ! Coil Normal(3) : the solenoidal wire direction in global coordinates.
+  !   CoilSolver.F90:358-359 Fatals if it sits in the Solver -- it must
+  !   be on the Component.  We use +z, consistent with our radial-slit
+  !   geometry.
+  ! Desired Current Density / Electrode Area : CoilSolver.F90:421-438
+  !   normalises the wire vector to magnitude `Desired Current Density`
+  !   (= 1 by default).  Combined with our N_j this sets the field-driven J.
+  ! Resistance : with --path coilsolver the coil body's Electric
+  !   Conductivity is non-physical (1e-12); Elmer takes R from THIS key,
+  !   so r_component(1) = R_wire(N) is exact (mesh-independent).
+  Coil Use W Vector = Logical True
+  W Vector Variable Name = String "CoilCurrent e"
+  Coil Normal(3) = Real 0.0 0.0 1.0
+  Desired Current Density = Real 1
+  Electrode Area = Real 1
+  Resistance = Real 6.333429e-01
+End
+
+Component 2
+  Name = String "LoadResistor"
+  Component Type = String Resistor
+  Resistance = Real 0.5012
+End
+
+! ============================================================
+!  Body Force "Circuit" -- circuit sources
+!    testsource = 0 V: no external drive.  The coil's induced EMF is
+!    the only source, exactly as in the open-circuit case, but now the
+!    loop is closed through Component 2 (the load resistor).
+!
+!    The same three keys CalcFields looks for on the Component block are
+!    mirrored here, because the ImposeCircuitCurrent code path
+!    (`fem/src/MagnetoDynamics/CalcFields.F90:1130-1138`) reads them from
+!    the Body Force.  Without this mirror we SEGFAULT on the first
+!    CalcFields call, even though the Component has them.
+! ============================================================
+! ============================================================
+!  Boundaries
+! ============================================================
+! NOTE: `ElmerGrid ... -autoclean` renumbers boundary groups sequentially,
+! so the gmsh tags 1001 / 1002 become Elmer boundary indices 1 / 2.
+! Check mesh/mesh.names:   $ MagneticInfinity = 1
+!                          $ MagnetSurface    = 2
+
+! Outer air surface: magnetic infinity + held fixed in the mesh motion
+Boundary Condition 1
+  Name = "MagneticInfinity"
+  Target Boundaries(1) = 1
+  Magnetic Vector Potential 1 = 0.0
+  Magnetic Vector Potential 2 = 0.0
+  Magnetic Vector Potential 3 = 0.0
+  Fixed Boundary = Logical True
+End
+
+! Magnet surface: free to move with the rigid translation
+Boundary Condition 2
+  Name = "MagnetSurface"
+  Target Boundaries(1) = 2
+  Moving Boundary = Logical True
+End
+
+! ============================================================
+!  Closed-circuit BCs (inserted by make_sif.py for a conductor curve)
+!    CoilStart / CoilEnd mark where the winding enters and leaves
+!    the coil body.  solenoid3d.py emits these as gmsh physical
+!    groups 1003 / 1004; ElmerGrid -autoclean renumbers them to
+!    3 / 4 (check mesh/mesh.names).
+! ============================================================
+Boundary Condition 3
+  Name = "CoilStart"
+  Target Boundaries = 3
+  ! W is the stranded coil's wire-direction potential.  Pinning it to 1
+  ! here and 0 at CoilEnd is what defines the winding path; without both
+  ! the coil has no direction and the derived-field solver segfaults.
+  ! These two faces are the sides of the RADIAL SLIT in the coil body --
+  ! the top/bottom disks they used to be are z-normal and could only ever
+  ! drive an axial current.  See hpc/notes.md 13.12.
+End
+
+Boundary Condition 4
+  Name = "CoilEnd"
+  Target Boundaries = 4
+End
+
+! ---- Alpha / Beta: the local frame the stranded coil needs ----------
+! Alpha runs radially outward (inner cylinder -> outer cylinder) and Beta
+! axially (bottom disk -> top disk), so
+!     gamma = alpha x beta = -theta-hat
+! which IS the wire direction of a solenoid.  These four faces exist only
+! because solenoid3d.py stopped discarding the coil's lateral surfaces.
+Boundary Condition 5
+  Name = "Alpha0"
+  Target Boundaries = 5
+  Body 1: Alpha = Real 0
+End
+
+Boundary Condition 6
+  Name = "Alpha1"
+  Target Boundaries = 6
+  Body 1: Alpha = Real 1
+End
+
+Boundary Condition 7
+  Name = "Beta0"
+  Target Boundaries = 7
+  Body 1: Beta = Real 0
+End
+
+Boundary Condition 8
+  Name = "Beta1"
+  Target Boundaries = 8
+  Body 1: Beta = Real 1
+End
+

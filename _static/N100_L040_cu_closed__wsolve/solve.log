@@ -1,0 +1,1705 @@
+ELMER SOLVER (v 26.2) STARTED AT: 2026/09/19 11:06:01
+ParCommInit: Initialize #PEs: 1
+MAIN: 
+MAIN: =============================================================
+MAIN: ElmerSolver finite element software, Welcome!
+MAIN: This program is free software licensed under (L)GPL
+MAIN: Copyright 1st April 1995 - , CSC - IT Center for Science Ltd.
+MAIN: Webpage http://www.csc.fi/elmer, Email elmeradm@csc.fi
+MAIN: Version: 26.2-unknown (Rev: unknown, Compiled: 2026-09-10)
+MAIN:  Running one task without MPI parallelization.
+MAIN:  Running with just one thread per task.
+MAIN: =============================================================
+OpenIncludeFile: Trying to include file: circuits.definitions
+MAIN: 
+MAIN: 
+MAIN: -------------------------------------
+MAIN: Reading Model: case.sif
+LoadInputFile: Scanning input file: case.sif
+LoadInputFile: Scanning only size info
+LoadInputFile: First time visiting
+LoadInputFile: Reading base load of sif file
+OpenIncludeFile: Trying to include file: circuits.definitions
+CheckKeyword: Found keyword type assuming suffix 1 for: exported variable 2
+CheckKeyword: Found keyword type assuming suffix 1 for: exported variable 2
+CheckKeyword: Found keyword type assuming suffix 1 for: exported variable 3
+CheckKeyword: Found keyword type assuming suffix 1 for: exported variable 3
+CheckKeyword: Found keyword type assuming suffix 1 for: exported variable 4
+CheckKeyword: Found keyword type assuming suffix 1 for: exported variable 4
+CheckKeyword: Found keyword type assuming suffix 1 for: variable 2
+CheckKeyword: Found keyword type assuming suffix 1 for: variable 2
+CheckKeyword: Found keyword type assuming suffix 1 for: operator 2
+CheckKeyword: Found keyword type assuming suffix 1 for: operator 2
+LoadInputFile: Loading input file: case.sif
+LoadInputFile: Reading base load of sif file
+OpenIncludeFile: Trying to include file: circuits.definitions
+CheckKeyword:  Unlisted keyword: [polar decomposition determinant tolerance] in section: [solver 7]
+CheckKeyword:  Unlisted keyword: [polar decomposition max iterations] in section: [solver 7]
+CheckKeyword: Found keyword type assuming suffix 1 for: exported variable 2
+CheckKeyword: Found keyword type assuming suffix 1 for: exported variable 2
+CheckKeyword: Found keyword type assuming suffix 1 for: exported variable 3
+CheckKeyword: Found keyword type assuming suffix 1 for: exported variable 3
+CheckKeyword: Found keyword type assuming suffix 1 for: exported variable 4
+CheckKeyword: Found keyword type assuming suffix 1 for: exported variable 4
+CheckKeyword:  Unlisted keyword: [export circuit variables] in section: [solver 10]
+CheckKeyword: Found keyword type assuming suffix 1 for: variable 2
+CheckKeyword: Found keyword type assuming suffix 1 for: variable 2
+CheckKeyword: Found keyword type assuming suffix 1 for: operator 2
+CheckKeyword: Found keyword type assuming suffix 1 for: operator 2
+CheckKeyword:  Unlisted keyword: [alpha reference] in section: [body 1]
+CheckKeyword:  Unlisted keyword: [beta reference] in section: [body 1]
+CheckKeyword:  Unlisted keyword: [electrode boundaries] in section: [component 1]
+CheckKeyword:  Unlisted keyword: [circuit current variable id] in section: [component 1]
+CheckKeyword:  Unlisted keyword: [stranded coil n_j] in section: [component 1]
+CheckKeyword:  Unlisted keyword: [coil use w vector] in section: [component 1]
+CheckKeyword:  Unlisted keyword: [w vector variable name] in section: [component 1]
+CheckKeyword:  Unlisted keyword: [electrode area] in section: [component 1]
+CheckKeyword:  Unlisted keyword: [testsource] in section: [body force 3]
+CheckKeyword:  Unlisted keyword: [circuit current variable id] in section: [body force 3]
+CheckKeyword:  Unlisted keyword: [stranded coil n_j] in section: [body force 3]
+CheckKeyword:  Unlisted keyword: [w] in section: [boundary condition 3]
+CheckKeyword:  Unlisted keyword: [w] in section: [boundary condition 4]
+CheckKeyword:  Unlisted keyword: [body 1: alpha] in section: [boundary condition 5]
+CheckKeyword:  Unlisted keyword: [body 1: alpha] in section: [boundary condition 6]
+CheckKeyword:  Unlisted keyword: [body 1: beta] in section: [boundary condition 7]
+CheckKeyword:  Unlisted keyword: [body 1: beta] in section: [boundary condition 8]
+LoadInputFile: Number of BCs: 8
+LoadInputFile: Number of Body Forces: 3
+LoadInputFile: Number of Initial Conditions: 0
+LoadInputFile: Number of Materials: 3
+LoadInputFile: Number of Equations: 1
+LoadInputFile: Number of Solvers: 11
+LoadInputFile: Number of Bodies: 3
+WARNING:: LoadInputFile: > Body Force 3 < not used in any Body!
+Loading user function library: [RigidMeshMapper]...[RigidMeshMapper_Init0]
+Loading user function library: [RigidMeshMapper]...[RigidMeshMapper_Init0]
+Loading user function library: [MagnetoDynamics]...[WhitneyAVSolver_Init0]
+WhitneyAVSolver_Init0: Setting element type to: "n:1 e:1"
+Loading user function library: [MagnetoDynamics]...[MagnetoDynamicsCalcFields_Init0]
+Loading user function library: [ResultOutputSolve]...[ResultOutputSolver_Init0]
+Loading user function library: [ResultOutputSolve]...[ResultOutputSolver_Init0]
+Loading user function library: [DirectionSolver]...[DirectionSolver_Init0]
+Loading user function library: [DirectionSolver]...[DirectionSolver_Init0]
+Loading user function library: [CoordinateTransform]...[RotMSolver_Init0]
+Loading user function library: [CoordinateTransform]...[RotMSolver_Init0]
+Loading user function library: [WPotentialSolver]...[Wsolve_Init0]
+Loading user function library: [CircuitsAndDynamics]...[CircuitsAndDynamics_Init0]
+Loading user function library: [CircuitsAndDynamics]...[CircuitsAndDynamics_Init0]
+Loading user function library: [CircuitsAndDynamics]...[CircuitsOutput_Init0]
+Loading user function library: [CircuitsAndDynamics]...[CircuitsOutput_Init0]
+Loading user function library: [SaveData]...[SaveScalars_Init0]
+Loading user function library: [SaveData]...[SaveScalars_Init0]
+Loading user function library: [DirectionSolver]...[DirectionSolver_Dummy_Init0]
+Loading user function library: [DirectionSolver]...[DirectionSolver_Dummy_Init0]
+Loading user function library: [DirectionSolver]...[DirectionSolver_Dummy_Init0]
+Loading user function library: [DirectionSolver]...[DirectionSolver_Dummy_Init0]
+Loading user function library: [WPotentialSolver]...[Wsolve_Dummy_Init0]
+Loading user function library: [WPotentialSolver]...[Wsolve_Dummy_Init0]
+LoadMesh: Loading serial mesh!
+ElmerMeshReader: Performing step: 1
+ElmerMeshReader: Base mesh name: ./mesh
+ReadHeaderFile: Reading header info from file: ./mesh/mesh.header
+InitializeMesh: Number of nodes in mesh: 2917
+InitializeMesh: Number of bulk elements in mesh: 16703
+InitializeMesh: Number of boundary elements in mesh: 2040
+InitializeMesh: Initial number of max element nodes: 4
+ElmerMeshReader: Performing step: 2
+ReadNodesFile: Reading nodes from file: ./mesh/mesh.nodes
+MapCoordinates: Performing coordinate mapping
+SetMeshDimension: Dimension of mesh is: 3
+SetMeshDimension: Max dimension of mesh is: 3
+ElmerMeshReader: Performing step: 3
+ReadElementsFile: Reading bulk elements from file: ./mesh/mesh.elements
+ElmerMeshReader: Performing step: 4
+ReadBoundaryFile: Reading boundary elements from file: ./mesh/mesh.boundary
+PermuteNodeNumbering: Performing node mapping
+MapBodiesAndBCs: Skipping remapping of bodies
+MapBodiesAndBCs: Remapping boundaries
+MapBodiesAndBCs: Minimum initial boundary index: 1
+MapBodiesAndBCs: Maximum initial boundary index: 8
+ElmerMeshReader: Performing step: 5
+ElmerMeshReader: Performing step: 6
+LoadMesh: Loading mesh done
+NonNodalElements: Requested elements require creation of edges
+FindMeshEdges: Determining faces in 3D mesh
+FindMeshFaces3D: Number of faces found: 33766
+FindMeshEdges: Determining edges in 3D mesh
+FindMeshEdges3D: Number of edges found: 19979
+LoadMesh: Preparing mesh done
+LoadMesh: Elapsed REAL time:     0.1390 (s)
+MeshStabParams: Computing stabilization parameters
+MeshStabParams: Elapsed REAL time:     0.0070 (s)
+MAIN: -------------------------------------
+AddMeshCoordinates: Setting mesh coordinates and time
+AddSolvers: Setting up 14 solvers
+AddSolvers: Setting up solver 1: meshdeform
+AddEquationBasics: Using procedure: RigidMeshMapper RigidMeshMapper
+AddEquationBasics: Setting up solver: meshdeform
+Loading user function library: [RigidMeshMapper]...[RigidMeshMapper_Init]
+Loading user function library: [RigidMeshMapper]...[RigidMeshMapper_Init]
+Loading user function library: [RigidMeshMapper]...[RigidMeshMapper_bulk]
+Loading user function library: [RigidMeshMapper]...[RigidMeshMapper_bulk]
+Loading user function library: [RigidMeshMapper]...[RigidMeshMapper]
+AddEquationBasics: Time stepping method is: bdf
+AddEquationBasics: Creating standard variable: meshrelax
+OptimizeBandwidth: ---------------------------------------------------------
+OptimizeBandwidth: Computing matrix structure for: meshdeform
+OptimizeBandwidth: Initial bandwidth for meshdeform: 2661
+OptimizeBandwidth: Optimized bandwidth for meshdeform: 519
+OptimizeBandwidth: ---------------------------------------------------------
+AddSolvers: Setting up solver 2: mgdynamics
+AddEquationBasics: Using procedure: MagnetoDynamics WhitneyAVSolver
+AddEquationBasics: Setting up solver: mgdynamics
+Loading user function library: [MagnetoDynamics]...[WhitneyAVSolver_Init]
+WARNING:: ListFind: 
+WARNING:: ListFind:  Requested property: [Linear System Preconditioning], not found
+WARNING:: ListFind: 
+Loading user function library: [MagnetoDynamics]...[WhitneyAVSolver_bulk]
+Loading user function library: [MagnetoDynamics]...[WhitneyAVSolver_bulk]
+Loading user function library: [MagnetoDynamics]...[WhitneyAVSolver]
+AddEquationBasics: Time stepping method is: bdf
+AddEquationBasics: Creating standard variable: magnetic vector potential
+OptimizeBandwidth: ---------------------------------------------------------
+OptimizeBandwidth: Computing matrix structure for: mgdynamics
+OptimizeBandwidth: Initial bandwidth for mgdynamics: 22880
+OptimizeBandwidth: Optimized bandwidth for mgdynamics: 3675
+OptimizeBandwidth: ---------------------------------------------------------
+AddSolvers: Setting up solver 3: mgdynamicscalc
+AddEquationBasics: Using procedure: MagnetoDynamics MagnetoDynamicsCalcFields
+AddEquationBasics: Setting up solver: mgdynamicscalc
+Loading user function library: [MagnetoDynamics]...[MagnetoDynamicsCalcFields_Init]
+Loading user function library: [MagnetoDynamics]...[MagnetoDynamicsCalcFields_bulk]
+Loading user function library: [MagnetoDynamics]...[MagnetoDynamicsCalcFields_bulk]
+Loading user function library: [MagnetoDynamics]...[MagnetoDynamicsCalcFields]
+AddEquationBasics: Time stepping method is: bdf
+AddEquationBasics: Creating standard variable: hr_dummy
+OptimizeBandwidth: ---------------------------------------------------------
+OptimizeBandwidth: Computing matrix structure for: mgdynamicscalc
+OptimizeBandwidth: Initial bandwidth for mgdynamicscalc: 2661
+OptimizeBandwidth: Optimized bandwidth for mgdynamicscalc: 519
+OptimizeBandwidth: ---------------------------------------------------------
+CreateDGPerm: Created permutation for DG nodes: 66812
+CreateDGPerm: Created permutation for DG nodes: 66812
+CreateDGPerm: Created permutation for DG nodes: 66812
+AddSolvers: Setting up solver 4: resultoutput
+AddEquationBasics: Using procedure: ResultOutputSolve ResultOutputSolver
+AddEquationBasics: Setting up solver: resultoutput
+Loading user function library: [ResultOutputSolve]...[ResultOutputSolver_Init]
+Loading user function library: [ResultOutputSolve]...[ResultOutputSolver_Init]
+Loading user function library: [ResultOutputSolve]...[ResultOutputSolver_bulk]
+Loading user function library: [ResultOutputSolve]...[ResultOutputSolver_bulk]
+Loading user function library: [ResultOutputSolve]...[ResultOutputSolver]
+AddEquationBasics: Time stepping method is: bdf
+AddSolvers: Setting up solver 5: direction alpha
+AddEquationBasics: Using procedure: DirectionSolver DirectionSolver
+AddEquationBasics: Setting up solver: direction alpha
+Loading user function library: [DirectionSolver]...[DirectionSolver_Init]
+Loading user function library: [DirectionSolver]...[DirectionSolver_Init]
+Loading user function library: [DirectionSolver]...[DirectionSolver_bulk]
+Loading user function library: [DirectionSolver]...[DirectionSolver_bulk]
+Loading user function library: [DirectionSolver]...[DirectionSolver]
+AddEquationBasics: Time stepping method is: bdf
+AddEquationBasics: Creating standard variable: alpha
+OptimizeBandwidth: ---------------------------------------------------------
+OptimizeBandwidth: Computing matrix structure for: direction alpha
+OptimizeBandwidth: Initial bandwidth for direction alpha: 2661
+OptimizeBandwidth: Optimized bandwidth for direction alpha: 519
+OptimizeBandwidth: ---------------------------------------------------------
+AddSolvers: Setting up solver 6: direction beta
+AddEquationBasics: Using procedure: DirectionSolver DirectionSolver
+AddEquationBasics: Setting up solver: direction beta
+Loading user function library: [DirectionSolver]...[DirectionSolver_Init]
+Loading user function library: [DirectionSolver]...[DirectionSolver_Init]
+Loading user function library: [DirectionSolver]...[DirectionSolver_bulk]
+Loading user function library: [DirectionSolver]...[DirectionSolver_bulk]
+Loading user function library: [DirectionSolver]...[DirectionSolver]
+AddEquationBasics: Time stepping method is: bdf
+AddEquationBasics: Creating standard variable: beta
+OptimizeBandwidth: ---------------------------------------------------------
+OptimizeBandwidth: Computing matrix structure for: direction beta
+OptimizeBandwidth: Initial bandwidth for direction beta: 2661
+OptimizeBandwidth: Optimized bandwidth for direction beta: 519
+OptimizeBandwidth: ---------------------------------------------------------
+AddSolvers: Setting up solver 7: transformation matrix
+AddEquationBasics: Using procedure: CoordinateTransform RotMSolver
+AddEquationBasics: Setting up solver: transformation matrix
+Loading user function library: [CoordinateTransform]...[RotMSolver_Init]
+Loading user function library: [CoordinateTransform]...[RotMSolver_bulk]
+Loading user function library: [CoordinateTransform]...[RotMSolver_bulk]
+Loading user function library: [CoordinateTransform]...[RotMSolver]
+AddEquationBasics: Time stepping method is: bdf
+AddEquationBasics: Creating standard variable: dummy
+OptimizeBandwidth: ---------------------------------------------------------
+OptimizeBandwidth: Computing matrix structure for: transformation matrix
+OptimizeBandwidth: Initial bandwidth for transformation matrix: 59768
+OptimizeBandwidth: ---------------------------------------------------------
+AddSolvers: Setting up solver 8: wire direction
+AddEquationBasics: Using procedure: WPotentialSolver Wsolve
+AddEquationBasics: Setting up solver: wire direction
+Loading user function library: [WPotentialSolver]...[Wsolve_Init]
+Loading user function library: [WPotentialSolver]...[Wsolve_Init]
+Loading user function library: [WPotentialSolver]...[Wsolve_bulk]
+Loading user function library: [WPotentialSolver]...[Wsolve_bulk]
+Loading user function library: [WPotentialSolver]...[Wsolve]
+AddEquationBasics: Time stepping method is: bdf
+AddEquationBasics: Creating standard variable: w
+OptimizeBandwidth: ---------------------------------------------------------
+OptimizeBandwidth: Computing matrix structure for: wire direction
+OptimizeBandwidth: Initial bandwidth for wire direction: 2661
+OptimizeBandwidth: Optimized bandwidth for wire direction: 519
+OptimizeBandwidth: ---------------------------------------------------------
+AddSolvers: Setting up solver 9: circuits
+AddEquationBasics: Using procedure: CircuitsAndDynamics CircuitsAndDynamics
+AddEquationBasics: Setting up solver: circuits
+Loading user function library: [CircuitsAndDynamics]...[CircuitsAndDynamics_Init]
+Loading user function library: [CircuitsAndDynamics]...[CircuitsAndDynamics_bulk]
+Loading user function library: [CircuitsAndDynamics]...[CircuitsAndDynamics_bulk]
+Loading user function library: [CircuitsAndDynamics]...[CircuitsAndDynamics]
+AddEquationBasics: Time stepping method is: bdf
+AddEquationBasics: Creating global variable: ckt
+AddSolvers: Setting up solver 10: circuits output
+AddEquationBasics: Using procedure: CircuitsAndDynamics CircuitsOutput
+AddEquationBasics: Setting up solver: circuits output
+Loading user function library: [CircuitsAndDynamics]...[CircuitsOutput_Init]
+Loading user function library: [CircuitsAndDynamics]...[CircuitsOutput_Init]
+Loading user function library: [CircuitsAndDynamics]...[CircuitsOutput_bulk]
+Loading user function library: [CircuitsAndDynamics]...[CircuitsOutput_bulk]
+Loading user function library: [CircuitsAndDynamics]...[CircuitsOutput]
+AddEquationBasics: Time stepping method is: bdf
+AddSolvers: Setting up solver 11: savescalars
+AddEquationBasics: Using procedure: SaveData SaveScalars
+AddEquationBasics: Setting up solver: savescalars
+Loading user function library: [SaveData]...[SaveScalars_Init]
+Loading user function library: [SaveData]...[SaveScalars_bulk]
+Loading user function library: [SaveData]...[SaveScalars_bulk]
+Loading user function library: [SaveData]...[SaveScalars]
+AddEquationBasics: Time stepping method is: bdf
+AddSolvers: Setting up solver 12: elementaladdalpha
+AddEquationBasics: Using procedure: DirectionSolver DirectionSolver_Dummy
+AddEquationBasics: Setting up solver: elementaladdalpha
+Loading user function library: [DirectionSolver]...[DirectionSolver_Dummy_Init]
+Loading user function library: [DirectionSolver]...[DirectionSolver_Dummy_Init]
+Loading user function library: [DirectionSolver]...[DirectionSolver_Dummy_bulk]
+Loading user function library: [DirectionSolver]...[DirectionSolver_Dummy_bulk]
+Loading user function library: [DirectionSolver]...[DirectionSolver_Dummy]
+AddEquationBasics: Time stepping method is: bdf
+AddEquationBasics: Creating standard variable: alpha_dummy
+AddSolvers: Setting up solver 13: elementaladdbeta
+AddEquationBasics: Using procedure: DirectionSolver DirectionSolver_Dummy
+AddEquationBasics: Setting up solver: elementaladdbeta
+Loading user function library: [DirectionSolver]...[DirectionSolver_Dummy_Init]
+Loading user function library: [DirectionSolver]...[DirectionSolver_Dummy_Init]
+Loading user function library: [DirectionSolver]...[DirectionSolver_Dummy_bulk]
+Loading user function library: [DirectionSolver]...[DirectionSolver_Dummy_bulk]
+Loading user function library: [DirectionSolver]...[DirectionSolver_Dummy]
+AddEquationBasics: Time stepping method is: bdf
+AddEquationBasics: Creating standard variable: beta_dummy
+AddSolvers: Setting up solver 14: elementaladd1
+AddEquationBasics: Using procedure: WPotentialSolver Wsolve_Dummy
+AddEquationBasics: Setting up solver: elementaladd1
+Loading user function library: [WPotentialSolver]...[Wsolve_Dummy_Init]
+Loading user function library: [WPotentialSolver]...[Wsolve_Dummy_Init]
+Loading user function library: [WPotentialSolver]...[Wsolve_Dummy_bulk]
+Loading user function library: [WPotentialSolver]...[Wsolve_Dummy_bulk]
+Loading user function library: [WPotentialSolver]...[Wsolve_Dummy]
+AddEquationBasics: Time stepping method is: bdf
+AddEquationBasics: Creating standard variable: w_dummy
+CreateDGPerm: Created permutation for DG nodes: 66812
+AddTimeEtc: Setting time and other global variables
+MAIN: Random seed initialized to: 314159265
+SetInitialConditions: Setting up initial conditions (if any)
+MAIN: Number of timesteps to be saved: 4
+SingleSolver: Attempting to call solver: 5
+SingleSolver: Solver Equation string is: direction alpha
+DefUtils::DefaultDirichletBCs: Setting Dirichlet boundary conditions
+EnforceDirichletConditions: Enforcing total of 281 Dirichlet conditions.
+EnforceDirichletConditions: Applying Dirichlet conditions using scaled diagonal
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+EnforceDirichletConditions: Dirichlet conditions enforced for dofs: 281
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: bicgstab
+Prec-none: Elapsed REAL time:     0.0000 (s)
+      70 0.1767E-10
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=1) (NRM,RELC): ( 0.72486228      2.0000000     ) :: direction alpha
+DefUtils::DefaultDirichletBCs: Setting Dirichlet boundary conditions
+EnforceDirichletConditions: No Dirichlet conditions to enforce, exiting!
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+SolveLinearSystem: Solution trivially zero!
+DefUtils::DefaultDirichletBCs: Setting Dirichlet boundary conditions
+EnforceDirichletConditions: No Dirichlet conditions to enforce, exiting!
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+SolveLinearSystem: Solution trivially zero!
+SingleSolver: Attempting to call solver: 6
+SingleSolver: Solver Equation string is: direction beta
+DefUtils::DefaultDirichletBCs: Setting Dirichlet boundary conditions
+EnforceDirichletConditions: Enforcing total of 80 Dirichlet conditions.
+EnforceDirichletConditions: Applying Dirichlet conditions using scaled diagonal
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+EnforceDirichletConditions: Dirichlet conditions enforced for dofs: 80
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: bicgstab
+Prec-none: Elapsed REAL time:     0.0000 (s)
+      92 0.8181E-10
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=1) (NRM,RELC): ( 0.63038155      2.0000000     ) :: direction beta
+DefUtils::DefaultDirichletBCs: Setting Dirichlet boundary conditions
+EnforceDirichletConditions: No Dirichlet conditions to enforce, exiting!
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+SolveLinearSystem: Solution trivially zero!
+DefUtils::DefaultDirichletBCs: Setting Dirichlet boundary conditions
+EnforceDirichletConditions: No Dirichlet conditions to enforce, exiting!
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+SolveLinearSystem: Solution trivially zero!
+SingleSolver: Attempting to call solver: 7
+SingleSolver: Solver Equation string is: transformation matrix
+SingleSolver: Attempting to call solver: 8
+SingleSolver: Solver Equation string is: wire direction
+AddComponentsToBodyList: "Body 1" associated to "Component 1"
+DefUtils::DefaultDirichletBCs: Setting Dirichlet boundary conditions
+EnforceDirichletConditions: Enforcing total of 34 Dirichlet conditions.
+EnforceDirichletConditions: Applying Dirichlet conditions using scaled diagonal
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+EnforceDirichletConditions: Dirichlet conditions enforced for dofs: 34
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-none: Elapsed REAL time:     0.0000 (s)
+      80 0.5021E-10
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=1) (NRM,RELC): ( 0.48389489      2.0000000     ) :: wire direction
+GetWnormsForBodies: W norm computed in components.
+MAIN: 
+MAIN: -------------------------------------
+MAIN: Time: 1/4:   1.000E-03
+MAIN: -------------------------------------
+MAIN: 
+SingleSolver: Attempting to call solver: 9
+SingleSolver: Solver Equation string is: circuits
+CircuitsAndDynamics: Initializing electric circuits for transient simulation
+CircuitsAndDynamics: Circuit equations associated with solver index: 2
+CircuitsAndDynamics: Initializing circuit 1 with 6 variables!
+Circuits_Init: Component 2 is not a coil. Checking if it has a component type.
+IHarmonic2D: Found Permutation vector for circuit 1
+AddComponentEquationsAndCouplings: Using coil resistance for component 1
+GetWPotentialVar: Using gradient of field to define direction: w potential
+AddComponentEquationsAndCouplings: Writing resistor equation, component 2
+SingleSolver: Attempting to call solver: 10
+SingleSolver: Solver Equation string is: circuits output
+DefaultStart: Starting solver: circuits output
+CircuitsOutput: Writing Circuit Results
+CircuitsOutput: Writing Circuit Variables for Circuit 1
+CircuitsOutput: There are 6 Circuit Variables
+CircuitsOutput: i_testsource            0.0000E+00
+CircuitsOutput: v_testsource            0.0000E+00
+CircuitsOutput: i_component(1)          0.0000E+00
+CircuitsOutput: v_component(1)          0.0000E+00
+CircuitsOutput: i_component(2)          0.0000E+00
+CircuitsOutput: v_component(2)          0.0000E+00
+CircuitsOutput: Writing Component Variables for Circuit 1
+CircuitsOutput: r_component(1)          6.3334E-01
+CircuitsOutput: p_dc_component(1)       0.0000E+00
+CircuitsOutput: r_component(2)          1.0000E+01
+CircuitsOutput: p_dc_component(2)       0.0000E+00
+Circuit_ToMeshVariable: Adding circuit variables to be mesh variables
+Circuits_ToMeshVariable: Creating variable: crt i
+Circuits_ToMeshVariable: Creating variable: crt v
+DefaultFinish: Finished solver: circuits output
+SingleSolver: Attempting to call solver: 1
+SingleSolver: Solver Equation string is: meshdeform
+RigidMeshMapper: ---------------------------------------
+RigidMeshMapper: Performing analytic mesh mapping
+RigidMeshMapper: ---------------------------------------
+RigidMeshMapper: Storing original coordinates
+StoreOriginalCoordinates: Original coordinates already stored
+StoreOriginalCoordinates: Original coordinates stored
+RigidMeshMapper: Solving mesh relaxation field: meshrelax
+RigidMeshMapper: Solving mesh relaxation field using Laplace
+DefUtils::DefaultDirichletBCs: Setting Dirichlet boundary conditions
+EnforceDirichletConditions: Enforcing total of 698 Dirichlet conditions.
+EnforceDirichletConditions: Applying Dirichlet conditions using scaled diagonal
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+EnforceDirichletConditions: Dirichlet conditions enforced for dofs: 698
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: bicgstab
+CRS_IncompleteLU: ILU(0) (Real), Performing Factorization:
+CRS_IncompleteLU: Allocated LU matrix of size: 42875
+CRS_IncompleteLU: ILU(0) (Real), NOF nonzeros:     42876
+CRS_IncompleteLU: ILU(0) (Real), filling (%) :       100
+CRS_IncompleteLU: ILU(0) (Real), Factorization time (s):     0.00
+Prec-ilu0: Elapsed REAL time:     0.0010 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=1) (NRM,RELC): ( 0.57108888      2.0000000     ) :: meshdeform
+RigidMeshMapper: Number of nodes mapped: 863
+RigidMeshMapper: All done
+DefaultFinish: Finished solver: meshdeform
+SingleSolver: Attempting to call solver: 2
+SingleSolver: Solver Equation string is: mgdynamics
+WhitneyAVSolver: 
+WhitneyAVSolver: -------------------------------------------------
+WhitneyAVSolver: Solving transient AV equations with edge elements
+DefaultStart: Starting solver: mgdynamics
+WARNING:: GetPermittivity: Permittivity not defined in material, defaulting to that of vacuum
+MGDynAssembly: Elapsed REAL time:     0.2540 (s)
+DefUtils::DefaultDirichletBCs: Setting Dirichlet boundary conditions
+EnforceDirichletConditions: No Dirichlet conditions to enforce, exiting!
+WhitneyAVSolver: Volume tree edges: 2916 of total: 19979
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveSystem: Solving linear system with linear restrictions!
+SolveWithLinearRestriction: Creating variable for Lagrange multiplier
+SolveWithLinearRestriction: Reverting CollectionMatrix back to CRS matrix
+List_ToCRSMatrix: Changing matrix type with number of non-zeros: 650873
+SolveWithLinearRestriction: Collection matrix creation time (CPU,REAL):     0.05    0.05 (s)
+SolveWithLinearRestriction: Collection matrix increased with 6 rows and 2693 non-zeros
+SolveWithLinearRestriction: Now solving the linear system with constraints!
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 22902
+SolveLinearSystem: Serial linear System Solver: direct
+DirectSolver: Using direct method: umfpack
+ComputeChange: WARNING: Possible mismatch in length of vectors (22902 vs. 22896)!
+ComputeNorm: Computing norm of solution
+ComputeChange: Nonlinear iteration did not converge to tolerance
+ComputeChange: NS (ITER=1) (NRM,RELC): ( 0.10552689E-03  2.0000000     ) :: mgdynamics
+SolveWithLinearRestriction: Picking solution from collection solution
+SolveWithLinearRestriction: Separating Lagrange multiplier from collection solution
+SolveWithLinearRestriction: All done
+WhitneyAVSolver: Calculating lumped parameters
+DefaultFinish: Finished solver: mgdynamics
+WhitneyAVSolver: All done
+WhitneyAVSolver: -------------------------------------------
+SingleSolver: Attempting to call solver: 3
+SingleSolver: Solver Equation string is: mgdynamicscalc
+MagnetoDynamicsCalcFields: ------------------------------
+MagnetoDynamicsCalcFields: Computing postprocessed fields
+MagnetoDynamicsCalcFields: Using potential variable: magnetic vector potential
+MagnetoDynamicsCalcFields: Number of components to compute: 12
+WARNING:: GetPermittivity: Permittivity not defined in material, defaulting to that of vacuum
+MagnetoDynamicsCalcFields: Solving for field: magnetic flux density[magnetic flux density:3]
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+CRS_IncompleteLU: ILU(0) (Real), Performing Factorization:
+CRS_IncompleteLU: Allocated LU matrix of size: 42875
+CRS_IncompleteLU: ILU(0) (Real), NOF nonzeros:     42876
+CRS_IncompleteLU: ILU(0) (Real), filling (%) :       100
+CRS_IncompleteLU: ILU(0) (Real), Factorization time (s):     0.00
+Prec-ilu0: Elapsed REAL time:     0.0010 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=1) (NRM,RELC): ( 0.54169153E-01  2.0000000     ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=2) (NRM,RELC): ( 0.54293165E-01 0.22867145E-02 ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=3) (NRM,RELC): ( 0.29538448      1.3789347     ) :: mgdynamicscalc
+MagnetoDynamicsCalcFields: Solving for field: magnetic field strength[magnetic field strength:3]
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=4) (NRM,RELC): (  42681.346      1.9999723     ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=5) (NRM,RELC): (  42706.158     0.58115877E-03 ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=6) (NRM,RELC): (  240198.05      1.3961750     ) :: mgdynamicscalc
+MagnetoDynamicsCalcFields: Solving for field: magnetic vector potential
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=7) (NRM,RELC): ( 0.25849374E-01  1.9999996     ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=8) (NRM,RELC): ( 0.23866196E-01 0.79780957E-01 ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=9) (NRM,RELC): ( 0.14393690E-01 0.49516648     ) :: mgdynamicscalc
+MagnetoDynamicsCalcFields: Solving for field: current density[current density:3]
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=10) (NRM,RELC): ( 0.15918558E-11  2.0000000     ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=11) (NRM,RELC): ( 0.17711739E-11 0.10664081     ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=12) (NRM,RELC): ( 0.11165392E-12  1.7627953     ) :: mgdynamicscalc
+MagnetoDynamicsCalcFields: Eddy current power:    1.614490E-15
+MagnetoDynamicsCalcFields: ElectroMagnetic Field Energy:    1.044503E+01
+SingleSolver: Attempting to call solver: 4
+SingleSolver: Solver Equation string is: resultoutput
+ResultOutputSolver: -------------------------------------
+ResultOutputSolver: Saving with prefix: case
+ResultOutputSolver: Dimension of mesh is: 3
+ResultOutputSolver: Working on mesh 1: mesh with 2917 nodes
+ResultOutputSolver: Creating list for saving - if not present
+CreateListForSaving: Field Variables for Saving
+CreateListForSaving: Scalar Field 1: meshrelax
+CreateListForSaving: Scalar Field 2: magnetic vector potential
+CreateListForSaving: Scalar Field 3: alpha
+CreateListForSaving: Scalar Field 4: beta
+CreateListForSaving: Scalar Field 5: w
+CreateListForSaving: Scalar Field 6: alpha direction
+CreateListForSaving: Scalar Field 7: beta direction
+CreateListForSaving: Scalar Field 8: w potential
+CreateListForSaving: Vector Field 1: magnetic flux density
+CreateListForSaving: Vector Field 2: magnetic field strength
+CreateListForSaving: Vector Field 3: current density
+CreateListForSaving: Vector Field 4: magnetic flux density e
+CreateListForSaving: Vector Field 5: magnetic field strength e
+CreateListForSaving: Vector Field 6: current density e
+CreateListForSaving: Vector Field 7: w vector e
+ResultOutputSolver: Saving in unstructured VTK XML (.vtu) format
+VtuOutputSolver: Saving results in VTK XML format with prefix: case
+VtuOutputSolver: Saving number of partitions: 1
+SolverOutputDirectory: Creating directory: results
+VtuOutputSolver: Full filename base is: results/case
+GenerateSaveMask: Number of active elements 18743 out of 18743
+GenerateSaveMask: Number of geometry nodes 2917 out of 2917
+VtuOutputSolver: Total number of elements to save: 18743
+VtuOutputSolver: Total number of geometry nodes to save: 2917
+VtuOutputSolver: Total number of dof nodes to save: 2917
+VtuOutputSolver: Writing the vtu file: results/case_t0001.vtu
+AscBinWriteInit: Initializing buffered ascii/binary writing
+AscBinWriteInit: Writing in binary
+AscBinWriteInit: Writing in double precision
+AscBinWriteInit: Writing to unit number: 58
+AscBinWriteInit: Size of buffer is: 2917
+WriteVtuFile: Writing nodal fields
+WriteVtuFile: Saving 1-component variable: meshrelax
+WriteVtuFile: Saving 1-component variable: magnetic vector potential
+WriteVtuFile: Saving 1-component variable: alpha
+WriteVtuFile: Saving 1-component variable: beta
+WriteVtuFile: Saving 1-component variable: w
+WriteVtuFile: Saving 1-component variable: alpha direction
+WriteVtuFile: Saving 1-component variable: beta direction
+WriteVtuFile: Saving 1-component variable: w potential
+WriteVtuFile: Saving 3-component variable: magnetic flux density
+WriteVtuFile: Saving 3-component variable: magnetic field strength
+WriteVtuFile: Saving 3-component variable: current density
+WriteVtuFile: Saving 3-component variable: magnetic flux density e
+WriteVtuFile: Saving 3-component variable: magnetic field strength e
+WriteVtuFile: Saving 3-component variable: current density e
+WriteVtuFile: Saving 3-component variable: w vector e
+WriteVtuFile: Number of nodal fields written: 8
+WriteVtuFile: Writing elemental fields
+WriteVtuFile: Number of elemental fields written: 7
+WriteVtuFile: Writing coordinates for each used node
+WriteVtuFile: Writing the elemental connectivity data
+WriteVtuFile: Writing nodal fields
+WriteVtuFile: Saving 1-component variable: meshrelax
+WriteVtuFile: Saving 1-component variable: magnetic vector potential
+WriteVtuFile: Saving 1-component variable: alpha
+WriteVtuFile: Saving 1-component variable: beta
+WriteVtuFile: Saving 1-component variable: w
+WriteVtuFile: Saving 1-component variable: alpha direction
+WriteVtuFile: Saving 1-component variable: beta direction
+WriteVtuFile: Saving 1-component variable: w potential
+WriteVtuFile: Saving 3-component variable: magnetic flux density
+WriteVtuFile: Saving 3-component variable: magnetic field strength
+WriteVtuFile: Saving 3-component variable: current density
+WriteVtuFile: Saving 3-component variable: magnetic flux density e
+WriteVtuFile: Saving 3-component variable: magnetic field strength e
+WriteVtuFile: Saving 3-component variable: current density e
+WriteVtuFile: Saving 3-component variable: w vector e
+WriteVtuFile: Writing elemental fields
+AscBinWriteFree: Terminating buffered ascii/binary writing
+VtuOutputSolver: All done for now
+ResultOutputSolver: -------------------------------------
+SingleSolver: Attempting to call solver: 11
+SingleSolver: Solver Equation string is: savescalars
+SaveScalars: -----------------------------------------
+SaveScalars: Saving scalar values of various kinds
+SolverOutputDirectory: Creating directory: results
+SaveScalars: Performed 2 reduction operations
+SaveScalars: Found 13 result scalars in simulation section
+SaveScalars: Saving results from component - if any
+SaveScalars: Found 17 values to save in total
+SaveScalars: Saving names of values to file: results/circuit.csv.names
+SaveScalars: Saving values to file: results/circuit.csv
+SaveScalars: -----------------------------------------
+MAIN: 
+MAIN: -------------------------------------
+MAIN: Time: 2/4:   2.000E-03
+MAIN: Elapsed time:  9.9 seconds
+MAIN: Estimated time left: 24.9 seconds
+MAIN: -------------------------------------
+MAIN: 
+SingleSolver: Attempting to call solver: 9
+SingleSolver: Solver Equation string is: circuits
+CircuitsAndDynamics: Associating circuit variable to Lagrange values!
+CircuitsAndDynamics: Add PrevValues to Lagrange multiplier!
+AddComponentEquationsAndCouplings: Using coil resistance for component 1
+AddComponentEquationsAndCouplings: Writing resistor equation, component 2
+SingleSolver: Attempting to call solver: 10
+SingleSolver: Solver Equation string is: circuits output
+DefaultStart: Starting solver: circuits output
+CircuitsOutput: Initializing Lagrange multipliers of size: 6
+CircuitsOutput: Writing Circuit Results
+CircuitsOutput: Writing Circuit Variables for Circuit 1
+CircuitsOutput: There are 6 Circuit Variables
+CircuitsOutput: i_testsource            0.0000E+00
+CircuitsOutput: v_testsource            0.0000E+00
+CircuitsOutput: i_component(1)          0.0000E+00
+CircuitsOutput: v_component(1)         -0.0000E+00
+CircuitsOutput: i_component(2)          0.0000E+00
+CircuitsOutput: v_component(2)          0.0000E+00
+CircuitsOutput: Writing Component Variables for Circuit 1
+CircuitsOutput: r_component(1)          6.3334E-01
+CircuitsOutput: p_dc_component(1)       0.0000E+00
+CircuitsOutput: r_component(2)          1.0000E+01
+CircuitsOutput: p_dc_component(2)       0.0000E+00
+Circuit_ToMeshVariable: Adding circuit variables to be mesh variables
+DefaultFinish: Finished solver: circuits output
+SingleSolver: Attempting to call solver: 1
+SingleSolver: Solver Equation string is: meshdeform
+RigidMeshMapper: ---------------------------------------
+RigidMeshMapper: Performing analytic mesh mapping
+RigidMeshMapper: ---------------------------------------
+DefaultFinish: Finished solver: meshdeform
+SingleSolver: Attempting to call solver: 2
+SingleSolver: Solver Equation string is: mgdynamics
+WhitneyAVSolver: 
+WhitneyAVSolver: -------------------------------------------------
+WhitneyAVSolver: Solving transient AV equations with edge elements
+DefaultStart: Starting solver: mgdynamics
+MGDynAssembly: Elapsed REAL time:     0.4920 (s)
+DefUtils::DefaultDirichletBCs: Setting Dirichlet boundary conditions
+EnforceDirichletConditions: No Dirichlet conditions to enforce, exiting!
+WhitneyAVSolver: Volume tree edges: 2916 of total: 19979
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveSystem: Solving linear system with linear restrictions!
+SolveWithLinearRestriction: Freeing previous collection matrix structures
+SolveWithLinearRestriction: Refactoring requested, creating fully new matrix
+SolveWithLinearRestriction: Reverting CollectionMatrix back to CRS matrix
+List_ToCRSMatrix: Changing matrix type with number of non-zeros: 650873
+SolveWithLinearRestriction: Collection matrix creation time (CPU,REAL):     0.09    0.09 (s)
+SolveWithLinearRestriction: Collection matrix increased with 6 rows and 2693 non-zeros
+SolveWithLinearRestriction: Now solving the linear system with constraints!
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 22902
+SolveLinearSystem: Serial linear System Solver: direct
+DirectSolver: Using direct method: umfpack
+ComputeChange: WARNING: Possible mismatch in length of vectors (22902 vs. 22896)!
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=1) (NRM,RELC): ( 0.10552689E-03 0.31914168E-12 ) :: mgdynamics
+SolveWithLinearRestriction: Picking solution from collection solution
+SolveWithLinearRestriction: Separating Lagrange multiplier from collection solution
+SolveWithLinearRestriction: All done
+WhitneyAVSolver: Calculating lumped parameters
+DefaultFinish: Finished solver: mgdynamics
+WhitneyAVSolver: All done
+WhitneyAVSolver: -------------------------------------------
+SingleSolver: Attempting to call solver: 3
+SingleSolver: Solver Equation string is: mgdynamicscalc
+MagnetoDynamicsCalcFields: ------------------------------
+MagnetoDynamicsCalcFields: Computing postprocessed fields
+MagnetoDynamicsCalcFields: Using potential variable: magnetic vector potential
+MagnetoDynamicsCalcFields: Number of components to compute: 12
+MagnetoDynamicsCalcFields: Solving for field: magnetic flux density[magnetic flux density:3]
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=1) (NRM,RELC): ( 0.54169153E-01  2.0000000     ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=2) (NRM,RELC): ( 0.54293165E-01 0.22867145E-02 ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=3) (NRM,RELC): ( 0.29538448      1.3789347     ) :: mgdynamicscalc
+MagnetoDynamicsCalcFields: Solving for field: magnetic field strength[magnetic field strength:3]
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=4) (NRM,RELC): (  42681.346      1.9999723     ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=5) (NRM,RELC): (  42706.158     0.58115877E-03 ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=6) (NRM,RELC): (  240198.05      1.3961750     ) :: mgdynamicscalc
+MagnetoDynamicsCalcFields: Solving for field: magnetic vector potential
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=7) (NRM,RELC): ( 0.25849374E-01  1.9999996     ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=8) (NRM,RELC): ( 0.23866196E-01 0.79780957E-01 ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=9) (NRM,RELC): ( 0.14393690E-01 0.49516648     ) :: mgdynamicscalc
+MagnetoDynamicsCalcFields: Solving for field: current density[current density:3]
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=10) (NRM,RELC): ( 0.29740038E-08  1.9999992     ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=11) (NRM,RELC): ( 0.25440934E-08 0.15581835     ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=12) (NRM,RELC): ( 0.15356085E-08 0.49439147     ) :: mgdynamicscalc
+MagnetoDynamicsCalcFields: Eddy current power:    1.304610E-08
+MagnetoDynamicsCalcFields: ElectroMagnetic Field Energy:    1.044503E+01
+SingleSolver: Attempting to call solver: 4
+SingleSolver: Solver Equation string is: resultoutput
+ResultOutputSolver: -------------------------------------
+ResultOutputSolver: Dimension of mesh is: 3
+ResultOutputSolver: Working on mesh 1: mesh with 2917 nodes
+ResultOutputSolver: Saving in unstructured VTK XML (.vtu) format
+VtuOutputSolver: Full filename base is: results/case
+GenerateSaveMask: Number of active elements 18743 out of 18743
+GenerateSaveMask: Number of geometry nodes 2917 out of 2917
+VtuOutputSolver: Writing the vtu file: results/case_t0002.vtu
+AscBinWriteInit: Initializing buffered ascii/binary writing
+AscBinWriteInit: Writing in binary
+AscBinWriteInit: Writing in double precision
+AscBinWriteInit: Writing to unit number: 58
+AscBinWriteInit: Size of buffer is: 2917
+WriteVtuFile: Writing nodal fields
+WriteVtuFile: Saving 1-component variable: meshrelax
+WriteVtuFile: Saving 1-component variable: magnetic vector potential
+WriteVtuFile: Saving 1-component variable: alpha
+WriteVtuFile: Saving 1-component variable: beta
+WriteVtuFile: Saving 1-component variable: w
+WriteVtuFile: Saving 1-component variable: alpha direction
+WriteVtuFile: Saving 1-component variable: beta direction
+WriteVtuFile: Saving 1-component variable: w potential
+WriteVtuFile: Saving 3-component variable: magnetic flux density
+WriteVtuFile: Saving 3-component variable: magnetic field strength
+WriteVtuFile: Saving 3-component variable: current density
+WriteVtuFile: Saving 3-component variable: magnetic flux density e
+WriteVtuFile: Saving 3-component variable: magnetic field strength e
+WriteVtuFile: Saving 3-component variable: current density e
+WriteVtuFile: Saving 3-component variable: w vector e
+WriteVtuFile: Number of nodal fields written: 8
+WriteVtuFile: Writing elemental fields
+WriteVtuFile: Number of elemental fields written: 7
+WriteVtuFile: Writing coordinates for each used node
+WriteVtuFile: Writing the elemental connectivity data
+WriteVtuFile: Writing nodal fields
+WriteVtuFile: Saving 1-component variable: meshrelax
+WriteVtuFile: Saving 1-component variable: magnetic vector potential
+WriteVtuFile: Saving 1-component variable: alpha
+WriteVtuFile: Saving 1-component variable: beta
+WriteVtuFile: Saving 1-component variable: w
+WriteVtuFile: Saving 1-component variable: alpha direction
+WriteVtuFile: Saving 1-component variable: beta direction
+WriteVtuFile: Saving 1-component variable: w potential
+WriteVtuFile: Saving 3-component variable: magnetic flux density
+WriteVtuFile: Saving 3-component variable: magnetic field strength
+WriteVtuFile: Saving 3-component variable: current density
+WriteVtuFile: Saving 3-component variable: magnetic flux density e
+WriteVtuFile: Saving 3-component variable: magnetic field strength e
+WriteVtuFile: Saving 3-component variable: current density e
+WriteVtuFile: Saving 3-component variable: w vector e
+WriteVtuFile: Writing elemental fields
+AscBinWriteFree: Terminating buffered ascii/binary writing
+VtuOutputSolver: All done for now
+ResultOutputSolver: -------------------------------------
+SingleSolver: Attempting to call solver: 11
+SingleSolver: Solver Equation string is: savescalars
+SaveScalars: -----------------------------------------
+SaveScalars: Saving scalar values of various kinds
+SaveScalars: Performed 2 reduction operations
+SaveScalars: Found 13 result scalars in simulation section
+SaveScalars: Saving results from component - if any
+SaveScalars: Found 17 values to save in total
+SaveScalars: Saving values to file: results/circuit.csv
+SaveScalars: -----------------------------------------
+MAIN: 
+MAIN: -------------------------------------
+MAIN: Time: 3/4:   3.000E-03
+MAIN: Elapsed time: 18.7 seconds
+MAIN: Estimated time left: 17.4 seconds
+MAIN: -------------------------------------
+MAIN: 
+SingleSolver: Attempting to call solver: 9
+SingleSolver: Solver Equation string is: circuits
+AddComponentEquationsAndCouplings: Using coil resistance for component 1
+AddComponentEquationsAndCouplings: Writing resistor equation, component 2
+SingleSolver: Attempting to call solver: 10
+SingleSolver: Solver Equation string is: circuits output
+DefaultStart: Starting solver: circuits output
+CircuitsOutput: Initializing Lagrange multipliers of size: 6
+CircuitsOutput: Writing Circuit Results
+CircuitsOutput: Writing Circuit Variables for Circuit 1
+CircuitsOutput: There are 6 Circuit Variables
+CircuitsOutput: i_testsource            0.0000E+00
+CircuitsOutput: v_testsource            0.0000E+00
+CircuitsOutput: i_component(1)          0.0000E+00
+CircuitsOutput: v_component(1)         -0.0000E+00
+CircuitsOutput: i_component(2)          0.0000E+00
+CircuitsOutput: v_component(2)          0.0000E+00
+CircuitsOutput: Writing Component Variables for Circuit 1
+CircuitsOutput: r_component(1)          6.3334E-01
+CircuitsOutput: p_dc_component(1)       0.0000E+00
+CircuitsOutput: r_component(2)          1.0000E+01
+CircuitsOutput: p_dc_component(2)       0.0000E+00
+Circuit_ToMeshVariable: Adding circuit variables to be mesh variables
+DefaultFinish: Finished solver: circuits output
+SingleSolver: Attempting to call solver: 1
+SingleSolver: Solver Equation string is: meshdeform
+RigidMeshMapper: ---------------------------------------
+RigidMeshMapper: Performing analytic mesh mapping
+RigidMeshMapper: ---------------------------------------
+DefaultFinish: Finished solver: meshdeform
+SingleSolver: Attempting to call solver: 2
+SingleSolver: Solver Equation string is: mgdynamics
+WhitneyAVSolver: 
+WhitneyAVSolver: -------------------------------------------------
+WhitneyAVSolver: Solving transient AV equations with edge elements
+DefaultStart: Starting solver: mgdynamics
+MGDynAssembly: Elapsed REAL time:     0.4240 (s)
+DefUtils::DefaultDirichletBCs: Setting Dirichlet boundary conditions
+EnforceDirichletConditions: No Dirichlet conditions to enforce, exiting!
+WhitneyAVSolver: Volume tree edges: 2916 of total: 19979
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveSystem: Solving linear system with linear restrictions!
+SolveWithLinearRestriction: Freeing previous collection matrix structures
+SolveWithLinearRestriction: Refactoring requested, creating fully new matrix
+SolveWithLinearRestriction: Reverting CollectionMatrix back to CRS matrix
+List_ToCRSMatrix: Changing matrix type with number of non-zeros: 650873
+SolveWithLinearRestriction: Collection matrix creation time (CPU,REAL):     0.07    0.07 (s)
+SolveWithLinearRestriction: Collection matrix increased with 6 rows and 2693 non-zeros
+SolveWithLinearRestriction: Now solving the linear system with constraints!
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 22902
+SolveLinearSystem: Serial linear System Solver: direct
+DirectSolver: Using direct method: umfpack
+ComputeChange: WARNING: Possible mismatch in length of vectors (22902 vs. 22896)!
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=1) (NRM,RELC): ( 0.10552689E-03 0.25685447E-15 ) :: mgdynamics
+SolveWithLinearRestriction: Picking solution from collection solution
+SolveWithLinearRestriction: Separating Lagrange multiplier from collection solution
+SolveWithLinearRestriction: All done
+WhitneyAVSolver: Calculating lumped parameters
+DefaultFinish: Finished solver: mgdynamics
+WhitneyAVSolver: All done
+WhitneyAVSolver: -------------------------------------------
+SingleSolver: Attempting to call solver: 3
+SingleSolver: Solver Equation string is: mgdynamicscalc
+MagnetoDynamicsCalcFields: ------------------------------
+MagnetoDynamicsCalcFields: Computing postprocessed fields
+MagnetoDynamicsCalcFields: Using potential variable: magnetic vector potential
+MagnetoDynamicsCalcFields: Number of components to compute: 12
+MagnetoDynamicsCalcFields: Solving for field: magnetic flux density[magnetic flux density:3]
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=1) (NRM,RELC): ( 0.54169153E-01  1.9999999     ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=2) (NRM,RELC): ( 0.54293165E-01 0.22867145E-02 ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=3) (NRM,RELC): ( 0.29538448      1.3789347     ) :: mgdynamicscalc
+MagnetoDynamicsCalcFields: Solving for field: magnetic field strength[magnetic field strength:3]
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=4) (NRM,RELC): (  42681.346      1.9999723     ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=5) (NRM,RELC): (  42706.158     0.58115877E-03 ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=6) (NRM,RELC): (  240198.05      1.3961750     ) :: mgdynamicscalc
+MagnetoDynamicsCalcFields: Solving for field: magnetic vector potential
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=7) (NRM,RELC): ( 0.25849374E-01  1.9999996     ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=8) (NRM,RELC): ( 0.23866196E-01 0.79780957E-01 ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=9) (NRM,RELC): ( 0.14393690E-01 0.49516648     ) :: mgdynamicscalc
+MagnetoDynamicsCalcFields: Solving for field: current density[current density:3]
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=10) (NRM,RELC): ( 0.29740038E-08  1.9999992     ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=11) (NRM,RELC): ( 0.25440934E-08 0.15581835     ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=12) (NRM,RELC): ( 0.15356085E-08 0.49439147     ) :: mgdynamicscalc
+MagnetoDynamicsCalcFields: Eddy current power:    1.304610E-08
+MagnetoDynamicsCalcFields: ElectroMagnetic Field Energy:    1.044503E+01
+SingleSolver: Attempting to call solver: 4
+SingleSolver: Solver Equation string is: resultoutput
+ResultOutputSolver: -------------------------------------
+ResultOutputSolver: Dimension of mesh is: 3
+ResultOutputSolver: Working on mesh 1: mesh with 2917 nodes
+ResultOutputSolver: Saving in unstructured VTK XML (.vtu) format
+VtuOutputSolver: Full filename base is: results/case
+GenerateSaveMask: Number of active elements 18743 out of 18743
+GenerateSaveMask: Number of geometry nodes 2917 out of 2917
+VtuOutputSolver: Writing the vtu file: results/case_t0003.vtu
+AscBinWriteInit: Initializing buffered ascii/binary writing
+AscBinWriteInit: Writing in binary
+AscBinWriteInit: Writing in double precision
+AscBinWriteInit: Writing to unit number: 58
+AscBinWriteInit: Size of buffer is: 2917
+WriteVtuFile: Writing nodal fields
+WriteVtuFile: Saving 1-component variable: meshrelax
+WriteVtuFile: Saving 1-component variable: magnetic vector potential
+WriteVtuFile: Saving 1-component variable: alpha
+WriteVtuFile: Saving 1-component variable: beta
+WriteVtuFile: Saving 1-component variable: w
+WriteVtuFile: Saving 1-component variable: alpha direction
+WriteVtuFile: Saving 1-component variable: beta direction
+WriteVtuFile: Saving 1-component variable: w potential
+WriteVtuFile: Saving 3-component variable: magnetic flux density
+WriteVtuFile: Saving 3-component variable: magnetic field strength
+WriteVtuFile: Saving 3-component variable: current density
+WriteVtuFile: Saving 3-component variable: magnetic flux density e
+WriteVtuFile: Saving 3-component variable: magnetic field strength e
+WriteVtuFile: Saving 3-component variable: current density e
+WriteVtuFile: Saving 3-component variable: w vector e
+WriteVtuFile: Number of nodal fields written: 8
+WriteVtuFile: Writing elemental fields
+WriteVtuFile: Number of elemental fields written: 7
+WriteVtuFile: Writing coordinates for each used node
+WriteVtuFile: Writing the elemental connectivity data
+WriteVtuFile: Writing nodal fields
+WriteVtuFile: Saving 1-component variable: meshrelax
+WriteVtuFile: Saving 1-component variable: magnetic vector potential
+WriteVtuFile: Saving 1-component variable: alpha
+WriteVtuFile: Saving 1-component variable: beta
+WriteVtuFile: Saving 1-component variable: w
+WriteVtuFile: Saving 1-component variable: alpha direction
+WriteVtuFile: Saving 1-component variable: beta direction
+WriteVtuFile: Saving 1-component variable: w potential
+WriteVtuFile: Saving 3-component variable: magnetic flux density
+WriteVtuFile: Saving 3-component variable: magnetic field strength
+WriteVtuFile: Saving 3-component variable: current density
+WriteVtuFile: Saving 3-component variable: magnetic flux density e
+WriteVtuFile: Saving 3-component variable: magnetic field strength e
+WriteVtuFile: Saving 3-component variable: current density e
+WriteVtuFile: Saving 3-component variable: w vector e
+WriteVtuFile: Writing elemental fields
+AscBinWriteFree: Terminating buffered ascii/binary writing
+VtuOutputSolver: All done for now
+ResultOutputSolver: -------------------------------------
+SingleSolver: Attempting to call solver: 11
+SingleSolver: Solver Equation string is: savescalars
+SaveScalars: -----------------------------------------
+SaveScalars: Saving scalar values of various kinds
+SaveScalars: Performed 2 reduction operations
+SaveScalars: Found 13 result scalars in simulation section
+SaveScalars: Saving results from component - if any
+SaveScalars: Found 17 values to save in total
+SaveScalars: Saving values to file: results/circuit.csv
+SaveScalars: -----------------------------------------
+MAIN: 
+MAIN: -------------------------------------
+MAIN: Time: 4/4:   4.000E-03
+MAIN: Elapsed time: 26.7 seconds
+MAIN: Estimated time left:  8.1 seconds
+MAIN: -------------------------------------
+MAIN: 
+SingleSolver: Attempting to call solver: 9
+SingleSolver: Solver Equation string is: circuits
+AddComponentEquationsAndCouplings: Using coil resistance for component 1
+AddComponentEquationsAndCouplings: Writing resistor equation, component 2
+SingleSolver: Attempting to call solver: 10
+SingleSolver: Solver Equation string is: circuits output
+DefaultStart: Starting solver: circuits output
+CircuitsOutput: Initializing Lagrange multipliers of size: 6
+CircuitsOutput: Writing Circuit Results
+CircuitsOutput: Writing Circuit Variables for Circuit 1
+CircuitsOutput: There are 6 Circuit Variables
+CircuitsOutput: i_testsource            0.0000E+00
+CircuitsOutput: v_testsource            0.0000E+00
+CircuitsOutput: i_component(1)          0.0000E+00
+CircuitsOutput: v_component(1)         -0.0000E+00
+CircuitsOutput: i_component(2)          0.0000E+00
+CircuitsOutput: v_component(2)          0.0000E+00
+CircuitsOutput: Writing Component Variables for Circuit 1
+CircuitsOutput: r_component(1)          6.3334E-01
+CircuitsOutput: p_dc_component(1)       0.0000E+00
+CircuitsOutput: r_component(2)          1.0000E+01
+CircuitsOutput: p_dc_component(2)       0.0000E+00
+Circuit_ToMeshVariable: Adding circuit variables to be mesh variables
+DefaultFinish: Finished solver: circuits output
+SingleSolver: Attempting to call solver: 1
+SingleSolver: Solver Equation string is: meshdeform
+RigidMeshMapper: ---------------------------------------
+RigidMeshMapper: Performing analytic mesh mapping
+RigidMeshMapper: ---------------------------------------
+DefaultFinish: Finished solver: meshdeform
+SingleSolver: Attempting to call solver: 2
+SingleSolver: Solver Equation string is: mgdynamics
+WhitneyAVSolver: 
+WhitneyAVSolver: -------------------------------------------------
+WhitneyAVSolver: Solving transient AV equations with edge elements
+DefaultStart: Starting solver: mgdynamics
+MGDynAssembly: Elapsed REAL time:     0.3860 (s)
+DefUtils::DefaultDirichletBCs: Setting Dirichlet boundary conditions
+EnforceDirichletConditions: No Dirichlet conditions to enforce, exiting!
+WhitneyAVSolver: Volume tree edges: 2916 of total: 19979
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveSystem: Solving linear system with linear restrictions!
+SolveWithLinearRestriction: Freeing previous collection matrix structures
+SolveWithLinearRestriction: Refactoring requested, creating fully new matrix
+SolveWithLinearRestriction: Reverting CollectionMatrix back to CRS matrix
+List_ToCRSMatrix: Changing matrix type with number of non-zeros: 650873
+SolveWithLinearRestriction: Collection matrix creation time (CPU,REAL):     0.06    0.06 (s)
+SolveWithLinearRestriction: Collection matrix increased with 6 rows and 2693 non-zeros
+SolveWithLinearRestriction: Now solving the linear system with constraints!
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 22902
+SolveLinearSystem: Serial linear System Solver: direct
+DirectSolver: Using direct method: umfpack
+ComputeChange: WARNING: Possible mismatch in length of vectors (22902 vs. 22896)!
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=1) (NRM,RELC): ( 0.10552689E-03 0.38528171E-15 ) :: mgdynamics
+SolveWithLinearRestriction: Picking solution from collection solution
+SolveWithLinearRestriction: Separating Lagrange multiplier from collection solution
+SolveWithLinearRestriction: All done
+WhitneyAVSolver: Calculating lumped parameters
+DefaultFinish: Finished solver: mgdynamics
+WhitneyAVSolver: All done
+WhitneyAVSolver: -------------------------------------------
+SingleSolver: Attempting to call solver: 3
+SingleSolver: Solver Equation string is: mgdynamicscalc
+MagnetoDynamicsCalcFields: ------------------------------
+MagnetoDynamicsCalcFields: Computing postprocessed fields
+MagnetoDynamicsCalcFields: Using potential variable: magnetic vector potential
+MagnetoDynamicsCalcFields: Number of components to compute: 12
+MagnetoDynamicsCalcFields: Solving for field: magnetic flux density[magnetic flux density:3]
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=1) (NRM,RELC): ( 0.54169153E-01  1.9999999     ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=2) (NRM,RELC): ( 0.54293165E-01 0.22867145E-02 ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=3) (NRM,RELC): ( 0.29538448      1.3789347     ) :: mgdynamicscalc
+MagnetoDynamicsCalcFields: Solving for field: magnetic field strength[magnetic field strength:3]
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=4) (NRM,RELC): (  42681.346      1.9999723     ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=5) (NRM,RELC): (  42706.158     0.58115877E-03 ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=6) (NRM,RELC): (  240198.05      1.3961750     ) :: mgdynamicscalc
+MagnetoDynamicsCalcFields: Solving for field: magnetic vector potential
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=7) (NRM,RELC): ( 0.25849374E-01  1.9999996     ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=8) (NRM,RELC): ( 0.23866196E-01 0.79780957E-01 ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=9) (NRM,RELC): ( 0.14393690E-01 0.49516648     ) :: mgdynamicscalc
+MagnetoDynamicsCalcFields: Solving for field: current density[current density:3]
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=10) (NRM,RELC): ( 0.29740038E-08  1.9999992     ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=11) (NRM,RELC): ( 0.25440934E-08 0.15581835     ) :: mgdynamicscalc
+DefaultSolve: Solving linear system with default routines
+SolveSystem: Solving linear system
+SolveLinearSystem: Assuming real valued linear system
+SolveLinearSystem: Assuming serial linear system
+ScaleLinearSystem: Creating > DiagScaling < vector of size 2917
+SolveLinearSystem: Linear System Preconditioning: ilu0
+Prec0-ilu0: Elapsed REAL time:     0.0000 (s)
+SolveLinearSystem: Serial linear System Solver: iterative
+IterSolver: Using iterative method: cg
+Prec-ilu0: Elapsed REAL time:     0.0000 (s)
+ComputeNorm: Computing norm of solution
+ComputeChange: NS (ITER=12) (NRM,RELC): ( 0.15356085E-08 0.49439147     ) :: mgdynamicscalc
+MagnetoDynamicsCalcFields: Eddy current power:    1.304610E-08
+MagnetoDynamicsCalcFields: ElectroMagnetic Field Energy:    1.044503E+01
+SingleSolver: Attempting to call solver: 4
+SingleSolver: Solver Equation string is: resultoutput
+ResultOutputSolver: -------------------------------------
+ResultOutputSolver: Dimension of mesh is: 3
+ResultOutputSolver: Working on mesh 1: mesh with 2917 nodes
+ResultOutputSolver: Saving in unstructured VTK XML (.vtu) format
+VtuOutputSolver: Full filename base is: results/case
+GenerateSaveMask: Number of active elements 18743 out of 18743
+GenerateSaveMask: Number of geometry nodes 2917 out of 2917
+VtuOutputSolver: Writing the vtu file: results/case_t0004.vtu
+AscBinWriteInit: Initializing buffered ascii/binary writing
+AscBinWriteInit: Writing in binary
+AscBinWriteInit: Writing in double precision
+AscBinWriteInit: Writing to unit number: 58
+AscBinWriteInit: Size of buffer is: 2917
+WriteVtuFile: Writing nodal fields
+WriteVtuFile: Saving 1-component variable: meshrelax
+WriteVtuFile: Saving 1-component variable: magnetic vector potential
+WriteVtuFile: Saving 1-component variable: alpha
+WriteVtuFile: Saving 1-component variable: beta
+WriteVtuFile: Saving 1-component variable: w
+WriteVtuFile: Saving 1-component variable: alpha direction
+WriteVtuFile: Saving 1-component variable: beta direction
+WriteVtuFile: Saving 1-component variable: w potential
+WriteVtuFile: Saving 3-component variable: magnetic flux density
+WriteVtuFile: Saving 3-component variable: magnetic field strength
+WriteVtuFile: Saving 3-component variable: current density
+WriteVtuFile: Saving 3-component variable: magnetic flux density e
+WriteVtuFile: Saving 3-component variable: magnetic field strength e
+WriteVtuFile: Saving 3-component variable: current density e
+WriteVtuFile: Saving 3-component variable: w vector e
+WriteVtuFile: Number of nodal fields written: 8
+WriteVtuFile: Writing elemental fields
+WriteVtuFile: Number of elemental fields written: 7
+WriteVtuFile: Writing coordinates for each used node
+WriteVtuFile: Writing the elemental connectivity data
+WriteVtuFile: Writing nodal fields
+WriteVtuFile: Saving 1-component variable: meshrelax
+WriteVtuFile: Saving 1-component variable: magnetic vector potential
+WriteVtuFile: Saving 1-component variable: alpha
+WriteVtuFile: Saving 1-component variable: beta
+WriteVtuFile: Saving 1-component variable: w
+WriteVtuFile: Saving 1-component variable: alpha direction
+WriteVtuFile: Saving 1-component variable: beta direction
+WriteVtuFile: Saving 1-component variable: w potential
+WriteVtuFile: Saving 3-component variable: magnetic flux density
+WriteVtuFile: Saving 3-component variable: magnetic field strength
+WriteVtuFile: Saving 3-component variable: current density
+WriteVtuFile: Saving 3-component variable: magnetic flux density e
+WriteVtuFile: Saving 3-component variable: magnetic field strength e
+WriteVtuFile: Saving 3-component variable: current density e
+WriteVtuFile: Saving 3-component variable: w vector e
+WriteVtuFile: Writing elemental fields
+AscBinWriteFree: Terminating buffered ascii/binary writing
+VtuOutputSolver: All done for now
+ResultOutputSolver: -------------------------------------
+SingleSolver: Attempting to call solver: 11
+SingleSolver: Solver Equation string is: savescalars
+SaveScalars: -----------------------------------------
+SaveScalars: Saving scalar values of various kinds
+SaveScalars: Performed 2 reduction operations
+SaveScalars: Found 13 result scalars in simulation section
+SaveScalars: Saving results from component - if any
+SaveScalars: Found 17 values to save in total
+SaveScalars: Saving values to file: results/circuit.csv
+SaveScalars: -----------------------------------------
+ReloadInputFile: Reloading input file
+LoadInputFile: Loading input file:
+MAIN: Reporting unused list entries for sif improvement!
+MAIN: If you do not want these lines undefine > DEVEL_LISTUSAGE < !
+   Unused keywords:
+       Simulation            max output level
+       Equation 1            mesh update
+       Component 1           coil normal
+       Component 1           desired current density
+       Body Force 3          testsource
+       Body Force 3          circuit current variable id
+       Body Force 3          stranded coil n_j
+       Boundary Condition 1  magnetic vector potential 1
+       Boundary Condition 1  magnetic vector potential 2
+       Boundary Condition 1  magnetic vector potential 3
+       Boundary Condition 3  coil start
+       Boundary Condition 4  coil end
+       Solver 2              calculate current density
+       Solver 2              calculate magnetic flux density
+       Solver 2              calculate magnetic field strength
+       Solver 2              linear system convergence tolerance
+       Solver 2              linear system max iterations
+       Solver 2              steady state convergence tolerance
+       Solver 3              steady state convergence tolerance
+       Solver 5              linear system abort not converged
+       Solver 6              linear system abort not converged
+       Solver 8              linear system abort not converged
+       Solver 11             output format
+       Solver 11             operator 1
+       Solver 11             operator 2
+MAIN: *** Elmer Solver: ALL DONE ***
+ReleaseMeshFaceTables: Releasing number of faces: 33766
+Loading user function library: [RigidMeshMapper]...[RigidMeshMapper_Finalize]
+Loading user function library: [RigidMeshMapper]...[RigidMeshMapper_Finalize]
+Loading user function library: [MagnetoDynamics]...[WhitneyAVSolver_Finalize]
+Loading user function library: [MagnetoDynamics]...[WhitneyAVSolver_Finalize]
+Loading user function library: [MagnetoDynamics]...[MagnetoDynamicsCalcFields_Finalize]
+Loading user function library: [MagnetoDynamics]...[MagnetoDynamicsCalcFields_Finalize]
+Loading user function library: [ResultOutputSolve]...[ResultOutputSolver_Finalize]
+Loading user function library: [ResultOutputSolve]...[ResultOutputSolver_Finalize]
+Loading user function library: [DirectionSolver]...[DirectionSolver_Finalize]
+Loading user function library: [DirectionSolver]...[DirectionSolver_Finalize]
+Loading user function library: [DirectionSolver]...[DirectionSolver_Finalize]
+Loading user function library: [DirectionSolver]...[DirectionSolver_Finalize]
+Loading user function library: [CoordinateTransform]...[RotMSolver_Finalize]
+Loading user function library: [CoordinateTransform]...[RotMSolver_Finalize]
+Loading user function library: [WPotentialSolver]...[Wsolve_Finalize]
+Loading user function library: [WPotentialSolver]...[Wsolve_Finalize]
+Loading user function library: [CircuitsAndDynamics]...[CircuitsAndDynamics_Finalize]
+Loading user function library: [CircuitsAndDynamics]...[CircuitsAndDynamics_Finalize]
+Loading user function library: [CircuitsAndDynamics]...[CircuitsOutput_Finalize]
+Loading user function library: [CircuitsAndDynamics]...[CircuitsOutput_Finalize]
+Loading user function library: [SaveData]...[SaveScalars_Finalize]
+Loading user function library: [SaveData]...[SaveScalars_Finalize]
+Loading user function library: [DirectionSolver]...[DirectionSolver_Dummy_Finalize]
+Loading user function library: [DirectionSolver]...[DirectionSolver_Dummy_Finalize]
+Loading user function library: [DirectionSolver]...[DirectionSolver_Dummy_Finalize]
+Loading user function library: [DirectionSolver]...[DirectionSolver_Dummy_Finalize]
+Loading user function library: [WPotentialSolver]...[Wsolve_Dummy_Finalize]
+Loading user function library: [WPotentialSolver]...[Wsolve_Dummy_Finalize]
+MAIN: The end
+SOLVER TOTAL TIME(CPU,REAL):        34.82       34.82
+ELMER SOLVER FINISHED AT: 2026/09/19 11:06:36

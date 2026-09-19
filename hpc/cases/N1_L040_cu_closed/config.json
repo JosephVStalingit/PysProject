@@ -1,0 +1,116 @@
+{
+    "_comment": "config.json -- input to solenoid3d.py.\n\n    Layout:\n      experiment  : global experiment metadata\n      physics     : shared physics (gravity, mass, air drag, magnet properties)\n      mesh        : mesh sizes\n      geometry    : air-domain extents\n      curves      : LIST of curve blocks, ONE per body geometry. To add a new\n                    curve, simply add another named entry under [curves]. Each\n                    block must carry:  label, color, z_release_m, N_turns,\n                    R_load_ohm, damping_extra_N_s_per_m, body_name, sif_suffix.\n                    Wire-related keys (wire_diameter_m,\n                    wire_conductivity_S_per_m) are read when N_turns > 0.",
+    "experiment": {
+        "name": "magnet_spring_oscillator",
+        "_comment_mode": "motion_mode selects which law drives the mesh: 'spring' uses config.json -> [spring] (damped harmonic oscillator), 'free_fall' uses z = z0 - 1/2 g t^2. Both are PRESCRIBED translations applied by RigidMeshMapper.",
+        "motion_mode": "spring",
+        "description": "Permanent cylindrical magnet suspended on a spring above a coil, released from rest and oscillating through the coil bore. We track trajectory, flux, EMF, induced current and the Lenz braking force for multiple coil configurations.",
+        "z_release_default_m": 0.045,
+        "z_final_default_m": -0.05,
+        "_comment_time": "t_end_default_s spans THREE full spring periods (T ~= 0.29976 s, so 0.9 s = 3.0024 periods). dt must stay small: the RigidMeshMapper tracks a prescribed translation accurately only when the per-step displacement (here A*omega0*dt ~= 0.84 mm) is well below the local element size. make_sif.py turns these two into `Timestep Sizes` / `Timestep Intervals`.",
+        "t_end_default_s": 0.9,
+        "dt_s": 0.001
+    },
+    "physics": {
+        "G": 9.81,
+        "M_kg": 0.5,
+        "C_air": 0.05
+    },
+    "magnet": {
+        "_comment": "Permanent NdFeB cylinder.  CAREFUL: `H_mag_m` is the HALF height used by the on-axis dipole formula; the real extent is z1_m - z0_m = 0.030 m.  The mesh position equals the spring RELEASE position, so the prescribed displacement starts at exactly zero.",
+        "M_mag_A_per_m": 1200000.0,
+        "R_mag_m": 0.015,
+        "H_mag_m": 0.015,
+        "z0_m": 0.03,
+        "z1_m": 0.06
+    },
+    "coil": {
+        "_comment": "SHARED bore-former dimensions (inner / outer radius of the hollow\n        bobbin) and the SHARED coil length. The coil length was moved\n        here FROM each curve so that the experimental factor 'number of\n        turns' and 'material' can be varied WITHOUT changing geometry.\n        That is: with length fixed at L_coil_m, R_wire for a curve is\n        R_wire = N_turns * 2*pi*r_mean / (sigma * pi*d^2/4), and the only\n        remaining factors are N_turns and sigma.\n\n        L_coil_m = 0.040 m is the previously-validated 40 mm coil.\n        The empty curve (no conductor) ignores L_coil_m and uses AirInside.",
+        "z0_m": 0.0,
+        "z1_m": 0.04,
+        "r_inner_m": 0.02,
+        "r_outer_m": 0.025,
+        "slit_width_m": 0.0035,
+        "_comment_slit": "Radial slit through the coil annulus.  It is what gives the stranded coil its two wire terminals: WPotentialSolver conducts W along the wire direction, so the W = 0 / W = 1 pair must be separated IN THETA, and only a slit can do that on an axisymmetric ring (hpc/notes.md 13.12).  Keep it as thin as the mesh can resolve -- it is a mathematical device, not a physical air gap."
+    },
+    "spring": {
+        "_comment": "SPRING-MASS-DAMPER experiment (replaces the free-fall motion law).\n\n    The magnet hangs from a helical spring whose top is fixed to a clamped\n    anchor plate above the coil.  Instead of the free-fall law z = z0 - g t^2\n    the mesh is driven with the analytic damped-oscillator solution:\n\n        m z'' = -m g - k (L - L0) - c z' - F_lenz\n        z(t)  = z_eq + A e^(-gamma t) [cos(wd t) + (gamma/wd) sin(wd t)]\n\n    with      omega0 = sqrt(k/m)\n              gamma  = c / (2 m)\n              wd     = sqrt(omega0^2 - gamma^2)\n              sag    = m g / k              (static stretch)\n              L_eq   = anchor_z0 - (z_eq + H_mag/2)\n              L0     = L_eq - sag           (unstretched length)\n              A      = |z_release - z_eq|   (released from rest)\n\n    All lengths are in metres, angles in radians.  The MESH represents the\n    spring at its EQUILIBRIUM length; the oscillation is a prescribed\n    translation (RigidMeshMapper + Mesh Translate 3 = MATC expression),\n    exactly like the free-fall case, so no rigid-body solver is needed.\n\n    NOTE: the spring (R = 6..8 mm) sits on the axis INSIDE the coil bore and\n    is non-magnetic (mu_r = 1), so it has NO effect on the field.  Meshing it\n    is therefore optional -- see include_in_mesh.",
+        "enabled": true,
+        "stiffness_N_per_m": 220.0,
+        "damping_N_s_per_m": 0.8,
+        "mass_kg": 0.5,
+        "z_eq_m": 0.02,
+        "z_release_m": 0.045,
+        "_comment_anchor": "Clamped plate the spring hangs from.  Its bottom face (anchor_z0) is the fixed end of the spring.",
+        "anchor_z0_m": 0.099,
+        "anchor_z1_m": 0.101,
+        "_comment_spring_geom": "Spring = hollow tube at its EQUILIBRIUM length.  spring_z1 is welded to the anchor bottom; spring_z0 would touch the magnet top if the magnet sat at z_eq.",
+        "spring_r_inner_m": 0.006,
+        "spring_r_outer_m": 0.008,
+        "spring_z0_m": 0.039,
+        "spring_z1_m": 0.099,
+        "clamped_boundary": true,
+        "include_in_mesh": false,
+        "_derived_from_defaults": {
+            "omega0_rad_per_s": 20.976,
+            "period_s": 0.2995,
+            "frequency_Hz": 3.338,
+            "gamma_per_s": 0.8,
+            "omega_d_rad_per_s": 20.961,
+            "quality_factor": 13.1,
+            "static_sag_m": 0.0223,
+            "L_eq_m": 0.064,
+            "L0_m": 0.0417,
+            "amplitude_m": 0.025,
+            "magnet_centre_range_m": [
+                -0.005,
+                0.045
+            ],
+            "magnet_span_range_m": [
+                -0.02,
+                0.06
+            ],
+            "spring_length_range_m": [
+                0.039,
+                0.089
+            ],
+            "spring_stretch_range": [
+                0.94,
+                2.13
+            ]
+        },
+        "_comment_derived": "Recomputed by solenoid3d.py / oscilloscope.py from the values above -- do NOT edit by hand; they are recorded here only so the defaults are self-documenting."
+    },
+    "mesh": {
+        "_comment": "Sizes are applied to the corner POINTS of each volume (required with General.ExpertMode=1). The magnet and coil are refined locally; the far-field air stays coarse. The TRANSIENT run performs one direct linear solve per timestep, so the total node count directly drives wall-clock time.",
+        "_comment_lc_slit": "!!! lc_slit_m MUST STAY >= coil.slit_width_m (0.0035 m). !!!  Below that threshold the 3.5 mm slit is spanned by MORE THAN ONE element and the closed-circuit transient develops a self-amplifying numerical mode: the coil current grows by a constant factor EVERY timestep (1.777/step at 2.5 mm, 3.30/step at 3.0 mm, 1.199/step at 3.5 mm) until the run overflows.  At or above the slit width a single element spans the gap and the transient is stable (gain ~1.000).  Everything else -- dt, R_load, whether the magnet moves, and the scalar-vs-vector W route -- makes NO difference; only this number does.  Measured cost: 2.5 mm -> 30698 elements (UNSTABLE), 4.0 mm -> 18743 (stable).  See hpc/notes.md 15.11.  NOTE: stable is not yet the same as converged -- the absolute induced-current magnitude has NOT been validated, so do not quote currents from this model until the lc_slit_m convergence study in 15.11 is done.",
+        "lc_min_m": 0.0025,
+        "lc_max_m": 0.022,
+        "lc_coil_m": 0.008,
+        "lc_magnet_m": 0.004,
+        "lc_others_m": 0.022,
+        "lc_slit_m": 0.004
+    },
+    "geometry": {
+        "R_air_m": 0.08,
+        "air_z0_m": -0.08,
+        "air_z1_m": 0.11
+    },
+    "curves": {
+        "N25_L040_cu_closed": {
+            "_comment": "25 turns of 0.7 mm copper wire, 40 mm coil, closed into 10 ohm load. R_wire ~ 0.14 ohm.",
+            "label": "Cu 25t closed (R=10)",
+            "color": "#d62728",
+            "z_release_m": 0.045,
+            "N_turns": 25,
+            "wire_diameter_m": 0.0007,
+            "wire_conductivity_S_per_m": 59600000.0,
+            "R_load_ohm": 10.0,
+            "damping_extra_N_s_per_m": 0.0,
+            "body_name": "StrandedCoil",
+            "sif_suffix": "N25_L040_cu_closed",
+            "circuit_state": "closed"
+        },
+        "_comment_block": "3 x 2 factorial (N_turns x material), FIXED coil length (40 mm, in [coil]).  6 conductor curves: materials Cu (sigma=5.96e7) / Al (sigma=3.5e7); N_turns 25 / 50 / 100.  EVERY conductor curve runs a CLOSED circuit (R_load = 10 ohm).  Naming: N<turns>_L040_<material>_closed.  --- Closed-circuit FEM --- make_sif.py --circuit closed sets Material 1 Electric Conductivity = sigma_wire, emits Component 1 (Coil Type = stranded, Number of Turns from the curve) and Component 2 (the 10 ohm load resistor), the WPotentialSolver / CircuitsAndDynamics / CircuitsOutput solvers, an INCLUDE circuits.definitions holding the MNA matrices, and CoilStart / CoilEnd BCs on the coil's two end faces.  The `empty` curve has no conductor and no circuit: it is the no-Lenz-braking baseline.  NOTE: the OPEN-circuit variant was REMOVED -- there is no R_load=inf twin any more, so the Lenz contrast must come from N and sigma alone.  See hpc/notes.md 13."
+    }
+}

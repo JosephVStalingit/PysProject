@@ -707,6 +707,38 @@ CONTAINS
           ! ( d/dt a,w )        
 
           IF ( TransientSimulation ) THEN 
+            ! -----------------------------------------------------------------
+            ! ANALYSED 2026-09-16 (project "pysproject") -- DO NOT ADD `localC`
+            ! HERE.  An earlier attempt appended `/localC` on the theory that
+            ! the flux term was missing the sigma that the resistance term
+            ! divides by.  That was WRONG; reverted the same day.
+            !
+            ! WHY IT IS WRONG -- the two terms are NOT symmetric by accident:
+            !
+            !   stranded coil : J  = N_j * I * w          (sigma FREE)
+            !   solid (massive): J = -sigma * dA/dt       (sigma INSIDE)
+            !
+            ! `w` is the UNIT-current winding direction delivered by CoilSolver
+            ! (see `_coil_turn_density` in make_sif.py: J = N_j*I must come out
+            ! in A/m^2).  The circuit coupling is the flux linkage
+            !
+            !   Psi = N_j * Integral(A . w) dV     ->  [1/m^2][Wb/m][m^3] = Wb
+            !
+            ! which contains NO conductivity.  Compare the SOLID conductor 40
+            ! lines below (SUBROUTINE Add_massive):
+            !     val = s(t)*detJ*SUM(Wbasis(j,:)*gradv)
+            !     ... tscl * val * localC/dt          <- sigma IS required
+            ! because there the current is the EDDY current -sigma dA/dt.
+            ! The presence of `localC` in one and not the other is therefore
+            ! CORRECT PHYSICS, not a lost factor.
+            !
+            ! (The resistance term above keeps `/localC` for the same reason:
+            !  R = N_j**2 * Integral(|w|**2/sigma_eff) dV, and with the
+            !  homogenised sigma_eff = f*sigma_wire it reproduces the physical
+            !  R_wire = N*L_turn/(sigma_wire*A_wire) -- verified to 2.1%
+            !  against the FEM's own r_component(1).  If `localC` were also
+            !  applied here, L would come out ~2.87e6 times TOO SMALL.)
+            ! -----------------------------------------------------------------
             IF (dim == 2) val = Comp % N_j * IP % s(t)*detJ*Basis(j)*circ_eq_coeff/dt*w(3)
             IF (dim == 3) val = Comp % N_j * IP % s(t)*detJ*SUM(WBasis(j,:)*w)/dt
             val = val / Comp % VoltageFactor

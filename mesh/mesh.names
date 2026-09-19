@@ -4,3 +4,4 @@ $ Magnet = 2
 $ Air = 3
 ! ----- names for boundaries -----
 $ MagneticInfinity = 1
+$ MagnetSurface = 2

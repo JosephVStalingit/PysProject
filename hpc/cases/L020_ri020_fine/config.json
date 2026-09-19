@@ -1,0 +1,121 @@
+{
+    "_comment": "config.json -- input to solenoid3d.py.\n\n    Layout:\n      experiment  : global experiment metadata\n      physics     : shared physics (gravity, mass, air drag, magnet properties)\n      mesh        : mesh sizes\n      geometry    : air-domain extents\n      curves      : LIST of curve blocks, ONE per body geometry. To add a new\n                    curve, simply add another named entry under [curves]. Each\n                    block must carry:  label, color, z_release_m, N_turns,\n                    R_load_ohm, damping_extra_N_s_per_m, body_name, sif_suffix.\n                    Wire-related keys (wire_diameter_m,\n                    wire_conductivity_S_per_m) are read when N_turns > 0.",
+    "experiment": {
+        "name": "magnet_free_fall",
+        "description": "Permanent cylindrical magnet released from rest above the coil. We track trajectory, flux, EMF, induced current and the Lenz braking force for multiple coil configurations.",
+        "z_release_default_m": 0.11,
+        "z_final_default_m": -0.05,
+        "t_end_default_s": 0.5,
+        "dt_s": 0.0001
+    },
+    "physics": {
+        "G": 9.81,
+        "M_kg": 0.5,
+        "C_air": 0.05
+    },
+    "magnet": {
+        "M_mag_A_per_m": 1200000.0,
+        "R_mag_m": 0.015,
+        "H_mag_m": 0.015,
+        "z0_m": 0.04,
+        "z1_m": 0.07
+    },
+    "coil": {
+        "_comment": "Coil/bore body geometry as built by solenoid3d.py (S_IN/S_OUT/S_Z0/S_Z1). Used by the oscilloscope to integrate the flux through the winding.",
+        "z0_m": 0.0,
+        "z1_m": 0.02,
+        "r_inner_m": 0.02,
+        "r_outer_m": 0.025,
+        "mean_turn_length_m": 0.142
+    },
+    "mesh": {
+        "_comment": "Sizes are applied to the corner POINTS of each volume (required with General.ExpertMode=1). The magnet and coil are refined locally; the far-field air stays coarse. The TRANSIENT run performs one direct linear solve per timestep, so the total node count directly drives wall-clock time.",
+        "lc_min_m": 0.0015,
+        "lc_max_m": 0.022,
+        "lc_coil_m": 0.0025000000000000005,
+        "lc_magnet_m": 0.002,
+        "lc_others_m": 0.012
+    },
+    "geometry": {
+        "R_air_m": 0.08,
+        "air_z0_m": -0.045,
+        "air_z1_m": 0.11000000000000001
+    },
+    "curves": {
+        "empty": {
+            "_comment": "REFERENCE -- no conductor at all. Free-fall baseline (no Lenz braking, no induced current).",
+            "label": "空 (无导体)",
+            "color": "#1f77b4",
+            "z_release_m": 0.11,
+            "N_turns": 0,
+            "wire_diameter_m": null,
+            "wire_conductivity_S_per_m": null,
+            "R_load_ohm": "inf",
+            "damping_extra_N_s_per_m": 0.0,
+            "body_name": "AirInside",
+            "sif_suffix": "no-coil"
+        },
+        "copper_closed": {
+            "_comment": "铜线闭路 CLOSED CIRCUIT, copper. 50 turns of 0.7 mm Cu wire (sigma=5.96e7) into a 10 ohm load. Current flows -> EMF/R, Lenz braking and Joule loss.",
+            "label": "铜线闭路 (Cu 50t 0.7mm, R=10Ω)",
+            "color": "#d62728",
+            "z_release_m": 0.11,
+            "N_turns": 50,
+            "wire_diameter_m": 0.0007,
+            "wire_conductivity_S_per_m": 59600000.0,
+            "R_load_ohm": 10.0,
+            "damping_extra_N_s_per_m": 0.0,
+            "body_name": "StrandedCoil",
+            "sif_suffix": "stranded-coil"
+        },
+        "aluminum_closed": {
+            "_comment": "铝线闭路 CLOSED CIRCUIT, aluminium. Same 50 turns / 0.7 mm but sigma=3.5e7, so R_wire is 1.70x the copper value (0.527 vs 0.310 ohm) into the same 10 ohm load.",
+            "label": "铝线闭路 (Al 50t 0.7mm, R=10Ω)",
+            "color": "#2ca02c",
+            "z_release_m": 0.11,
+            "N_turns": 50,
+            "wire_diameter_m": 0.0007,
+            "wire_conductivity_S_per_m": 35000000.0,
+            "R_load_ohm": 10.0,
+            "damping_extra_N_s_per_m": 0.0,
+            "body_name": "StrandedCoil",
+            "sif_suffix": "stranded-coil"
+        },
+        "aluminum_open": {
+            "_comment": "铝线开路 OPEN CIRCUIT, aluminium. Same winding but R_load=inf: the EMF still appears across the terminals, I = 0, therefore NO Lenz braking. Compare against aluminum_closed to isolate the circuit-state effect.",
+            "label": "铝线开路 (Al 50t 0.7mm, R=∞)",
+            "color": "#ff7f0e",
+            "z_release_m": 0.11,
+            "N_turns": 50,
+            "wire_diameter_m": 0.0007,
+            "wire_conductivity_S_per_m": 35000000.0,
+            "R_load_ohm": "inf",
+            "damping_extra_N_s_per_m": 0.0,
+            "body_name": "StrandedCoil",
+            "sif_suffix": "stranded-coil"
+        }
+    },
+    "_study": {
+        "length": 0.02,
+        "level": "fine",
+        "n_positions": 56,
+        "dz": 0.002,
+        "z_start": 0.075,
+        "z_end": -0.035,
+        "travel": 0.11,
+        "coil_z0": 0.0,
+        "coil_z1": 0.02,
+        "mag_z0": 0.04,
+        "mag_z1": 0.07,
+        "coil_r_inner": 0.02,
+        "coil_r_outer": 0.025,
+        "mag_radius": 0.015,
+        "gap": 0.005000000000000001,
+        "mesh": {
+            "lc_min_m": 0.0015,
+            "lc_magnet_m": 0.002,
+            "lc_coil_m": 0.0025000000000000005,
+            "lc_others_m": 0.012
+        }
+    }
+}

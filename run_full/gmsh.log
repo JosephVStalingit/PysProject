@@ -1,0 +1,989 @@
+[debug] cyl tags: air=1, coil_out=2, coil_in=3, mag=4
+[debug] radial slit: width=3.500 mm, tool tag=5
+[debug] coil faces: CoilStart=1 CoilEnd=1 Alpha0=1 Alpha1=1 Beta0=1 Beta1=1
+Info    : Meshing 1D...
+Info    : [  0%] Meshing curve 28 (Circle)
+Info    : [ 10%] Meshing curve 29 (Line)
+Info    : [ 10%] Meshing curve 30 (Circle)
+Info    : [ 10%] Meshing curve 31 (Line)
+Info    : [ 10%] Meshing curve 32 (Line)
+Info    : [ 20%] Meshing curve 33 (Circle)
+Info    : [ 20%] Meshing curve 34 (Line)
+Info    : [ 20%] Meshing curve 35 (Line)
+Info    : [ 20%] Meshing curve 36 (Line)
+Info    : [ 20%] Meshing curve 37 (Line)
+Info    : [ 30%] Meshing curve 38 (Circle)
+Info    : [ 30%] Meshing curve 39 (Line)
+Info    : [ 30%] Meshing curve 40 (Circle)
+Info    : [ 30%] Meshing curve 41 (Line)
+Info    : [ 30%] Meshing curve 42 (Circle)
+Info    : [ 40%] Meshing curve 43 (Line)
+Info    : [ 40%] Meshing curve 44 (Line)
+Info    : [ 40%] Meshing curve 45 (Line)
+Info    : [ 40%] Meshing curve 46 (Line)
+Info    : [ 40%] Meshing curve 47 (Line)
+Info    : [ 50%] Meshing curve 48 (Line)
+Info    : [ 50%] Meshing curve 49 (Line)
+Info    : [ 50%] Meshing curve 50 (Line)
+Info    : [ 50%] Meshing curve 51 (Line)
+Info    : [ 60%] Meshing curve 52 (Circle)
+Info    : [ 60%] Meshing curve 53 (Circle)
+Info    : [ 60%] Meshing curve 54 (Line)
+Info    : [ 60%] Meshing curve 55 (Line)
+Info    : [ 60%] Meshing curve 56 (Line)
+Info    : [ 70%] Meshing curve 57 (Line)
+Info    : [ 70%] Meshing curve 58 (Line)
+Info    : [ 70%] Meshing curve 59 (Line)
+Info    : [ 70%] Meshing curve 60 (Line)
+Info    : [ 70%] Meshing curve 61 (Line)
+Info    : [ 80%] Meshing curve 62 (Line)
+Info    : [ 80%] Meshing curve 63 (Line)
+Info    : [ 80%] Meshing curve 64 (Line)
+Info    : [ 80%] Meshing curve 65 (Circle)
+Info    : [ 80%] Meshing curve 66 (Circle)
+Info    : [ 90%] Meshing curve 67 (Line)
+Info    : [ 90%] Meshing curve 68 (Line)
+Info    : [ 90%] Meshing curve 69 (Circle)
+Info    : [ 90%] Meshing curve 70 (Circle)
+Info    : [ 90%] Meshing curve 71 (Line)
+Info    : [100%] Meshing curve 72 (Line)
+Info    : [100%] Meshing curve 73 (Line)
+Info    : [100%] Meshing curve 74 (Line)
+Info    : [100%] Meshing curve 75 (Line)
+Info    : Done meshing 1D (Wall 0.064055s, CPU 0.004132s)
+Info    : Meshing 2D...
+Info    : [  0%] Meshing surface 22 (Cylinder, Frontal-Delaunay)
+Info    : [ 10%] Meshing surface 23 (Plane, Frontal-Delaunay)
+Info    : [ 10%] Meshing surface 24 (Plane, Frontal-Delaunay)
+Info    : [ 20%] Meshing surface 25 (Plane, Frontal-Delaunay)
+Info    : [ 20%] Meshing surface 26 (Plane, Frontal-Delaunay)
+Info    : [ 20%] Meshing surface 27 (Cylinder, Frontal-Delaunay)
+Info    : [ 30%] Meshing surface 28 (Cylinder, Frontal-Delaunay)
+Info    : [ 30%] Meshing surface 29 (Plane, Frontal-Delaunay)
+Info    : [ 30%] Meshing surface 30 (Plane, Frontal-Delaunay)
+Info    : [ 40%] Meshing surface 31 (Plane, Frontal-Delaunay)
+Info    : [ 40%] Meshing surface 32 (Plane, Frontal-Delaunay)
+Info    : [ 50%] Meshing surface 33 (Plane, Frontal-Delaunay)
+Info    : [ 50%] Meshing surface 34 (Plane, Frontal-Delaunay)
+Info    : [ 50%] Meshing surface 35 (Plane, Frontal-Delaunay)
+Info    : [ 60%] Meshing surface 36 (Plane, Frontal-Delaunay)
+Info    : [ 60%] Meshing surface 37 (Plane, Frontal-Delaunay)
+Info    : [ 60%] Meshing surface 38 (Cylinder, Frontal-Delaunay)
+Info    : [ 70%] Meshing surface 39 (Plane, Frontal-Delaunay)
+Info    : [ 70%] Meshing surface 40 (Plane, Frontal-Delaunay)
+Info    : [ 80%] Meshing surface 41 (Plane, Frontal-Delaunay)
+Info    : [ 80%] Meshing surface 42 (Cylinder, Frontal-Delaunay)
+Info    : [ 80%] Meshing surface 43 (Cylinder, Frontal-Delaunay)
+Info    : [ 90%] Meshing surface 44 (Plane, Frontal-Delaunay)
+Info    : [ 90%] Meshing surface 45 (Plane, Frontal-Delaunay)
+Info    : [ 90%] Meshing surface 46 (Plane, Frontal-Delaunay)
+Info    : [100%] Meshing surface 47 (Plane, Frontal-Delaunay)
+Info    : [100%] Meshing surface 48 (Plane, Frontal-Delaunay)
+Info    : Done meshing 2D (Wall 0.053511s, CPU 0.036068s)
+Info    : Meshing 3D...
+Info    : Meshing volume 2 (Frontal)
+Info    : Region 2 Face 22, 3 intersect
+Info    : Region 2 Face 23, 1 intersect
+Info    : Region 2 Face 24, 1 intersect
+Info    : Region 2 Face 25, 0 intersect
+Info    : Region 2 Face 26, 2 intersect
+Info    : Region 2 Face 27, 2 intersect
+Info    : CalcLocalH: 295 Points 0 Elements 586 Surface Elements 
+Info    : Check subdomain 1 / 1 
+Info    : 586 open elements 
+Info    : Meshing subdomain 1 of 1 
+Info    : 586 open elements 
+Info    : Use internal rules 
+Info    : 586 open elements 
+Info    : Delaunay meshing 
+Info    : number of points: 295 
+Info    : blockfill local h 
+Info    : number of points: 295 
+Info    : Points: 295 
+Info    : Elements: 1990 
+Info    : 0 open elements 
+Info    : Num open: 0 
+Info    : free: 0, fixed: 1990 
+Info    : SwapImprove  
+Info    : 0 swaps performed 
+Info    : 0 open elements 
+Info    : Num open: 0 
+Info    : free: 0, fixed: 1990 
+Info    : SwapImprove  
+Info    : 0 swaps performed 
+Info    : 0 degenerated elements removed 
+Info    : Remove intersecting 
+Info    : Remove outer 
+Info    : tables filled 
+Info    : outer removed 
+Info    : 586 open elements 
+Info    : 295 points, 760 elements 
+Info    : 0 open elements 
+Info    : 0 open faces 
+Info    : start tetmeshing 
+Info    : Use internal rules 
+Info    : 0 open elements 
+Info    : Success ! 
+Info    : 295 points, 760 elements 
+Info    : Meshing volume 3 (Frontal)
+Info    : Region 3 Face 28, 1 intersect
+Info    : Region 3 Face 29, 1 intersect
+Info    : Region 3 Face 30, 0 intersect
+Info    : Region 3 Face 22, 1 intersect
+Info    : Region 3 Face 23, 1 intersect
+Info    : Region 3 Face 31, 1 intersect
+Info    : Region 3 Face 25, 1 intersect
+Info    : Region 3 Face 32, 2 intersect
+Info    : Region 3 Face 33, 2 intersect
+Info    : Region 3 Face 27, 3 intersect
+Info    : Region 3 Face 34, 1 intersect
+Info    : Region 3 Face 35, 4 intersect
+Info    : Region 3 Face 36, 4 intersect
+Info    : Region 3 Face 37, 3 intersect
+Info    : Region 3 Face 38, 4 intersect
+Info    : Region 3 Face 39, 3 intersect
+Info    : Region 3 Face 40, 1 intersect
+Info    : Region 3 Face 41, 2 intersect
+Info    : CalcLocalH: 1077 Points 0 Elements 2150 Surface Elements 
+Info    : Check subdomain 1 / 1 
+Info    : 2150 open elements 
+Info    : Meshing subdomain 1 of 1 
+Info    : 2150 open elements 
+Info    : Use internal rules 
+Info    : 2150 open elements 
+Info    : Delaunay meshing 
+Info    : number of points: 1077 
+Info    : blockfill local h 
+Info    : number of points: 2674 
+Info    : Points: 2674 
+Info    : Elements: 16467 
+Info    : 68 open elements 
+Info    : Num open: 68 
+Info    : free: 948, fixed: 15519 
+Info    : SwapImprove  
+Info    : 114 swaps performed 
+Info    : 42 open elements 
+Info    : Num open: 42 
+Info    : free: 481, fixed: 15947 
+Info    : SwapImprove  
+Info    : 13 swaps performed 
+Info    : 2 degenerated elements removed 
+Info    : Remove intersecting 
+Info    : Remove outer 
+Info    : tables filled 
+Info    : outer removed 
+Info    : 2150 open elements 
+Info    : 2657 points, 13153 elements 
+Info    : 242 open elements 
+Info    : 242 open faces 
+Info    : start tetmeshing 
+Info    : Use internal rules 
+Info    : El: 0 faces: 242 vol = 100 
+Info    : El: 2 faces: 244 vol = 99.5926 
+Info    : El: 3 faces: 240 vol = 99.5802 
+Info    : El: 4 faces: 236 vol = 99.5677 
+Info    : El: 6 faces: 238 vol = 99.5338 
+Info    : El: 7 faces: 238 vol = 99.4669 
+Info    : El: 9 faces: 240 vol = 99.3962 
+Info    : El: 11 faces: 242 vol = 99.3621 
+Info    : El: 12 faces: 238 vol = 99.3617 
+Info    : El: 13 faces: 238 vol = 99.2825 
+Info    : El: 15 faces: 240 vol = 99.2528 
+Info    : El: 16 faces: 236 vol = 99.2523 
+Info    : El: 17 faces: 236 vol = 99.2069 
+Info    : El: 18 faces: 232 vol = 99.1745 
+Info    : El: 19 faces: 232 vol = 98.0986 
+Info    : El: 20 faces: 234 vol = 97.0894 
+Info    : El: 21 faces: 232 vol = 96.0132 
+Info    : El: 22 faces: 232 vol = 94.6298 
+Info    : El: 23 faces: 230 vol = 93.8557 
+Info    : El: 24 faces: 230 vol = 93.849 
+Info    : El: 25 faces: 228 vol = 93.8272 
+Info    : El: 26 faces: 230 vol = 93.8261 
+Info    : El: 27 faces: 228 vol = 93.8235 
+Info    : El: 28 faces: 230 vol = 93.8055 
+Info    : El: 29 faces: 228 vol = 93.7791 
+Info    : El: 30 faces: 230 vol = 92.1394 
+Info    : El: 31 faces: 230 vol = 90.3948 
+Info    : El: 32 faces: 228 vol = 88.9343 
+Info    : El: 33 faces: 226 vol = 87.8669 
+Info    : El: 35 faces: 228 vol = 86.5638 
+Info    : El: 37 faces: 230 vol = 85.76 
+Info    : El: 38 faces: 230 vol = 85.2241 
+Info    : El: 39 faces: 230 vol = 84.7744 
+Info    : El: 41 faces: 232 vol = 83.5233 
+Info    : El: 43 faces: 234 vol = 81.0437 
+Info    : El: 44 faces: 236 vol = 79.7121 
+Info    : El: 46 faces: 238 vol = 78.6585 
+Info    : El: 47 faces: 238 vol = 77.5919 
+Info    : El: 48 faces: 238 vol = 76.7917 
+Info    : El: 49 faces: 238 vol = 76.2215 
+Info    : El: 50 faces: 236 vol = 75.5896 
+Info    : El: 51 faces: 234 vol = 74.5646 
+Info    : El: 52 faces: 232 vol = 72.5139 
+Info    : El: 53 faces: 230 vol = 71.2379 
+Info    : El: 54 faces: 232 vol = 70.5901 
+Info    : El: 55 faces: 234 vol = 69.5443 
+Info    : El: 56 faces: 234 vol = 67.3943 
+Info    : El: 57 faces: 232 vol = 65.774 
+Info    : El: 58 faces: 230 vol = 64.359 
+Info    : El: 59 faces: 230 vol = 62.8 
+Info    : El: 60 faces: 232 vol = 62.6552 
+Info    : El: 61 faces: 230 vol = 62.4813 
+Info    : El: 62 faces: 228 vol = 62.3635 
+Info    : El: 63 faces: 228 vol = 61.0705 
+Info    : El: 64 faces: 228 vol = 60.5589 
+Info    : El: 65 faces: 230 vol = 59.9802 
+Info    : El: 66 faces: 228 vol = 59.6909 
+Info    : El: 68 faces: 230 vol = 59.5504 
+Info    : El: 69 faces: 232 vol = 59.3826 
+Info    : El: 70 faces: 232 vol = 59.1664 
+Info    : El: 72 faces: 234 vol = 58.6712 
+Info    : El: 73 faces: 234 vol = 58.4442 
+Info    : El: 75 faces: 236 vol = 57.8045 
+Info    : El: 76 faces: 238 vol = 57.3693 
+Info    : El: 77 faces: 238 vol = 57.2038 
+Info    : El: 78 faces: 238 vol = 56.8895 
+Info    : El: 79 faces: 240 vol = 56.8172 
+Info    : El: 80 faces: 238 vol = 56.781 
+Info    : El: 81 faces: 240 vol = 56.3017 
+Info    : El: 82 faces: 240 vol = 55.276 
+Info    : El: 84 faces: 242 vol = 55.1478 
+Info    : El: 85 faces: 242 vol = 55.0754 
+Info    : El: 86 faces: 244 vol = 54.4968 
+Info    : El: 88 faces: 246 vol = 54.1809 
+Info    : El: 89 faces: 248 vol = 53.9461 
+Info    : El: 90 faces: 248 vol = 53.8737 
+Info    : El: 91 faces: 248 vol = 53.7629 
+Info    : El: 92 faces: 250 vol = 53.1344 
+Info    : El: 93 faces: 250 vol = 52.9897 
+Info    : El: 94 faces: 250 vol = 52.4111 
+Info    : El: 95 faces: 252 vol = 52.2902 
+Info    : El: 96 faces: 252 vol = 51.7588 
+Info    : El: 97 faces: 248 vol = 51.1802 
+Info    : El: 98 faces: 248 vol = 51.1551 
+Info    : El: 99 faces: 248 vol = 51.0797 
+Info    : El: 100 faces: 248 vol = 50.9618 
+Info    : El: 101 faces: 244 vol = 50.3695 
+Info    : El: 103 faces: 246 vol = 50.2346 
+Info    : El: 104 faces: 246 vol = 50.1535 
+Info    : El: 105 faces: 246 vol = 50.0319 
+Info    : El: 107 faces: 248 vol = 49.6446 
+Info    : El: 109 faces: 250 vol = 49.5006 
+Info    : El: 110 faces: 250 vol = 49.4629 
+Info    : El: 111 faces: 250 vol = 49.0818 
+Info    : El: 113 faces: 252 vol = 48.9634 
+Info    : El: 114 faces: 252 vol = 48.8961 
+Info    : El: 115 faces: 252 vol = 48.8355 
+Info    : El: 116 faces: 254 vol = 48.7652 
+Info    : El: 117 faces: 252 vol = 48.6703 
+Info    : El: 118 faces: 252 vol = 48.6026 
+Info    : El: 119 faces: 252 vol = 48.4527 
+Info    : El: 120 faces: 252 vol = 48.3781 
+Info    : El: 121 faces: 254 vol = 48.2611 
+Info    : El: 123 faces: 256 vol = 48.1329 
+Info    : El: 124 faces: 256 vol = 48.0988 
+Info    : El: 125 faces: 256 vol = 48.0361 
+Info    : El: 126 faces: 256 vol = 47.9735 
+Info    : El: 127 faces: 256 vol = 47.9011 
+Info    : El: 128 faces: 254 vol = 47.8776 
+Info    : El: 129 faces: 254 vol = 47.8053 
+Info    : El: 130 faces: 254 vol = 47.7818 
+Info    : El: 132 faces: 256 vol = 47.7415 
+Info    : El: 133 faces: 256 vol = 47.7003 
+Info    : El: 134 faces: 258 vol = 47.5557 
+Info    : El: 135 faces: 258 vol = 47.411 
+Info    : El: 137 faces: 260 vol = 47.3688 
+Info    : El: 139 faces: 262 vol = 47.3266 
+Info    : El: 140 faces: 262 vol = 47.2852 
+Info    : El: 141 faces: 260 vol = 47.2169 
+Info    : El: 142 faces: 258 vol = 47.2079 
+Info    : El: 143 faces: 258 vol = 47.1859 
+Info    : El: 144 faces: 260 vol = 47.0853 
+Info    : El: 145 faces: 258 vol = 47.013 
+Info    : El: 147 faces: 260 vol = 46.7942 
+Info    : El: 148 faces: 262 vol = 46.777 
+Info    : El: 149 faces: 262 vol = 46.7598 
+Info    : El: 150 faces: 262 vol = 46.6987 
+Info    : El: 151 faces: 262 vol = 46.6736 
+Info    : El: 152 faces: 260 vol = 46.6295 
+Info    : El: 153 faces: 256 vol = 46.5032 
+Info    : El: 154 faces: 254 vol = 46.0863 
+Info    : El: 155 faces: 256 vol = 44.3641 
+Info    : El: 156 faces: 256 vol = 44.1246 
+Info    : El: 158 faces: 258 vol = 44.0964 
+Info    : El: 159 faces: 258 vol = 43.8616 
+Info    : El: 160 faces: 260 vol = 43.5069 
+Info    : El: 161 faces: 258 vol = 43.0374 
+Info    : El: 162 faces: 256 vol = 42.5677 
+Info    : El: 163 faces: 254 vol = 40.8795 
+Info    : El: 164 faces: 252 vol = 39.6612 
+Info    : El: 165 faces: 252 vol = 39.4615 
+Info    : El: 166 faces: 252 vol = 39.2169 
+Info    : El: 167 faces: 252 vol = 38.2502 
+Info    : El: 168 faces: 250 vol = 37.6921 
+Info    : El: 169 faces: 252 vol = 35.4313 
+Info    : El: 170 faces: 250 vol = 34.5611 
+Info    : El: 171 faces: 248 vol = 34.3056 
+Info    : El: 172 faces: 248 vol = 33.7566 
+Info    : El: 173 faces: 248 vol = 32.7438 
+Info    : El: 174 faces: 248 vol = 32.6064 
+Info    : El: 175 faces: 246 vol = 31.3135 
+Info    : El: 176 faces: 246 vol = 31.1602 
+Info    : El: 177 faces: 248 vol = 31.0676 
+Info    : El: 178 faces: 246 vol = 31.0213 
+Info    : El: 179 faces: 244 vol = 30.9983 
+Info    : El: 180 faces: 242 vol = 30.9193 
+Info    : El: 181 faces: 242 vol = 30.2436 
+Info    : El: 182 faces: 244 vol = 30.2274 
+Info    : El: 183 faces: 244 vol = 30.1355 
+Info    : El: 184 faces: 242 vol = 30.0464 
+Info    : El: 185 faces: 242 vol = 29.959 
+Info    : El: 186 faces: 244 vol = 29.9115 
+Info    : El: 187 faces: 242 vol = 29.8907 
+Info    : El: 188 faces: 240 vol = 29.5989 
+Info    : El: 189 faces: 236 vol = 29.3095 
+Info    : El: 190 faces: 234 vol = 29.286 
+Info    : El: 191 faces: 232 vol = 29.275 
+Info    : El: 192 faces: 232 vol = 29.2698 
+Info    : El: 193 faces: 230 vol = 29.2259 
+Info    : El: 194 faces: 228 vol = 27.7165 
+Info    : El: 195 faces: 226 vol = 26.8309 
+Info    : El: 196 faces: 226 vol = 26.1058 
+Info    : El: 197 faces: 224 vol = 25.6675 
+Info    : El: 198 faces: 222 vol = 24.3181 
+Info    : El: 199 faces: 222 vol = 23.9245 
+Info    : El: 200 faces: 222 vol = 23.3288 
+Info    : El: 201 faces: 224 vol = 23.31 
+Info    : El: 202 faces: 226 vol = 23.258 
+Info    : El: 203 faces: 228 vol = 23.2575 
+Info    : El: 204 faces: 228 vol = 23.2548 
+Info    : El: 205 faces: 228 vol = 23.2547 
+Info    : El: 206 faces: 226 vol = 23.2019 
+Info    : El: 207 faces: 226 vol = 23.2018 
+Info    : El: 208 faces: 224 vol = 23.2017 
+Info    : El: 209 faces: 222 vol = 23.2015 
+Info    : El: 210 faces: 220 vol = 23.2013 
+Info    : El: 211 faces: 216 vol = 23.133 
+Info    : El: 212 faces: 218 vol = 23.1235 
+Info    : El: 213 faces: 216 vol = 23.0065 
+Info    : El: 214 faces: 214 vol = 23.0028 
+Info    : El: 215 faces: 210 vol = 22.9856 
+Info    : El: 216 faces: 212 vol = 22.9722 
+Info    : El: 217 faces: 210 vol = 22.9577 
+Info    : El: 218 faces: 208 vol = 22.9153 
+Info    : El: 219 faces: 210 vol = 22.9092 
+Info    : El: 220 faces: 208 vol = 22.9045 
+Info    : El: 221 faces: 208 vol = 22.7885 
+Info    : El: 222 faces: 208 vol = 22.6534 
+Info    : El: 223 faces: 206 vol = 22.4217 
+Info    : El: 224 faces: 204 vol = 22.1597 
+Info    : El: 225 faces: 204 vol = 22.1138 
+Info    : El: 226 faces: 204 vol = 21.3413 
+Info    : El: 227 faces: 204 vol = 20.9162 
+Info    : El: 228 faces: 204 vol = 20.7139 
+Info    : El: 229 faces: 202 vol = 20.428 
+Info    : El: 230 faces: 202 vol = 20.1943 
+Info    : El: 231 faces: 200 vol = 19.3204 
+Info    : El: 232 faces: 202 vol = 18.7506 
+Info    : El: 233 faces: 202 vol = 18.2706 
+Info    : El: 234 faces: 202 vol = 17.9031 
+Info    : El: 235 faces: 204 vol = 17.0897 
+Info    : El: 236 faces: 204 vol = 16.7944 
+Info    : El: 237 faces: 204 vol = 16.774 
+Info    : El: 238 faces: 202 vol = 16.5213 
+Info    : El: 239 faces: 204 vol = 16.495 
+Info    : El: 240 faces: 204 vol = 16.4047 
+Info    : El: 241 faces: 204 vol = 16.2044 
+Info    : El: 242 faces: 204 vol = 16.0002 
+Info    : El: 243 faces: 204 vol = 15.7423 
+Info    : El: 244 faces: 202 vol = 15.6076 
+Info    : El: 245 faces: 202 vol = 15.4478 
+Info    : El: 246 faces: 202 vol = 15.3406 
+Info    : El: 247 faces: 202 vol = 14.7713 
+Info    : El: 248 faces: 202 vol = 14.6921 
+Info    : El: 249 faces: 202 vol = 14.6098 
+Info    : El: 250 faces: 204 vol = 14.6043 
+Info    : El: 251 faces: 204 vol = 14.5969 
+Info    : El: 252 faces: 202 vol = 14.4361 
+Info    : El: 253 faces: 202 vol = 14.3568 
+Info    : El: 254 faces: 202 vol = 13.8196 
+Info    : El: 255 faces: 200 vol = 13.8017 
+Info    : El: 256 faces: 200 vol = 13.7609 
+Info    : El: 257 faces: 198 vol = 13.6999 
+Info    : El: 258 faces: 194 vol = 12.8872 
+Info    : El: 259 faces: 192 vol = 12.8161 
+Info    : El: 260 faces: 190 vol = 12.7289 
+Info    : El: 261 faces: 192 vol = 12.7124 
+Info    : El: 262 faces: 194 vol = 12.6297 
+Info    : El: 263 faces: 194 vol = 12.5055 
+Info    : El: 264 faces: 194 vol = 12.4976 
+Info    : El: 265 faces: 192 vol = 12.476 
+Info    : El: 266 faces: 194 vol = 12.4537 
+Info    : El: 267 faces: 192 vol = 12.3601 
+Info    : El: 268 faces: 192 vol = 12.3455 
+Info    : El: 269 faces: 192 vol = 12.3354 
+Info    : El: 270 faces: 192 vol = 12.2942 
+Info    : El: 271 faces: 192 vol = 12.2871 
+Info    : El: 272 faces: 192 vol = 12.2562 
+Info    : El: 273 faces: 190 vol = 12.1974 
+Info    : El: 274 faces: 192 vol = 12.1454 
+Info    : El: 275 faces: 190 vol = 12.1398 
+Info    : El: 276 faces: 190 vol = 12.0952 
+Info    : El: 277 faces: 188 vol = 12.0698 
+Info    : El: 279 faces: 190 vol = 11.8938 
+Info    : El: 280 faces: 186 vol = 11.3793 
+Info    : El: 281 faces: 186 vol = 11.2327 
+Info    : El: 282 faces: 182 vol = 11.0764 
+Info    : El: 283 faces: 180 vol = 10.5701 
+Info    : El: 284 faces: 180 vol = 10.4277 
+Info    : El: 285 faces: 180 vol = 10.1875 
+Info    : El: 286 faces: 178 vol = 10.1396 
+Info    : El: 287 faces: 176 vol = 10.077 
+Info    : El: 288 faces: 176 vol = 9.51922 
+Info    : El: 289 faces: 178 vol = 9.34782 
+Info    : El: 290 faces: 180 vol = 9.33931 
+Info    : El: 291 faces: 180 vol = 9.24651 
+Info    : El: 292 faces: 180 vol = 9.24395 
+Info    : El: 293 faces: 178 vol = 9.1209 
+Info    : El: 294 faces: 174 vol = 9.08746 
+Info    : El: 295 faces: 172 vol = 9.07794 
+Info    : El: 296 faces: 172 vol = 9.0159 
+Info    : El: 297 faces: 172 vol = 8.89705 
+Info    : El: 298 faces: 172 vol = 8.87294 
+Info    : El: 299 faces: 170 vol = 8.85561 
+Info    : El: 300 faces: 170 vol = 8.82269 
+Info    : El: 301 faces: 168 vol = 8.82249 
+Info    : El: 302 faces: 168 vol = 8.81264 
+Info    : El: 303 faces: 166 vol = 8.79218 
+Info    : El: 304 faces: 164 vol = 8.68715 
+Info    : El: 305 faces: 162 vol = 8.27874 
+Info    : El: 306 faces: 158 vol = 8.1972 
+Info    : El: 307 faces: 158 vol = 8.17524 
+Info    : El: 308 faces: 160 vol = 8.16442 
+Info    : El: 309 faces: 158 vol = 8.14957 
+Info    : El: 310 faces: 158 vol = 8.14225 
+Info    : El: 311 faces: 158 vol = 7.85066 
+Info    : El: 312 faces: 158 vol = 7.77515 
+Info    : El: 313 faces: 158 vol = 7.69697 
+Info    : El: 314 faces: 156 vol = 7.63184 
+Info    : El: 315 faces: 152 vol = 7.57901 
+Info    : El: 316 faces: 150 vol = 7.56162 
+Info    : El: 317 faces: 148 vol = 6.80494 
+Info    : El: 318 faces: 146 vol = 6.79084 
+Info    : El: 319 faces: 144 vol = 6.70684 
+Info    : El: 320 faces: 140 vol = 6.69954 
+Info    : El: 321 faces: 138 vol = 6.68452 
+Info    : El: 322 faces: 138 vol = 6.55298 
+Info    : El: 323 faces: 138 vol = 6.53692 
+Info    : El: 324 faces: 134 vol = 5.68857 
+Info    : El: 325 faces: 134 vol = 5.5304 
+Info    : El: 326 faces: 134 vol = 5.4345 
+Info    : El: 327 faces: 130 vol = 5.30094 
+Info    : El: 328 faces: 130 vol = 5.20879 
+Info    : El: 329 faces: 130 vol = 5.03228 
+Info    : El: 330 faces: 128 vol = 4.7941 
+Info    : El: 331 faces: 126 vol = 4.56039 
+Info    : El: 332 faces: 124 vol = 4.38209 
+Info    : El: 333 faces: 122 vol = 4.32597 
+Info    : El: 334 faces: 120 vol = 4.18814 
+Info    : El: 335 faces: 120 vol = 4.0375 
+Info    : El: 336 faces: 120 vol = 3.9858 
+Info    : El: 337 faces: 122 vol = 3.97531 
+Info    : El: 338 faces: 122 vol = 3.78725 
+Info    : El: 339 faces: 120 vol = 3.62518 
+Info    : El: 340 faces: 118 vol = 3.61444 
+Info    : El: 341 faces: 118 vol = 3.58237 
+Info    : El: 342 faces: 118 vol = 3.56868 
+Info    : El: 343 faces: 118 vol = 3.42575 
+Info    : El: 344 faces: 114 vol = 2.91708 
+Info    : El: 345 faces: 112 vol = 2.89989 
+Info    : El: 346 faces: 110 vol = 2.88562 
+Info    : El: 347 faces: 110 vol = 2.8462 
+Info    : El: 348 faces: 110 vol = 2.8407 
+Info    : El: 349 faces: 108 vol = 2.78576 
+Info    : El: 350 faces: 108 vol = 2.78476 
+Info    : El: 351 faces: 106 vol = 2.76259 
+Info    : El: 352 faces: 104 vol = 2.75295 
+Info    : El: 353 faces: 102 vol = 2.67873 
+Info    : El: 354 faces: 100 vol = 2.6696 
+Info    : El: 355 faces: 96 vol = 2.66541 
+Info    : El: 356 faces: 96 vol = 2.4298 
+Info    : El: 357 faces: 92 vol = 2.12015 
+Info    : El: 358 faces: 90 vol = 2.07117 
+Info    : El: 359 faces: 88 vol = 1.95518 
+Info    : El: 360 faces: 84 vol = 1.71123 
+Info    : El: 361 faces: 80 vol = 1.68641 
+Info    : El: 362 faces: 76 vol = 1.50944 
+Info    : El: 363 faces: 72 vol = 1.33112 
+Info    : El: 364 faces: 70 vol = 1.23705 
+Info    : El: 365 faces: 70 vol = 1.21471 
+Info    : El: 369 faces: 70 vol = 1.19838 
+Info    : El: 374 faces: 70 vol = 1.18851 
+Info    : El: 379 faces: 70 vol = 1.17564 
+Info    : El: 383 faces: 70 vol = 1.16952 
+Info    : El: 387 faces: 70 vol = 1.15302 
+Info    : El: 391 faces: 70 vol = 1.09275 
+Info    : El: 392 faces: 70 vol = 1.08265 
+Info    : El: 393 faces: 68 vol = 1.00567 
+Info    : El: 397 faces: 68 vol = 0.984701 
+Info    : El: 398 faces: 68 vol = 0.983434 
+Info    : El: 399 faces: 66 vol = 0.918397 
+Info    : El: 400 faces: 64 vol = 0.895242 
+Info    : El: 401 faces: 62 vol = 0.886014 
+Info    : El: 402 faces: 60 vol = 0.804846 
+Info    : El: 403 faces: 58 vol = 0.657307 
+Info    : El: 404 faces: 54 vol = 0.65003 
+Info    : El: 405 faces: 50 vol = 0.587712 
+Info    : El: 406 faces: 50 vol = 0.586117 
+Info    : El: 407 faces: 48 vol = 0.581069 
+Info    : El: 408 faces: 48 vol = 0.579196 
+Info    : El: 409 faces: 48 vol = 0.578335 
+Info    : El: 413 faces: 22 vol = 0.381831 
+Info    : El: 418 faces: 22 vol = 0.300604 
+Info    : El: 419 faces: 22 vol = 0.237731 
+Info    : El: 420 faces: 20 vol = 0.202204 
+Info    : El: 423 faces: 20 vol = 0.130781 
+Info    : El: 424 faces: 20 vol = 0.128234 
+Info    : El: 425 faces: 20 vol = 0.116884 
+Info    : El: 426 faces: 18 vol = 0.113761 
+Info    : El: 427 faces: 14 vol = 0.0344368 
+Info    : El: 428 faces: 10 vol = 0.0106289 
+Info    : 0 open elements 
+Info    : Success ! 
+Info    : 2700 points, 13617 elements 
+Info    : Meshing volume 4 (Frontal)
+Info    : Region 4 Face 24, 1 intersect
+Info    : Region 4 Face 34, 1 intersect
+Info    : Region 4 Face 31, 1 intersect
+Info    : Region 4 Face 33, 1 intersect
+Info    : Region 4 Face 37, 1 intersect
+Info    : Region 4 Face 39, 1 intersect
+Info    : Region 4 Face 36, 1 intersect
+Info    : Region 4 Face 26, 1 intersect
+Info    : Region 4 Face 32, 1 intersect
+Info    : Region 4 Face 35, 1 intersect
+Info    : Region 4 Face 42, 0 intersect
+Info    : Region 4 Face 43, 0 intersect
+Info    : Region 4 Face 44, 1 intersect
+Info    : CalcLocalH: 118 Points 0 Elements 232 Surface Elements 
+Info    : Check subdomain 1 / 1 
+Info    : 232 open elements 
+Info    : Meshing subdomain 1 of 1 
+Info    : 232 open elements 
+Info    : Use internal rules 
+Info    : 232 open elements 
+Info    : Delaunay meshing 
+Info    : number of points: 118 
+Info    : blockfill local h 
+Info    : number of points: 118 
+Info    : Points: 118 
+Info    : Elements: 595 
+Info    : 84 open elements 
+Info    : Num open: 84 
+Info    : free: 462, fixed: 133 
+Info    : SwapImprove  
+Info    : 49 swaps performed 
+Info    : 34 open elements 
+Info    : Num open: 34 
+Info    : free: 284, fixed: 301 
+Info    : SwapImprove  
+Info    : 5 swaps performed 
+Info    : 0 degenerated elements removed 
+Info    : Remove intersecting 
+Info    : Remove outer 
+Info    : tables filled 
+Info    : outer removed 
+Info    : 232 open elements 
+Info    : 118 points, 191 elements 
+Info    : 116 open elements 
+Info    : 116 open faces 
+Info    : start tetmeshing 
+Info    : Use internal rules 
+Info    : El: 0 faces: 116 vol = 100 
+Info    : El: 1 faces: 116 vol = 96.077 
+Info    : El: 2 faces: 118 vol = 95.4635 
+Info    : El: 3 faces: 118 vol = 94.85 
+Info    : El: 5 faces: 120 vol = 92.9134 
+Info    : El: 6 faces: 120 vol = 92.8878 
+Info    : El: 7 faces: 122 vol = 92.8578 
+Info    : El: 8 faces: 120 vol = 92.2443 
+Info    : El: 9 faces: 122 vol = 91.0174 
+Info    : El: 11 faces: 124 vol = 90.4221 
+Info    : El: 12 faces: 124 vol = 89.8086 
+Info    : El: 13 faces: 124 vol = 89.6533 
+Info    : El: 15 faces: 126 vol = 89.2741 
+Info    : El: 16 faces: 128 vol = 89.0354 
+Info    : El: 18 faces: 130 vol = 88.571 
+Info    : El: 19 faces: 128 vol = 88.4024 
+Info    : El: 20 faces: 128 vol = 88.3274 
+Info    : El: 21 faces: 128 vol = 88.2524 
+Info    : El: 22 faces: 128 vol = 82.7959 
+Info    : El: 24 faces: 130 vol = 75.914 
+Info    : El: 25 faces: 130 vol = 74.1167 
+Info    : El: 26 faces: 130 vol = 68.6602 
+Info    : El: 27 faces: 130 vol = 66.8629 
+Info    : El: 28 faces: 126 vol = 61.4064 
+Info    : El: 29 faces: 126 vol = 60.0841 
+Info    : El: 30 faces: 124 vol = 60.0541 
+Info    : El: 32 faces: 126 vol = 58.9026 
+Info    : El: 33 faces: 126 vol = 57.6756 
+Info    : El: 34 faces: 128 vol = 57.6456 
+Info    : El: 35 faces: 128 vol = 57.0698 
+Info    : El: 36 faces: 128 vol = 57.0398 
+Info    : El: 37 faces: 128 vol = 56.5208 
+Info    : El: 38 faces: 128 vol = 55.2938 
+Info    : El: 39 faces: 130 vol = 53.2919 
+Info    : El: 40 faces: 130 vol = 53.2619 
+Info    : El: 41 faces: 132 vol = 53.2319 
+Info    : El: 42 faces: 130 vol = 52.0049 
+Info    : El: 43 faces: 128 vol = 51.9749 
+Info    : El: 44 faces: 126 vol = 50.748 
+Info    : El: 45 faces: 128 vol = 49.9294 
+Info    : El: 46 faces: 126 vol = 49.0756 
+Info    : El: 47 faces: 122 vol = 48.4998 
+Info    : El: 49 faces: 124 vol = 48.1811 
+Info    : El: 50 faces: 124 vol = 48.1315 
+Info    : El: 51 faces: 124 vol = 47.7402 
+Info    : El: 52 faces: 124 vol = 47.6424 
+Info    : El: 53 faces: 124 vol = 47.4955 
+Info    : El: 54 faces: 122 vol = 47.3688 
+Info    : El: 55 faces: 122 vol = 47.1341 
+Info    : El: 56 faces: 120 vol = 46.9883 
+Info    : El: 57 faces: 120 vol = 43.564 
+Info    : El: 58 faces: 120 vol = 42.8489 
+Info    : El: 60 faces: 122 vol = 36.3689 
+Info    : El: 61 faces: 124 vol = 36.1955 
+Info    : El: 62 faces: 124 vol = 36.1159 
+Info    : El: 63 faces: 124 vol = 35.969 
+Info    : El: 64 faces: 124 vol = 35.7344 
+Info    : El: 65 faces: 124 vol = 35.3106 
+Info    : El: 66 faces: 120 vol = 34.5955 
+Info    : El: 67 faces: 118 vol = 34.3282 
+Info    : El: 69 faces: 120 vol = 33.7047 
+Info    : El: 70 faces: 120 vol = 30.9266 
+Info    : El: 71 faces: 118 vol = 29.4553 
+Info    : El: 72 faces: 116 vol = 26.6524 
+Info    : El: 73 faces: 116 vol = 26.039 
+Info    : El: 74 faces: 114 vol = 25.8089 
+Info    : El: 75 faces: 110 vol = 25.7339 
+Info    : El: 76 faces: 106 vol = 25.7039 
+Info    : El: 77 faces: 104 vol = 24.0528 
+Info    : El: 78 faces: 100 vol = 22.4018 
+Info    : El: 79 faces: 98 vol = 21.0426 
+Info    : El: 80 faces: 96 vol = 21.0126 
+Info    : El: 81 faces: 94 vol = 20.9826 
+Info    : El: 82 faces: 92 vol = 20.4988 
+Info    : El: 83 faces: 90 vol = 19.2718 
+Info    : El: 84 faces: 88 vol = 19.1934 
+Info    : El: 85 faces: 88 vol = 18.8764 
+Info    : El: 86 faces: 86 vol = 18.7012 
+Info    : El: 87 faces: 82 vol = 15.7384 
+Info    : El: 88 faces: 78 vol = 14.5174 
+Info    : El: 89 faces: 74 vol = 13.387 
+Info    : El: 90 faces: 72 vol = 13.2412 
+Info    : El: 91 faces: 72 vol = 13.0954 
+Info    : El: 92 faces: 72 vol = 12.8654 
+Info    : El: 93 faces: 68 vol = 11.841 
+Info    : El: 94 faces: 66 vol = 11.6962 
+Info    : El: 95 faces: 64 vol = 11.5515 
+Info    : El: 96 faces: 62 vol = 11.2821 
+Info    : El: 98 faces: 64 vol = 10.7039 
+Info    : El: 100 faces: 66 vol = 10.6967 
+Info    : El: 101 faces: 68 vol = 10.6217 
+Info    : El: 102 faces: 64 vol = 10.5467 
+Info    : El: 103 faces: 60 vol = 10.4717 
+Info    : El: 104 faces: 58 vol = 10.2329 
+Info    : El: 105 faces: 58 vol = 10.1692 
+Info    : El: 106 faces: 58 vol = 10.0978 
+Info    : El: 107 faces: 56 vol = 9.70108 
+Info    : El: 108 faces: 58 vol = 9.62999 
+Info    : El: 109 faces: 56 vol = 9.6213 
+Info    : El: 110 faces: 58 vol = 9.47193 
+Info    : El: 111 faces: 56 vol = 9.46055 
+Info    : El: 112 faces: 56 vol = 8.70241 
+Info    : El: 114 faces: 58 vol = 7.94807 
+Info    : El: 115 faces: 60 vol = 7.12043 
+Info    : El: 116 faces: 60 vol = 7.07496 
+Info    : El: 117 faces: 62 vol = 6.96561 
+Info    : El: 118 faces: 60 vol = 6.93451 
+Info    : El: 119 faces: 62 vol = 6.74362 
+Info    : El: 120 faces: 60 vol = 5.98547 
+Info    : El: 121 faces: 60 vol = 5.68195 
+Info    : El: 122 faces: 62 vol = 5.64665 
+Info    : El: 123 faces: 62 vol = 5.26304 
+Info    : El: 124 faces: 64 vol = 5.24222 
+Info    : El: 125 faces: 62 vol = 5.1893 
+Info    : El: 126 faces: 60 vol = 5.11302 
+Info    : El: 127 faces: 56 vol = 4.93722 
+Info    : El: 128 faces: 56 vol = 4.8703 
+Info    : El: 129 faces: 56 vol = 4.82551 
+Info    : El: 130 faces: 54 vol = 4.58032 
+Info    : El: 131 faces: 52 vol = 3.9689 
+Info    : El: 132 faces: 50 vol = 3.62005 
+Info    : El: 133 faces: 50 vol = 3.55716 
+Info    : El: 134 faces: 48 vol = 3.42844 
+Info    : El: 135 faces: 48 vol = 3.1984 
+Info    : El: 136 faces: 44 vol = 3.07621 
+Info    : El: 137 faces: 42 vol = 3.02722 
+Info    : El: 138 faces: 38 vol = 2.97259 
+Info    : El: 139 faces: 38 vol = 2.59877 
+Info    : El: 140 faces: 36 vol = 2.55475 
+Info    : El: 141 faces: 36 vol = 2.41405 
+Info    : El: 142 faces: 38 vol = 2.25626 
+Info    : El: 143 faces: 34 vol = 2.11327 
+Info    : El: 144 faces: 32 vol = 1.81343 
+Info    : El: 145 faces: 30 vol = 1.71802 
+Info    : El: 146 faces: 28 vol = 1.63584 
+Info    : El: 147 faces: 26 vol = 1.54575 
+Info    : El: 148 faces: 26 vol = 1.52842 
+Info    : El: 149 faces: 24 vol = 1.20257 
+Info    : El: 150 faces: 22 vol = 0.942936 
+Info    : El: 154 faces: 22 vol = 0.77541 
+Info    : El: 155 faces: 22 vol = 0.746035 
+Info    : El: 156 faces: 20 vol = 0.685588 
+Info    : El: 157 faces: 18 vol = 0.660089 
+Info    : El: 158 faces: 14 vol = 0.629955 
+Info    : El: 162 faces: 14 vol = 0.408137 
+Info    : El: 163 faces: 14 vol = 0.367729 
+Info    : El: 164 faces: 12 vol = 0.302472 
+Info    : El: 165 faces: 12 vol = 0.224918 
+Info    : 0 open elements 
+Info    : Success ! 
+Info    : 133 points, 368 elements 
+Info    : Meshing volume 5 (Frontal)
+Info    : Region 5 Face 38, 3 intersect
+Info    : Region 5 Face 45, 0 intersect
+Info    : Region 5 Face 46, 1 intersect
+Info    : Region 5 Face 40, 1 intersect
+Info    : Region 5 Face 47, 2 intersect
+Info    : Region 5 Face 41, 1 intersect
+Info    : Region 5 Face 48, 1 intersect
+Info    : CalcLocalH: 415 Points 0 Elements 826 Surface Elements 
+Info    : Check subdomain 1 / 1 
+Info    : 826 open elements 
+Info    : Meshing subdomain 1 of 1 
+Info    : 826 open elements 
+Info    : Use internal rules 
+Info    : 826 open elements 
+Info    : Delaunay meshing 
+Info    : number of points: 415 
+Info    : blockfill local h 
+Info    : number of points: 553 
+Info    : Points: 553 
+Info    : Elements: 3432 
+Info    : 0 open elements 
+Info    : Num open: 0 
+Info    : free: 0, fixed: 3432 
+Info    : SwapImprove  
+Info    : 0 swaps performed 
+Info    : 0 open elements 
+Info    : Num open: 0 
+Info    : free: 0, fixed: 3432 
+Info    : SwapImprove  
+Info    : 0 swaps performed 
+Info    : 0 degenerated elements removed 
+Info    : Remove intersecting 
+Info    : Remove outer 
+Info    : tables filled 
+Info    : outer removed 
+Info    : 826 open elements 
+Info    : 553 points, 2092 elements 
+Info    : 0 open elements 
+Info    : 0 open faces 
+Info    : start tetmeshing 
+Info    : Use internal rules 
+Info    : 0 open elements 
+Info    : Success ! 
+Info    : 553 points, 2092 elements 
+Info    : Meshing volume 6 (Frontal)
+Info    : Region 6 Face 42, 1 intersect
+Info    : Region 6 Face 43, 1 intersect
+Info    : Region 6 Face 44, 1 intersect
+Info    : Region 6 Face 46, 1 intersect
+Info    : Region 6 Face 45, 1 intersect
+Info    : Region 6 Face 47, 1 intersect
+Info    : Region 6 Face 48, 1 intersect
+Info    : CalcLocalH: 69 Points 0 Elements 134 Surface Elements 
+Info    : Check subdomain 1 / 1 
+Info    : 134 open elements 
+Info    : Meshing subdomain 1 of 1 
+Info    : 134 open elements 
+Info    : Use internal rules 
+Info    : 134 open elements 
+Info    : Delaunay meshing 
+Info    : number of points: 69 
+Info    : blockfill local h 
+Info    : number of points: 71 
+Info    : Points: 71 
+Info    : Elements: 349 
+Info    : 0 open elements 
+Info    : Num open: 0 
+Info    : free: 0, fixed: 349 
+Info    : SwapImprove  
+Info    : 0 swaps performed 
+Info    : 0 open elements 
+Info    : Num open: 0 
+Info    : free: 0, fixed: 349 
+Info    : SwapImprove  
+Info    : 0 swaps performed 
+Info    : 0 degenerated elements removed 
+Info    : Remove intersecting 
+Info    : Remove outer 
+Info    : tables filled 
+Info    : outer removed 
+Info    : 134 open elements 
+Info    : 71 points, 174 elements 
+Info    : 0 open elements 
+Info    : 0 open faces 
+Info    : start tetmeshing 
+Info    : Use internal rules 
+Info    : 0 open elements 
+Info    : Success ! 
+Info    : 71 points, 174 elements 
+Info    : Done meshing 3D (Wall 1.34816s, CPU 0.512756s)
+Info    : Optimizing mesh...
+Info    : Optimizing volume 2
+Info    : Optimization starts (volume = 2.75597e-05) with worst = 0.0412079 / average = 0.821036:
+Info    : 0.00 < quality < 0.10 :         3 elements
+Info    : 0.10 < quality < 0.20 :         2 elements
+Info    : 0.20 < quality < 0.30 :         3 elements
+Info    : 0.30 < quality < 0.40 :         2 elements
+Info    : 0.40 < quality < 0.50 :        10 elements
+Info    : 0.50 < quality < 0.60 :        36 elements
+Info    : 0.60 < quality < 0.70 :        50 elements
+Info    : 0.70 < quality < 0.80 :       101 elements
+Info    : 0.80 < quality < 0.90 :       357 elements
+Info    : 0.90 < quality < 1.00 :       196 elements
+Info    : 7 edge swaps, 0 node relocations (volume = 2.75597e-05): worst = 0.223129 / average = 0.827918 (Wall 0.00536116s, CPU 0.000631s)
+Info    : No ill-shaped tets in the mesh :-)
+Info    : 0.00 < quality < 0.10 :         0 elements
+Info    : 0.10 < quality < 0.20 :         0 elements
+Info    : 0.20 < quality < 0.30 :         1 elements
+Info    : 0.30 < quality < 0.40 :         2 elements
+Info    : 0.40 < quality < 0.50 :        10 elements
+Info    : 0.50 < quality < 0.60 :        35 elements
+Info    : 0.60 < quality < 0.70 :        49 elements
+Info    : 0.70 < quality < 0.80 :       103 elements
+Info    : 0.80 < quality < 0.90 :       357 elements
+Info    : 0.90 < quality < 1.00 :       196 elements
+Info    : Optimizing volume 3
+Info    : Optimization starts (volume = 0.0037338) with worst = 3.41191e-08 / average = 0.641649:
+Info    : 0.00 < quality < 0.10 :       176 elements
+Info    : 0.10 < quality < 0.20 :       165 elements
+Info    : 0.20 < quality < 0.30 :       437 elements
+Info    : 0.30 < quality < 0.40 :       794 elements
+Info    : 0.40 < quality < 0.50 :       812 elements
+Info    : 0.50 < quality < 0.60 :      1385 elements
+Info    : 0.60 < quality < 0.70 :      3513 elements
+Info    : 0.70 < quality < 0.80 :      4332 elements
+Info    : 0.80 < quality < 0.90 :      1545 elements
+Info    : 0.90 < quality < 1.00 :       458 elements
+Info    : 462 edge swaps, 205 node relocations (volume = 0.0037338): worst = 9.03358e-07 / average = 0.656148 (Wall 0.019198s, CPU 0.01343s)
+Info    : 574 edge swaps, 279 node relocations (volume = 0.0037338): worst = 9.33946e-07 / average = 0.66003 (Wall 0.0275594s, CPU 0.02076s)
+Warning : 7 ill-shaped tets are still in the mesh
+Info    : 0.00 < quality < 0.10 :        26 elements
+Info    : 0.10 < quality < 0.20 :        11 elements
+Info    : 0.20 < quality < 0.30 :        90 elements
+Info    : 0.30 < quality < 0.40 :       862 elements
+Info    : 0.40 < quality < 0.50 :       920 elements
+Info    : 0.50 < quality < 0.60 :      1579 elements
+Info    : 0.60 < quality < 0.70 :      3350 elements
+Info    : 0.70 < quality < 0.80 :      4266 elements
+Info    : 0.80 < quality < 0.90 :      1564 elements
+Info    : 0.90 < quality < 1.00 :       497 elements
+Info    : Optimizing volume 4
+Info    : Optimization starts (volume = 2.97649e-06) with worst = 1.31456e-06 / average = 0.48758:
+Info    : 0.00 < quality < 0.10 :        68 elements
+Info    : 0.10 < quality < 0.20 :        18 elements
+Info    : 0.20 < quality < 0.30 :        15 elements
+Info    : 0.30 < quality < 0.40 :        21 elements
+Info    : 0.40 < quality < 0.50 :        34 elements
+Info    : 0.50 < quality < 0.60 :        35 elements
+Info    : 0.60 < quality < 0.70 :        72 elements
+Info    : 0.70 < quality < 0.80 :        77 elements
+Info    : 0.80 < quality < 0.90 :        25 elements
+Info    : 0.90 < quality < 1.00 :         3 elements
+Info    : 41 edge swaps, 36 node relocations (volume = 2.97649e-06): worst = 8.39255e-05 / average = 0.543693 (Wall 0.00700959s, CPU 0.001636s)
+Info    : 56 edge swaps, 48 node relocations (volume = 2.97649e-06): worst = 8.39255e-05 / average = 0.557088 (Wall 0.0087654s, CPU 0.002416s)
+Warning : 13 ill-shaped tets are still in the mesh
+Info    : 0.00 < quality < 0.10 :        25 elements
+Info    : 0.10 < quality < 0.20 :         6 elements
+Info    : 0.20 < quality < 0.30 :         6 elements
+Info    : 0.30 < quality < 0.40 :        26 elements
+Info    : 0.40 < quality < 0.50 :        46 elements
+Info    : 0.50 < quality < 0.60 :        38 elements
+Info    : 0.60 < quality < 0.70 :        79 elements
+Info    : 0.70 < quality < 0.80 :        77 elements
+Info    : 0.80 < quality < 0.90 :        30 elements
+Info    : 0.90 < quality < 1.00 :         3 elements
+Info    : Optimizing volume 5
+Info    : Optimization starts (volume = 2.0515e-05) with worst = 0.0249284 / average = 0.649445:
+Info    : 0.00 < quality < 0.10 :        14 elements
+Info    : 0.10 < quality < 0.20 :        34 elements
+Info    : 0.20 < quality < 0.30 :        89 elements
+Info    : 0.30 < quality < 0.40 :       110 elements
+Info    : 0.40 < quality < 0.50 :       147 elements
+Info    : 0.50 < quality < 0.60 :       313 elements
+Info    : 0.60 < quality < 0.70 :       443 elements
+Info    : 0.70 < quality < 0.80 :       470 elements
+Info    : 0.80 < quality < 0.90 :       321 elements
+Info    : 0.90 < quality < 1.00 :       151 elements
+Info    : 105 edge swaps, 11 node relocations (volume = 2.0515e-05): worst = 0.100271 / average = 0.673404 (Wall 0.00670223s, CPU 0.002887s)
+Info    : 121 edge swaps, 13 node relocations (volume = 2.0515e-05): worst = 0.227108 / average = 0.676452 (Wall 0.00876944s, CPU 0.003982s)
+Info    : 123 edge swaps, 15 node relocations (volume = 2.0515e-05): worst = 0.274081 / average = 0.676314 (Wall 0.0103433s, CPU 0.004693s)
+Info    : 125 edge swaps, 15 node relocations (volume = 2.0515e-05): worst = 0.28915 / average = 0.676726 (Wall 0.0117719s, CPU 0.005228s)
+Info    : No ill-shaped tets in the mesh :-)
+Info    : 0.00 < quality < 0.10 :         0 elements
+Info    : 0.10 < quality < 0.20 :         0 elements
+Info    : 0.20 < quality < 0.30 :         3 elements
+Info    : 0.30 < quality < 0.40 :       111 elements
+Info    : 0.40 < quality < 0.50 :       181 elements
+Info    : 0.50 < quality < 0.60 :       317 elements
+Info    : 0.60 < quality < 0.70 :       441 elements
+Info    : 0.70 < quality < 0.80 :       487 elements
+Info    : 0.80 < quality < 0.90 :       322 elements
+Info    : 0.90 < quality < 1.00 :       152 elements
+Info    : Optimizing volume 6
+Info    : Optimization starts (volume = 5.23507e-07) with worst = 0.000979333 / average = 0.716709:
+Info    : 0.00 < quality < 0.10 :         3 elements
+Info    : 0.10 < quality < 0.20 :         0 elements
+Info    : 0.20 < quality < 0.30 :         1 elements
+Info    : 0.30 < quality < 0.40 :         2 elements
+Info    : 0.40 < quality < 0.50 :        12 elements
+Info    : 0.50 < quality < 0.60 :        22 elements
+Info    : 0.60 < quality < 0.70 :        24 elements
+Info    : 0.70 < quality < 0.80 :        44 elements
+Info    : 0.80 < quality < 0.90 :        49 elements
+Info    : 0.90 < quality < 1.00 :        17 elements
+Info    : 4 edge swaps, 0 node relocations (volume = 5.23507e-07): worst = 0.255883 / average = 0.704092 (Wall 0.00538835s, CPU 0.000561s)
+Info    : 6 edge swaps, 0 node relocations (volume = 5.23507e-07): worst = 0.302942 / average = 0.698754 (Wall 0.00654468s, CPU 0.000712s)
+Info    : No ill-shaped tets in the mesh :-)
+Info    : 0.00 < quality < 0.10 :         0 elements
+Info    : 0.10 < quality < 0.20 :         0 elements
+Info    : 0.20 < quality < 0.30 :         0 elements
+Info    : 0.30 < quality < 0.40 :         8 elements
+Info    : 0.40 < quality < 0.50 :        17 elements
+Info    : 0.50 < quality < 0.60 :        30 elements
+Info    : 0.60 < quality < 0.70 :        22 elements
+Info    : 0.70 < quality < 0.80 :        37 elements
+Info    : 0.80 < quality < 0.90 :        43 elements
+Info    : 0.90 < quality < 1.00 :        17 elements
+Info    : Done optimizing mesh (Wall 0.106024s, CPU 0.039264s)
+Info    : 2917 nodes 19321 elements
+Warning : ------------------------------
+Warning : Mesh generation error summary
+Warning :     2 warnings
+Warning :     0 errors
+Warning : Check the full log for details
+Warning : ------------------------------
+Info    : Writing 'model3d.msh'...
+Info    : Done writing 'model3d.msh'
+[ok] wrote model3d.msh
+     config        : N50_L040_cu_closed
+     experiment    : magnet free fall (no spring, no anchor)
+     coil-bore vols: 1 (StrandedCoil)
+     magnet vols   : 2
+     air vols      : 2
+     outer surface : 1 faces
+     magnet surface: 14 faces

@@ -1,0 +1,135 @@
+# =============================================================================
+#  .github/workflows/ci.yml  --  GitHub Actions CI for PysProject
+#
+#  Triggers:
+#    - push to main, develop
+#    - pull_request to main
+#    - manual workflow_dispatch
+#    - weekly cron (Sunday 02:00 UTC)
+#
+#  Jobs:
+#    1. lint        -- ruff + mypy
+#    2. test-linux  -- pytest on Linux (apt Elmer)
+#    3. test-docker -- docker compose run (full pipeline incl. ElmerSolver)
+#    4. test-windows- pytest on Windows (uses bundled ./elmer262/)
+#    5. release     -- build wheel + upload to PyPI (only on tag v*)
+# =============================================================================
+
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * 0'   # weekly Sunday 02:00 UTC
+
+env:
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  # ---- 1. lint --------------------------------------------------------------
+  lint:
+    name: ruff + mypy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+      - run: pip install -e ".[dev]"
+      - run: ruff check solenoid3d.py tests/ __version__.py
+      - run: mypy solenoid3d.py tests/ || true   # warnings only
+
+  # ---- 2. unit tests (Linux, system Elmer via apt) --------------------------
+  test-linux:
+    name: pytest (Linux + Elmer apt)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install system deps (Elmer + gmsh libs)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y elmerfem libglu1-mesa libgl1-mesa-glx \
+                                  libglib2.0-0 libfontconfig1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+      - run: pip install -r requirements.txt
+      - name: Run pytest (mesh + render + dependency-free SIF tests)
+        run: |
+          pytest tests/test_mesh.py tests/test_render.py \
+                   tests/test_sif_solver.py tests/test_sif_circuit.py \
+                   tests/test_spring_model.py -v --tb=short \
+                 --junitxml=test_outputs/junit-linux.xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-output-linux
+          path: test_outputs/
+
+  # ---- 3. full pipeline via Docker -----------------------------------------
+  test-docker:
+    name: docker compose (full pipeline)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: docker compose build
+      - name: Run 4-step pipeline
+        run: docker compose run --rm fem
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: docker-results
+          path: |
+            results/
+            test_outputs/
+
+  # ---- 4. Windows test (uses bundled ./elmer262/) ---------------------------
+  test-windows:
+    name: pytest (Windows + bundled Elmer)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: pip install -r requirements.txt
+      - name: Run full pipeline
+        shell: pwsh
+        run: ./run_tests.ps1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows-results
+          path: |
+            results/
+            test_outputs/
+
+  # ---- 5. release to PyPI ---------------------------------------------------
+  release:
+    name: build + upload to PyPI
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [lint, test-linux, test-docker, test-windows]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: pip install build twine
+      - run: python -m build --sdist --wheel
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}

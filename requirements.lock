@@ -1,0 +1,37 @@
+# =============================================================================
+#  requirements.lock  --  exact-pinned versions for reproducible builds
+#
+#  Generate with:   pip-compile pyproject.toml --output-file=requirements.lock \
+#                           --extra dev --upgrade
+#  Install with:    pip install --no-deps -r requirements.lock
+#                   pip install -r requirements.txt
+# =============================================================================
+
+# Runtime
+gmsh==4.13.1
+meshio==5.3.5
+pyvista==0.43.2
+numpy==1.26.4
+matplotlib==3.8.4
+
+# Transitive (subset)
+pillow==10.4.0
+vtk==9.3.0
+scooby==0.10.0
+pooch==1.8.1
+appdirs==1.4.4
+rich==13.7.1
+typing-extensions==4.12.2
+
+# Dev / testing
+pytest==7.4.4
+pytest-cov==4.1.0
+ruff==0.6.2
+mypy==1.11.0
+pip-tools==7.4.1
+
+# Elmer 26.2 (system package, not pip)
+# Linux:   apt install elmerfem         (Debian 12 ships Elmer ~8.4)
+#          or compile from https://github.com/CSC-IT-Center-for-Science/elmerfem
+# Windows: ./elmer262/  bundled in the project (compile with MSYS2 mingw64)
+# macOS:   brew install elmerfem

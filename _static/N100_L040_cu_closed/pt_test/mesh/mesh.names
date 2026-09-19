@@ -1,0 +1,13 @@
+! ----- names for bodies -----
+$ StrandedCoil = 1
+$ Magnet = 2
+$ Air = 3
+! ----- names for boundaries -----
+$ MagneticInfinity = 1
+$ MagnetSurface = 2
+$ CoilStart = 3
+$ CoilEnd = 4
+$ Alpha0 = 5
+$ Alpha1 = 6
+$ Beta0 = 7
+$ Beta1 = 8

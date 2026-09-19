@@ -1,0 +1,1203 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+make_sif.py -- (re)generate case_transient.sif from config.json.
+
+config.json is meant to be the single source of truth, but the motion law
+lives inside the SIF as an Elmer MATC expression.  Rather than hand-editing
+two files, this script patches the MATC line from the config:
+
+    motion_mode = "spring"      -> damped-oscillator displacement (spring_model)
+    motion_mode = "free_fall"   -> -1/2 g t^2
+
+Usage:
+    python make_sif.py                       # write case_transient.sif
+    python make_sif.py --show                # dry-run, print the MATC line
+    python make_sif.py --out case_x.sif
+    python make_sif.py --solver hypre-ams    # iterative BiCGStab + AMS
+    python make_sif.py --curve N50_L040_cu_closed   # the closed-circuit solve
+    python make_sif.py --curve empty         # the no-conductor baseline
+
+--solver picks the linear-algebra backend for Solver 2 (WhitneyAVSolver):
+
+    umfpack     direct sparse LU (template default).  Fast, but memory
+                grows ~O(n^2) and it dies around 100 000 mesh edges.
+    hypre-ams   iterative BiCGStab preconditioned by Hypre's AMS, the
+                curl-conforming preconditioner for H(curl) edge elements.
+                Needs an Elmer built with -WITH_Hypre=TRUE; see
+                `hpc/build_elmer.sh hypre`.  No GPU required.
+
+--curve picks which entry in [curves] is the active study, and the circuit
+treatment follows from the CURVE, not from a separate mode flag:
+
+    conductor (N_turns > 0)   the closed circuit.  Material 1's Electric
+                              Conductivity becomes the curve's sigma_wire,
+                              and the SIF gains
+
+                                Component 1  the stranded coil, with
+                                             `Number of Turns` from the
+                                             curve, wound between the two
+                                             coil end faces
+                                Component 2  the load, `Component Type =
+                                             String Resistor`, `Resistance`
+                                             = the curve's R_load_ohm
+                                Solver 5     WPotentialSolver (the coil's
+                                             wire-direction potential W)
+                                Solver 6     CircuitsAndDynamics (the MNA
+                                             circuit assembly + solve)
+                                Solver 7     CircuitsOutput
+                                BC 3 / BC 4  CoilStart / CoilEnd, with
+                                             W = 1 / W = 0
+                                INCLUDE      circuits.definitions, the
+                                             MNA matrices (written next
+                                             to the SIF)
+
+    no conductor (N_turns = 0) the plain template, untouched: Material 1
+                              stays sigma = 0.0 and there is no circuit at
+                              all.  `--curve empty` is the no-Lenz-braking
+                              baseline the conductor curves are compared
+                              against.
+
+    no --curve at all          the plain template too (this is what
+                              `test_sif_solver.py` pins down).
+
+There is deliberately NO `--circuit` flag any more: the open-circuit
+variant was removed, so every conductor curve is a closed circuit and the
+only remaining contrast in the sweep is N_turns and material.
+
+The approach follows upstream
+fem/tests/circuits2D_transient_variable_resistor, whose header comment
+explains why no element law has to be hand-written:
+
+    ! Now we define the variable resistor. It is similar to FE components
+    ! in the sense that Elmer will write the component equation to the row
+    ! of the voltage component (row 6).  So no need to write V=RI.
+
+NOTE: the closed-circuit transient now RUNS (hpc/notes.md 15.7).  Two things
+to be aware of before trusting its numbers:
+
+  * `r_component(1)`, the coil's own resistance, comes back ~10x smaller
+    than a hand estimate (2.9e-2 vs ~0.31 ohm for 50 turns of 0.7 mm
+    copper).  The machinery works, but the magnitude is unverified --
+    see hpc/notes.md 15.7's "Open question".
+  * the mesh is ~2x larger than the open-circuit one, because the radial
+    slit must be resolved (hpc/notes.md 15.1).
+
+Run `hpc/smoke_test_closed.sh <curve>` first: it checks the mesh, the
+boundary renumbering, the SIF and a 3-step solve in about two minutes.
+"""
+from __future__ import annotations
+import argparse
+import json
+import math
+import re
+from pathlib import Path
+
+from spring_model import load_spring
+
+ROOT = Path(__file__).resolve().parent
+CFG_PATH = ROOT / "config.json"
+TEMPLATE = ROOT / "case_transient.sif"
+
+# ---------------------------------------------------------------------------
+#  Linear-solver backends
+# ---------------------------------------------------------------------------
+# Solver 2 (WhitneyAVSolver) is the expensive one.  The template asks for
+# UMFPACK -- a DIRECT sparse LU.  That is the fastest choice up to roughly
+# 100 000 mesh edges here, but its memory grows ~O(n^2) and on the HPC it
+# dies at exactly that point with
+#
+#     Error occurred in umf4num:   -1.0000000000000000
+#
+# The alternative is Elmer's Hypre interface, which requires an Elmer built
+# with `-DWITH_Hypre=TRUE` (see hpc/build_elmer.sh hypre).  The crucial
+# detail is the PRECONDITIONER.  Whitney elements are H(curl)-conforming,
+# so an ILU-style preconditioner does not work for them -- plain
+# BiCGStab + ILU1 genuinely diverges, which is what an earlier note in this
+# project recorded as "Elmer has no curl-conforming preconditioner".
+# That conclusion was wrong: Hypre's AMS (auxiliary-space Maxwell solver)
+# is built exactly for H(curl) and converges.  It was simply compiled out,
+# because WITH_Hypre defaults to FALSE.  Upstream validates this exact
+# combination in fem/tests/mgdyn_hypre_ams, whose header reads:
+#
+#     "This test case with BiCGStab as solver, AMS as preconditioner."
+#
+# Every keyword below is taken from that upstream test case:
+#
+#   linear system use hypre = logical true   route this solve to Hypre
+#   Linear System Preconditioning = AMS      the curl-conforming AMS
+#   Linear System Method Hypre Index = 7     outer Krylov method:
+#       2=AMS  6=PCG  7=BiCGStab  8=GMRES  9=FlexGMRES  10=LGMRES  11=COGMRES
+SOLVERS = ("umfpack", "hypre-ams")
+HYPRE_AMS_INDEX = 7          # BiCGStab, as in the upstream AMS test case
+
+# Solver 2's direct-solver block, as shipped by the template.  The WHOLE
+# four-line block is matched, not just the first two lines: leaving the
+# trailing `Convergence Tolerance` / `Max Iterations = 1000` behind would
+# duplicate those keys, and Elmer takes the LAST occurrence -- so the
+# iterative 5000 would be silently overridden back to 1000.
+_RE_DIRECT = re.compile(
+    r"(?m)^(?P<ind>[ \t]*)Linear System Solver[ \t]*=[ \t]*Direct[ \t]*\r?\n"
+    r"[ \t]*Linear System Direct Method[ \t]*=[ \t]*UMFPACK[ \t]*\r?\n"
+    r"[ \t]*Linear System Convergence Tolerance[ \t]*"
+    r"=[ \t]*[0-9.eE+-]+[ \t]*\r?\n"
+    r"[ \t]*Linear System Max Iterations[ \t]*=[ \t]*[0-9]+[ \t]*\r?\n")
+
+# The template justifies the DIRECT choice with a comment that becomes a lie
+# the moment we switch to Hypre, so it has to go with the block:
+#     ! DIRECT is used because the iterative route (BiCGStabL + ILU1) ...
+#     ! `Use Piola Transform = False` for the iterative route.
+# (The claim itself is only half true -- BiCGStab+ILU really does diverge
+# on Whitney elements, but AMS is the preconditioner that fixes it.)
+_STALE_DIRECT_NOTE = re.compile(
+    r"(?m)^[ \t]*! DIRECT is used because[^\n]*\r?\n"
+    r"(?:[ \t]*![^\n]*\r?\n)*?"
+    r"[ \t]*![^\n]*for the iterative route\.[^\n]*\r?\n")
+
+
+def patch_solver(sif: str, solver: str) -> str:
+    """Swap Solver 2's linear-system block for the requested backend."""
+    if solver == "umfpack":
+        if not _RE_DIRECT.search(sif):
+            raise SystemExit("[err] --solver umfpack: could not find the "
+                             "`Direct` / `UMFPACK` block in the template")
+        return sif                      # template already ships this
+
+    if solver != "hypre-ams":
+        raise SystemExit(f"[err] unknown solver '{solver}' "
+                         f"(use one of: {', '.join(SOLVERS)})")
+
+    m = _RE_DIRECT.search(sif)
+    if not m:
+        raise SystemExit("[err] --solver hypre-ams: could not find the "
+                         "`Direct` / `UMFPACK` block to replace")
+    # Drop the now-false justification for DIRECT.  Checked, not silently
+    # skipped, so template drift shows up here instead of shipping a SIF
+    # whose comment contradicts its solver.
+    sif, n_note = _STALE_DIRECT_NOTE.subn("", sif, count=1)
+    if n_note != 1:
+        raise SystemExit("[err] --solver hypre-ams: could not remove the "
+                         "stale `DIRECT is used because ...` comment")
+    m = _RE_DIRECT.search(sif)          # offsets moved after the deletion
+    i = m.group("ind")
+    repl = (
+        "\n".join(f"{i}{line}" for line in (
+            "! ------------------------------------------------------------",
+            "!  ITERATIVE / HYPRE AMS                                   ---",
+            "!  Escapes the O(n^2) memory wall that kills UMFPACK at     --",
+            "!  ~100 k edges, and AMS is the curl-conforming             --",
+            "!  preconditioner that H(curl) edge elements require        --",
+            "!  (plain BiCGStab+ILU diverges on Whitney elements).       --",
+            "! ------------------------------------------------------------",
+            "linear system use hypre          = Logical True",
+            "Linear System Solver             = Iterative",
+            "Linear System Symmetric          = Logical True",
+            "Linear System Preconditioning    = AMS",
+            f"Linear System Method Hypre Index = Integer {HYPRE_AMS_INDEX}",
+            # An iterative solve needs more headroom than a direct one, and
+            # the residual must be visible or a stall is undiagnosable.
+            "Linear System Convergence Tolerance = 1.0e-8",
+            "Linear System Max Iterations     = 5000",
+            "Linear System Residual Output    = 10",
+        ))
+        + "\n")
+    sif = sif[:m.start()] + repl + sif[m.end():]
+    return sif
+
+
+# ---------------------------------------------------------------------------
+#  Closed-circuit SIF -- coil + circuit coupling
+# ---------------------------------------------------------------------------
+# This is the difference between a post-hoc "I = EMF / R" curve and a real
+# FEM that solves the coupled circuit.  Three insertions:
+#
+#   1. Material 1's `Electric Conductivity` becomes sigma_wire (curve
+#      dependent) instead of 0.0.  This is what makes the coil actually
+#      carry current.
+#   2. Solver 5 / 6 / 7 -- CoilSolver + FluxSolver + DivergenceSolver --
+#      inserted after Solver 4, and Equation 1 is upgraded from
+#      `Active Solvers(3) = 1 2 3` to `Active Solvers(7) = 1 2 3 4 5 6 7`.
+#   3. Boundary Conditions 3 + 4 -- CoilStart + CoilEnd -- attached to the
+#      two coil end-face physical groups that solenoid3d.py emits
+#      (tags 1003 / 1004) when the bore is a real coil body.
+#
+# Idempotency: the solver+BC insertion is skipped if the SIF already has
+# a CoilSolver block, but the Material-1 sigma is ALWAYS rewritten
+# because it depends on which curve is active.
+# ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+#  Closed-circuit SIF -- stranded coil + resistive load via
+#  CircuitsAndDynamics  (the CORRECT approach for transient induction)
+# ---------------------------------------------------------------------------
+# Reference (Elmerfem 26.2.1):
+#   fem/tests/circuits2D_transient_variable_resistor/sif/variable_resistor.sif
+#   fem/tests/circuits2D_transient_variable_resistor/sif/
+#       variable_resistor_circuit.definitions
+#
+# The upstream comment in that test is the key to the whole design:
+#
+#   ! Now we define the variable resistor. It is similar to FE components
+#   ! in the sense that Elmer will write the component equation to the row
+#   ! of the voltage component (row 6).  So no need to write V=RI.
+#
+# i.e. a RESISTOR IS JUST A `Component` BLOCK.  Elmer writes V = R*I
+# automatically into the MNA system, so we never hand-code the element
+# law.  The coil is likewise a `Component` with `Coil Type = stranded`
+# and `Number of Turns = N`; Elmer derives the flux linkage and the
+# induced EMF from the A-field on the coil body.
+#
+# What we insert, therefore:
+#   1. Material 1 sigma 0.0 -> sigma_wire   (makes the coil conduct)
+#   2. `Component 1` -- the stranded coil (Master Bodies = coil body id,
+#      Number of Turns = curve N_turns, Electrode Boundaries = the two
+#      CoilStart/CoilEnd BCs)
+#   3. `Component 2` -- the load resistor, Resistance = curve R_load_ohm
+#   4. `Solver N` -- CircuitsAndDynamics (the MNA assembly/solve)
+#   5. `Solver N` -- CircuitsOutput (writes i/v per component per step)
+#   6. `Body Force "Circuit"` -- the circuit excitation block
+#   7. an `INCLUDE` of the circuit definitions file (MNA matrices)
+#
+# NOT using CoilSolver: that is a *static* coil-current solver used to
+# build a stranded-coil current distribution.  It converges on the coil
+# geometry but does not solve a transient induced-current loop, so it is
+# the wrong tool for a magnet falling through a coil.  The MeshSolver
+# reference test CoilSolver1/case.sif is steady-state for the same reason.
+#
+# !! ELMERGRID NOTE !!
+# The CoilStart/CoilEnd BC indices in the generated SIF are the gmsh
+# physical-group tags RENUMBERED by `ElmerGrid -autoclean` (1003->3,
+# 1004->4).  Verify against the case's mesh/mesh.names before solving;
+# a mismatch shows up as "Boundary condition N: target boundary not
+# found" at load time, not silently.
+
+_COIL_SOLVER_BLOCK = """
+! ============================================================
+!  Solvers 5..10 -- stranded-coil circuit coupling
+!  (inserted by make_sif.py for every curve with N_turns > 0;
+!   see hpc/notes.md 13)
+!    Solver 5   DirectionSolver Alpha  -- first local axis
+!    Solver 6   DirectionSolver Beta   -- second local axis
+!    Solver 7   RotMSolver             -- builds RotM E from Alpha x Beta
+!    Solver 8   WPotentialSolver       -- the coil's wire-direction W
+!    Solver 9   CircuitsAndDynamics    -- the MNA circuit assembly + solve
+!    Solver 10  CircuitsOutput         -- per-component i/v per step
+!
+!  Solvers 5..8 all run `Before All`: they compute the coil's local frame
+!  and wire direction ONCE, before the timestepping starts.  A stranded
+!  winding has no intrinsic wire direction, which is why the frame has to
+!  be solved for; a `massive` (solid) coil would not need 5..7, but it also
+!  has no `Number of Turns`, and its W conduction axis is pinned to global
+!  z -- see hpc/notes.md 13.12.
+!
+!  Reference: upstream fem/tests/circuits_transient_stranded/sif/6480.sif,
+!  Solvers 1-5 there.
+! ============================================================
+Solver 5
+  Exec Solver = "Before all"
+  Procedure = "DirectionSolver" "DirectionSolver"
+  Equation = "Direction Alpha"
+  Variable = Alpha
+
+  Linear System Solver = Iterative
+  Linear System Iterative Method = BiCGStab
+  Linear System Max Iterations = 5000
+  Linear System Convergence Tolerance = 1.0e-10
+  Linear System Abort Not Converged = True
+  Linear System Residual Output = 1000
+End
+
+Solver 6
+  Exec Solver = "Before all"
+  Procedure = "DirectionSolver" "DirectionSolver"
+  Equation = "Direction Beta"
+  Variable = Beta
+
+  Linear System Solver = Iterative
+  Linear System Iterative Method = BiCGStab
+  Linear System Max Iterations = 5000
+  Linear System Convergence Tolerance = 1.0e-10
+  Linear System Abort Not Converged = True
+  Linear System Residual Output = 1000
+End
+
+Solver 7
+  Exec Solver = "Before All"
+  Equation = "Transformation matrix"
+  Procedure = "CoordinateTransform" "RotMSolver"
+  Variable = -nooutput Dummy
+  Optimize Bandwidth = False
+  Polar Decomposition Determinant Tolerance = Real 1.0e-9
+  Polar Decomposition Max Iterations = Integer 100
+  Exported Variable 1 = -nooutput RotM E[RotM E:9]
+  Exported Variable 2 = -nooutput Alpha Vector E[Alpha Vector E:3]
+  Exported Variable 3 = -nooutput Beta Vector E[Beta Vector E:3]
+  Exported Variable 4 = -nooutput Gamma Vector E[Gamma Vector E:3]
+  Discontinuous Galerkin = True
+End
+
+Solver 8
+  ! W is the wire-direction potential the stranded coil has no intrinsic
+  ! version of.  It is pinned to 1 on CoilStart and 0 on CoilEnd (BC 3 /
+  ! BC 4) and solved through the coil body along the local frame built by
+  ! Solvers 5..7.
+  !
+  ! WITHOUT this the run gets as far as the first MagnetoDynamicsCalcFields
+  ! call and then SEGFAULTs with
+  !     WARNING:: GetWPotentialVar: Could not obtain variable for potential "W"
+  ! because the coil's lumped resistance and current density both need W.
+  Exec Solver = "Before All"
+  Equation = "Wire direction"
+  Procedure = "WPotentialSolver" "Wsolve"
+  Variable = W
+
+  Linear System Solver = Iterative
+  Linear System Iterative Method = CG
+  Linear System Max Iterations = 10000
+  Linear System Convergence Tolerance = 1.0e-10
+  Linear System Abort Not Converged = True
+  Linear System Residual Output = 1000
+End
+
+Solver 9
+  ! `Before timestep`, NOT `Always`  -- and this is load-bearing.
+  !
+  ! Elmer executes the per-timestep solvers in NUMERIC order, not in the
+  ! order they appear in `Active Solvers`:
+  !     ElmerSolver.F90:2644  DO i=1,nSolvers ... AHEAD_ALL  (pre-loop)
+  !     MainUtils.F90:3310    DO k=1,nSolvers ... EXEC_ALWAYS (each step)
+  ! MagnetoDynamicsCalcFields is Solver 3 and solvers 1/2/3 are the
+  ! template's, so the circuit can never be numbered below it.  With
+  ! `Always` it is only reached AFTER CalcFields -- which then SEGFAULTS on
+  ! the NULL Lagrange multiplier that the circuit has not created yet.
+  ! A circular dependency; see hpc/notes.md 15.7.
+  !
+  ! `Before timestep` puts it in the SOLVER_EXEC_AHEAD_TIME pre-pass, which
+  ! runs before the Always loop.  Verified: with this the whole chain
+  ! executes and the transient completes.
+  Exec Solver = "Before timestep"
+  Equation = "Circuits"
+  Procedure = "CircuitsAndDynamics" "CircuitsAndDynamics"
+End
+
+! Writes the per-component currents and voltages to the results file,
+! so the induced coil current i_component(1) can be compared against
+! the post-hoc EMF/R estimate oscilloscope.py produces.
+!
+! Same `Before timestep` reason as Solver 9 -- and it must stay NUMBERED
+! above it, because the pre-pass also runs in numeric order and the output
+! has to follow the assembly.
+Solver 10
+  Exec Solver = "Before timestep"
+  Equation = "Circuits Output"
+  Procedure = "CircuitsAndDynamics" "CircuitsOutput"
+  Export Circuit Variables = Logical True
+End
+
+! ============================================================
+!  Solver 11 -- SaveScalars: the per-step circuit time series
+! ============================================================
+!  WITHOUT `Export Circuit Variables` ON SOLVER 10 NOTHING IS EXPORTED.
+!  CircuitUtils.F90:1540 is a hard gate:
+!
+!      IF( .NOT. ListGetLogical( Solver % Values, &
+!          'Export Circuit Variables', Found ) ) RETURN
+!
+!  and until it was set, `crt i` / `crt v` were never created, so no
+!  circuit quantity ever reached a file -- only the log, and only at
+!  Level 10 (see below).  That is how the induced current stayed
+!  invisible through every earlier debugging round.
+!
+!  SaveScalars then flattens them into results/circuit.csv, one row per
+!  step, with the columns named in results/circuit.csv.names:
+!
+!      1 crt i 1      4 crt v 2      10 i_component(1)   <- COIL CURRENT
+!      2 crt i 2      5 eddy current power
+!      3 crt v 1      6 electromagnetic field energy
+!      7 res: time    ...            17 p_dc_component(2)
+!
+!  NOTE the `res:` SIMULATION-list scalars that CircuitsAndDynamics adds
+!  (CircuitsAndDynamics.F90:2820) are ALSO written.  `SimListAddAndOutput
+!  ConstReal` calls Info() at Level 10 but calls ListAddConstReal()
+!  UNCONDITIONALLY, so the CSV is complete even if the log is quiet --
+!  the log is only a secondary cross-check.
+Solver 11
+  Exec Solver = "After timestep"
+  Equation = "SaveScalars"
+  Procedure = "SaveData" "SaveScalars"
+  Filename = "circuit.csv"
+  Output Format = Ascii
+  File Append = Logical False
+  Variable 1 = "crt i"
+  Operator 1 = "mean"
+  Variable 2 = "crt v"
+  Operator 2 = "mean"
+End
+"""
+
+# Boundary Conditions 3/4 -- attached to the physical groups that
+# solenoid3d.py emits for the coil-cylinder top + bottom disks.
+#
+# !! TARGET BOUNDARIES MUST BE 3 AND 4, NOT 1003 AND 1004 !!
+# gmsh physical-group tags are 1001/1002/1003/1004, but `run_case.slurm`
+# converts model3d.msh -> mesh/ with
+#     ElmerGrid 14 2 model3d.msh -out mesh -autoclean
+# and `-autoclean` RENUMBERS boundary groups SEQUENTIALLY starting at 1.
+# The mapping is therefore
+#     1001 MagneticInfinity -> 1
+#     1002 MagnetSurface    -> 2
+#     1003 CoilStart        -> 3
+#     1004 CoilEnd          -> 4
+# (The template's own comment above Boundary Condition 1 documents the
+#  1001->1 / 1002->2 half of this.)  Writing 1003 here produces
+#     Boundary condition 3: target boundary not found
+# at solve time.  Verify against `mesh/mesh.names` after ElmerGrid runs;
+# that file lists the actual indices.
+_COIL_BC_BLOCK = """
+
+! ============================================================
+!  Closed-circuit BCs (inserted by make_sif.py for a conductor curve)
+!    CoilStart / CoilEnd mark where the winding enters and leaves
+!    the coil body.  solenoid3d.py emits these as gmsh physical
+!    groups 1003 / 1004; ElmerGrid -autoclean renumbers them to
+!    3 / 4 (check mesh/mesh.names).
+! ============================================================
+Boundary Condition 3
+  Name = "CoilStart"
+  Target Boundaries = 3
+  Coil Start = Logical True
+  ! W is the stranded coil's wire-direction potential.  Pinning it to 1
+  ! here and 0 at CoilEnd is what defines the winding path; without both
+  ! the coil has no direction and the derived-field solver segfaults.
+  ! These two faces are the sides of the RADIAL SLIT in the coil body --
+  ! the top/bottom disks they used to be are z-normal and could only ever
+  ! drive an axial current.  See hpc/notes.md 13.12.
+  W = Real 1
+End
+
+Boundary Condition 4
+  Name = "CoilEnd"
+  Target Boundaries = 4
+  Coil End = Logical True
+  W = Real 0
+End
+
+! ---- Alpha / Beta: the local frame the stranded coil needs ----------
+! Alpha runs radially outward (inner cylinder -> outer cylinder) and Beta
+! axially (bottom disk -> top disk), so
+!     gamma = alpha x beta = -theta-hat
+! which IS the wire direction of a solenoid.  These four faces exist only
+! because solenoid3d.py stopped discarding the coil's lateral surfaces.
+Boundary Condition 5
+  Name = "Alpha0"
+  Target Boundaries = 5
+  Body 1: Alpha = Real 0
+End
+
+Boundary Condition 6
+  Name = "Alpha1"
+  Target Boundaries = 6
+  Body 1: Alpha = Real 1
+End
+
+Boundary Condition 7
+  Name = "Beta0"
+  Target Boundaries = 7
+  Body 1: Beta = Real 0
+End
+
+Boundary Condition 8
+  Name = "Beta1"
+  Target Boundaries = 8
+  Body 1: Beta = Real 1
+End
+"""
+
+
+# Component blocks: the stranded coil + the load resistor.
+#
+# `Component 1` is the coil.  `Master Bodies = Integer 1` refers to the
+# SIF's Body 1 (CoilBlock / StrandedCoil) -- body indices, not gmsh
+# physical-group tags.  `Number of Turns` comes from the active curve.
+# `Electrode Boundaries` are the two winding end faces (the CoilStart /
+# CoilEnd BCs, renumbered by ElmerGrid to 3 / 4).
+#
+# `Component 2` is the load.  Per the upstream comment in
+# variable_resistor.sif, a resistor needs NO element equation: Elmer
+# writes V = R*I into the row of v_component(2) for us.  That is the
+# whole reason this approach works without hand-coded MNA entries.
+_COMPONENT_BLOCK = """
+! ============================================================
+!  Components -- stranded coil + resistive load
+!  (inserted by make_sif.py for a conductor curve)
+! ============================================================
+Component 1
+  Name = String "CoilWinding"
+  Master Bodies = Integer 1
+  Coil Type = String stranded
+  Number of Turns = Real {n_turns}
+  Electrode Boundaries(2) = Integer 3 4
+
+  ! ---- the two keys MagnetoDynamicsCalcFields DEMANDS for a stranded
+  ! coil in 3D.  Both are read from the Component and Fatal() if absent
+  ! (fem/src/modules/MagnetoDynamics/CalcFields.F90, CASE ('stranded')):
+  !
+  !   Circuit Current Variable Id : which circuit unknown carries this
+  !     coil's current.  It is used as `LagrangeVar % Values(IvarId)`
+  !     when the coil current is turned into a current density.
+  !   Stranded Coil N_j : the TURN DENSITY N/A_coil, i.e. turns per unit
+  !     cross-sectional area.  The source sets `ItoJCoeff = N_j`, so
+  !     J = N_j * I with J in A/m^2 and I in A -- hence 1/m^2.
+  Circuit Current Variable Id = Integer {ivar}
+  Stranded Coil N_j = Real {n_j:.10e}
+End
+
+Component 2
+  Name = String "LoadResistor"
+  Component Type = String Resistor
+  Resistance = Real {r_load}
+End
+"""
+
+# Body Force "Circuit": holds the circuit sources.  We use a ZERO-volt
+# source rather than removing it, so the circuit topology is byte-identical
+# to the upstream variable_resistor test (which is known to converge).
+# With V_source = 0 the loop reduces to  -0 + v_coil + v_load = 0, i.e.
+# v_coil = -v_load: the magnet-induced EMF drives current through the load.
+# Deriving a new source-free topology from first principles is possible but
+# would be untested; reusing the proven one is the safer engineering choice.
+_CIRCUIT_BODYFORCE_BLOCK = """
+! ============================================================
+!  Body Force "Circuit" -- circuit sources
+!    testsource = 0 V: no external drive.  The coil's induced EMF is
+!    the only source, exactly as in the open-circuit case, but now the
+!    loop is closed through Component 2 (the load resistor).
+!
+!    The same three keys CalcFields looks for on the Component block are
+!    mirrored here, because the ImposeCircuitCurrent code path
+!    (`fem/src/MagnetoDynamics/CalcFields.F90:1130-1138`) reads them from
+!    the Body Force.  Without this mirror we SEGFAULT on the first
+!    CalcFields call, even though the Component has them.
+! ============================================================
+Body Force 3
+  Name = "Circuit"
+  testsource = Real 0.0
+  Circuit Current Variable Id = Integer {ivar}
+  Stranded Coil N_j = Real {n_j:.10e}
+End
+"""
+
+
+# The MNA circuit definition.  This is the ONE piece we reuse verbatim
+# from upstream rather than derive: the topology
+#
+#     [0 V source] -- [coil component 1] -- [load resistor component 2]
+#
+# is a single series loop, which is exactly our experiment.  Setting the
+# source to 0 V (see _CIRCUIT_BODYFORCE_BLOCK) removes any external drive
+# and leaves the coil's magnet-induced EMF as the only source, closing the
+# loop through the load.
+#
+# The matrix layout, decoded from
+# fem/tests/circuits2D_transient_variable_resistor/sif/
+# variable_resistor_circuit.definitions:
+#
+#   C.1.variables = 6            number of MNA unknowns
+#   C.1.perm(0..5)               variable permutation (identity here)
+#   C.1.A / C.1.B                (6,6) matrices; A = impedance, B = topology
+#   C.1.Mre / C.1.Mim            harmonic-part matrices (unused in transient)
+#   C.1.name.k                   name of unknown k (1-based)
+#   C.1.source.1                 name of source 1, referenced from a Body Force
+#
+#   B(row, col) with BOTH 0-based; unknown k (1-based name.k) lives at col k-1.
+#   Rows are "the equation for unknown <row+1>".  Elmer OVERWRITES the row of
+#   each v_component(j) with that component's own equation (V = R*I for the
+#   resistor, the flux-linkage law for the stranded coil), so those rows are
+#   left untouched here.  The rows we must supply are the KVL loop row and the
+#   KCL current rows.
+_CIRCUIT_DEFINITIONS = """\
+! ---------------------------------------------------------------------------
+!  circuits.definitions -- MNA circuit for the closed-circuit FEM
+!  written by make_sif.py for a conductor curve
+!
+!  Topology:  [0 V source] -- [coil component 1] -- [load component 2]
+!  Reused from upstream fem/tests/circuits2D_transient_variable_resistor
+!  (which is known to converge); the only change is the 0 V source.
+!
+!  Unknowns (1-based names, 0-based matrix columns):
+!    1  i_testsource     col 0
+!    2  v_testsource     col 1
+!    3  i_component(1)   col 2      <- the coil current
+!    4  v_component(1)   col 3      <- the coil terminal voltage
+!    5  i_component(2)   col 4      <- the load current
+!    6  v_component(2)   col 5      <- the load voltage
+!
+!  Rows 3 and 5 (0-based) are written BY ELMER -- they are the rows of
+!  v_component(1) and v_component(2).  Do not add entries there, or the
+!  component equations will be overwritten.
+! ---------------------------------------------------------------------------
+$ Circuits = 1
+
+$ C.1.perm = zeros(6)
+$ C.1.perm(0) = 0
+$ C.1.perm(1) = 1
+$ C.1.perm(2) = 2
+$ C.1.perm(3) = 3
+$ C.1.perm(4) = 4
+$ C.1.perm(5) = 5
+
+$ C.1.variables = 6
+$ C.1.A = zeros(6,6)
+$ C.1.B = zeros(6,6)
+$ C.1.Mre = zeros(6,6)
+$ C.1.Mim = zeros(6,6)
+
+! Unknown names.  i_component(1)/v_component(1) are the stranded coil,
+! i_component(2)/v_component(2) the load resistor.
+$ C.1.name.1 = "i_testsource"
+$ C.1.name.2 = "v_testsource"
+$ C.1.name.3 = "i_component(1)"
+$ C.1.name.4 = "v_component(1)"
+$ C.1.name.5 = "i_component(2)"
+$ C.1.name.6 = "v_component(2)"
+
+! Source 1 is "testsource", defined in Body Force "Circuit" (= 0 V).
+$ C.1.B(0,1) = 1
+$ C.1.source.1 = "testsource"
+
+! KVL around the loop:  -v_testsource + v_coil + v_load = 0
+$ C.1.B(1,1) = -1
+$ C.1.B(1,3) = 1
+$ C.1.B(1,5) = 1
+
+! KCL at the source node:  i_testsource - i_coil = 0
+$ C.1.B(2,0) = 1
+$ C.1.B(2,2) = -1
+
+! KCL at the source node:  i_testsource - i_load = 0
+$ C.1.B(4,0) = 1
+$ C.1.B(4,4) = -1
+"""
+
+
+def _has_circuit(sif: str) -> bool:
+    """True if the CircuitsAndDynamics machinery is already present."""
+    return 'CircuitsAndDynamics' in sif
+
+
+def _is_conductor(curve: dict) -> bool:
+    """True if the curve has a real winding (so the loop can be closed).
+
+    N_turns > 0 is the only criterion.  `empty` (N_turns = 0) is the
+    no-conductor baseline: there is nothing to close a circuit through, so
+    it deliberately gets the plain template.
+    """
+    try:
+        return int(curve.get('N_turns', 0) or 0) > 0
+    except (TypeError, ValueError):
+        return False
+
+
+
+def _insert_coil_solvers(sif: str) -> str:
+    """Insert Solver 5/6/7 after Solver 4 and upgrade Equation 1.
+
+    Anchors on the `!  Materials` section header (which only appears once)
+    and walks back to the `End` that closes Solver 4, so the patch is
+    robust against whitespace drift in the template.
+    """
+    # Rewrite the whole `Active Solvers(n) = ...` line.  The character
+    # class MUST be [ \t] and not \s: \s matches newlines too, which
+    # would swallow the following line ("Mesh Update = Logical True" in
+    # this template) and produce
+    #     Active Solvers(3) = 1 2 3 4 5 6 7Mesh Update = Logical True
+    # i.e. a corrupted SIF.  Found the hard way; do not simplify.
+    #
+    # The list is `5 6 7 8 1 9 2 3 10 11`, NOT `1 2 3 4 ...`:
+    #
+    #   * Solver 4 is the VTU writer and the template deliberately leaves it
+    #     OUT of the active list -- it is driven by `Output Intervals` (see
+    #     the comment above `Solver 4`).  Adding it silently changes the
+    #     output schedule of every conductor run.
+    #   * the ORDER matters.  Upstream `fem/tests/circuits_transient_stranded`
+    #     runs the direction/frame solvers first (they are `Exec Solver =
+    #     Before All`, so they execute once before the timeloop), then
+    #     CircuitsAndDynamics BEFORE WhitneyAVSolver and CalcFields.
+    #     Solvers 5..8 = Direction Alpha, Direction Beta, RotMSolver,
+    #     WPotentialSolver; 9 = CircuitsAndDynamics; 10 = CircuitsOutput;
+    #     11 = SaveScalars (the circuit.csv writer).
+    #     The original 1 2 3 keep their relative order in the middle.
+    sif, n = re.subn(r'(?m)^([ \t]*Active Solvers\(\d+\)[ \t]*=[ \t]*)[0-9 \t]+$',
+                     r'\g<1>5 6 7 8 1 9 2 3 10 11', sif, count=1)
+    if n != 1:
+        raise SystemExit("[err] closed circuit: could not upgrade "
+                         "`Active Solvers(...)`.  Has the template changed?")
+    sif, n = re.subn(
+        r'(?m)^([ \t]*Active Solvers\()\d+(\)[ \t]*=[ \t]*5 6 7 8 1 9 2 3 10 11[ \t]*$)',
+        r'\g<1>10\g<2>', sif, count=1)
+    if n != 1:
+        raise SystemExit("[err] closed circuit: could not rewrite the "
+                         "`Active Solvers(n)` count.  Has the template "
+                         "changed?")
+
+    mat = re.search(r'(?m)^! =+\n!  Materials\n! =+', sif)
+    if not mat:
+        raise SystemExit("[err] closed circuit: could not find the "
+                         "`!  Materials` section header.  Has the "
+                         "template changed?")
+    before = sif[:mat.start()]
+    end_idx = before.rfind('\nEnd\n')
+    if end_idx < 0:
+        raise SystemExit("[err] closed circuit: no `End` line before "
+                         "`!  Materials` (Solver 4's terminator).  "
+                         "Has the template changed?")
+    inject_at = end_idx + len('\nEnd\n')
+
+    block = _COIL_SOLVER_BLOCK
+    return sif[:inject_at] + block + sif[inject_at:]
+
+
+def _insert_circuit_include(sif: str) -> str:
+    """Add `INCLUDE circuits.definitions` before the Header block.
+
+    The MNA matrices must be evaluated before CircuitsAndDynamics runs,
+    so the INCLUDE goes at the top of the file (same position as the
+    upstream reference test, which puts it right after Check Keywords).
+    """
+    m = re.search(r'(?m)^Header\b', sif)
+    if not m:
+        raise SystemExit("[err] closed circuit: no `Header` block to "
+                         "anchor the circuit INCLUDE on.")
+    line = ("! MNA circuit for the closed-circuit FEM (make_sif.py, "
+            "a conductor curve)\n"
+            "INCLUDE circuits.definitions\n\n")
+    return sif[:m.start()] + line + sif[m.start():]
+
+
+# Which circuit unknown holds the coil current, for `Circuit Current
+# Variable Id`.  Our MNA declares the unknowns in this order:
+#     1 i_testsource   2 v_testsource   3 i_component(1)
+#     4 v_component(1) 5 i_component(2) 6 v_component(2)
+# so `i_component(1)` is the third name.  0-based -> 2.  This is the value
+# the source uses as `LagrangeVar % Values(IvarId)`, so it must match the
+# circuit's own numbering; tests/test_sif_circuit.py cross-checks it
+# against circuits.definitions rather than trusting a constant here.
+_CIRCUIT_CURRENT_VAR_ID = 2
+
+
+def _coil_fill_factor(cfg: dict, curve: dict, n_turns: int) -> float:
+    """Copper fill factor f = N * A_wire / A_coil of the winding window.
+
+    WHY THIS MATTERS.  `CircuitsAndDynamics.F90:697` builds the coil's series
+    resistance as
+
+        localR = N_j**2 * |w|**2 / sigma * dV        (w is a unit vector)
+
+    so  R = N_j^2 * V_coil / sigma = N^2 * L_mean / (sigma * A_coil).
+
+    That is the resistance of N turns each of cross-section A_coil, i.e. it
+    implicitly assumes a SOLID conductor filling the whole winding window.
+    The physical wire resistance is
+
+        R_wire = N * L_mean / (sigma_wire * A_wire)
+               = N^2 * L_mean / (sigma_wire * f * A_coil)
+
+    so the two agree only if the MATERIAL conductivity fed to Elmer is the
+    homogenised
+
+        sigma_eff = f * sigma_wire.
+
+    Without this factor the coil resistance comes out 1/f too small --
+    ~10x for our 0.7 mm wire in a 5 mm window, which is ~10x in the induced
+    current.  Verified numerically: with sigma_wire the model returns
+    r_component(1) = 2.9026e-02 ohm for the 50-turn copper curve, and the
+    hand value is 0.308 ohm; 0.308/0.0296 = 10.4 = 1/f.
+    """
+    d = curve.get('wire_diameter_m')
+    if not d:
+        raise SystemExit(f"[err] conductor {curve.get('sif_suffix')!r} has no "
+                         f"wire_diameter_m; cannot build the winding.")
+    a_wire = math.pi * (0.5 * float(d)) ** 2
+    f = n_turns * a_wire / _coil_window_area(cfg)
+    if not 0.0 < f <= 1.0:
+        raise SystemExit(f"[err] fill factor {f:.4g} out of range -- check "
+                         f"N_turns, wire_diameter_m and the [coil] dimensions.")
+    return f
+
+
+def _coil_window_area(cfg: dict) -> float:
+    """Annulus cross-section of the winding window, in m^2."""
+    coil = cfg.get('coil', {})
+    try:
+        return ((float(coil['r_outer_m']) - float(coil['r_inner_m']))
+                * (float(coil['z1_m']) - float(coil['z0_m'])))
+    except (KeyError, TypeError, ValueError) as exc:
+        raise SystemExit(f"[err] cannot compute the coil window area from "
+                         f"[coil]: {exc}")
+
+
+def _coil_turn_density(cfg: dict, n_turns: int) -> float:
+    """N_j = N / A_coil, the turn density CalcFields needs for a stranded coil.
+
+    A_coil is the annulus cross-section, (r_outer - r_inner) * (z1 - z0),
+    because the winding is homogenised over the coil body.  J = N_j * I
+    must come out in A/m^2 for I in A, so N_j is in 1/m^2.
+    """
+    coil = cfg.get('coil', {})
+    try:
+        area = ((float(coil['r_outer_m']) - float(coil['r_inner_m']))
+                * (float(coil['z1_m']) - float(coil['z0_m'])))
+    except (KeyError, TypeError, ValueError) as exc:
+        raise SystemExit(f"[err] cannot compute the coil cross-section for "
+                         f"the stranded-coil N_j from [coil]: {exc}")
+    if area <= 0:
+        raise SystemExit(f"[err] coil cross-section is {area} m^2")
+    return n_turns / area
+
+
+def _insert_circuit_components(sif: str, curve: dict, cfg: dict) -> str:
+    """Append the Component blocks + the circuit Body Force.
+
+    Inserted immediately before the `!  Boundaries` header, i.e. right
+    after the Bodies section -- which is where the upstream reference
+    test places its Component blocks.
+    """
+    bc = re.search(r'(?m)^! =+\n!  Boundaries\n! =+', sif)
+    if not bc:
+        raise SystemExit("[err] closed circuit: could not find the "
+                         "`!  Boundaries` section header.  Has the "
+                         "template changed?")
+    n_turns = int(curve['N_turns'])
+    n_j = _coil_turn_density(cfg, n_turns)
+    block = (_COMPONENT_BLOCK.format(
+                n_turns=n_turns,
+                r_load=float(curve['R_load_ohm']),
+                ivar=_CIRCUIT_CURRENT_VAR_ID,
+                n_j=n_j)
+             + _CIRCUIT_BODYFORCE_BLOCK.format(
+                ivar=_CIRCUIT_CURRENT_VAR_ID,
+                n_j=n_j))
+    return sif[:bc.start()] + block + "\n" + sif[bc.start():]
+
+
+def _insert_body_frame_refs(sif: str) -> str:
+    """Add the Alpha/Beta reference directions to the coil Body.
+
+    RotMSolver polar-decomposes the two solved direction fields into a local
+    orthonormal frame, and it needs to know which global direction each of
+    Alpha and Beta is meant to point in.  Alpha runs radially outward (inner
+    cylinder -> outer cylinder) and Beta runs axially (bottom disk -> top
+    disk), hence `1 0 0` and `0 0 1`.  Upstream
+    `fem/tests/circuits_transient_stranded` sets the same two keys on its
+    coil Body (with `1 0 0` / `0 1 0`, because its coil is a block rather
+    than a ring).
+    """
+    m = re.search(r'(?m)^Body\s+1\s*$', sif)
+    if not m:
+        raise SystemExit("[err] closed circuit: no `Body 1` block to attach "
+                         "the Alpha/Beta reference directions to.")
+    rest = sif[m.end():]
+    e = re.search(r'(?m)^End[ \t]*$', rest)
+    if not e:
+        raise SystemExit("[err] closed circuit: `Body 1` has no closing End.")
+    at = m.end() + e.start()
+    add = ("  ! The local frame RotMSolver builds out of the two direction\n"
+           "  ! solves: Alpha runs radially outward, Beta runs axially, so\n"
+           "  ! gamma = alpha x beta = -theta-hat, the solenoid's wire\n"
+           "  ! direction (hpc/notes.md 13.12).\n"
+           "  Alpha reference (3) = Real 1 0 0\n"
+           "  Beta reference (3) = Real 0 0 1\n")
+    return sif[:at] + add + sif[at:]
+
+
+def _insert_coil_bcs(sif: str) -> str:
+    """Append Boundary Condition 3 (CoilStart) + 4 (CoilEnd).
+
+    Anchored on the LAST `End` in the file: in this template the
+    Boundaries section is the final section, so the last `End` closes
+    the final Boundary Condition block.  (Anchoring on `!  Materials`
+    would land the BCs in the Solver section instead -- that header sits
+    ABOVE Materials, Body forces, Bodies and Boundaries, not below.)
+    """
+    stripped = sif.rstrip()
+    trail = sif[len(stripped):]          # preserve trailing newlines
+    end_idx = stripped.rfind('\nEnd')
+    if end_idx < 0:
+        raise SystemExit("[err] closed circuit: no final `End` to anchor "
+                         "the CoilStart/CoilEnd BCs on.")
+    inject_at = end_idx + len('\nEnd')
+    return stripped[:inject_at] + _COIL_BC_BLOCK + stripped[inject_at:] + trail
+
+
+
+def patch_circuit_closed(sif: str, curve: dict, cfg: dict) -> str:
+    """Insert the closed-circuit block for the given curve.
+
+    `curve` is the active [curves] entry; it must have
+    wire_conductivity_S_per_m and a finite R_load_ohm.  `cfg` is the whole
+    config, needed for the [coil] dimensions that give the stranded-coil
+    turn density N_j = N / A_coil.
+    """
+    sigma = curve.get('wire_conductivity_S_per_m')
+    if not sigma or sigma <= 0:
+        raise SystemExit(f"[err] closed circuit: curve "
+                         f"{curve.get('sif_suffix', '?')!r} has no usable "
+                         f"wire_conductivity_S_per_m.  Closed circuit "
+                         f"requires a real conductor.")
+    R_load = curve.get('R_load_ohm')
+    if isinstance(R_load, str):
+        raise SystemExit(f"[err] closed circuit: curve "
+                         f"{curve.get('sif_suffix', '?')!r} has "
+                         f"R_load_ohm={R_load!r}; closed circuit requires "
+                         f"a finite load resistance.")
+
+    if not _has_circuit(sif):
+        sif = _insert_circuit_include(sif)
+        sif = _insert_coil_solvers(sif)
+        sif = _insert_circuit_components(sif, curve, cfg)
+        sif = _insert_body_frame_refs(sif)
+        sif = _insert_coil_bcs(sif)
+
+    # MagnetoDynamicsCalcFields (Solver 3) auto-discovers the target solver
+    # by scanning for one with a Procedure matching WhitneyAVSolver /
+    # WhitneyAVHarmonicSolver / MagnetoDynamics2D, and adds the key
+    # `Target Variable Solver Index` itself (CalcFields.F90 84/133/150).
+    # We must NOT set that key from the SIF -- it is unlisted (Elmer
+    # complains "Unknown specifier" at parse time before the Init routine
+    # has had a chance to add it) and CalcFields' own search then fails to
+    # find it for the same reason.  All we need to do is make sure Solver 2
+    # is the WhitneyAVSolver (which it is, and unchanged here).
+
+    # Rewrite Material 1's conductivity: it is curve-dependent.
+    # Always overwrite, NOT guarded by the idempotency check.
+    #
+    # It must be the HOMOGENISED conductivity f*sigma_wire, not sigma_wire.
+    # Elmer builds the coil's series resistance as N_j^2 * V/sigma, which
+    # equals the physical wire resistance only when the material carries the
+    # fill factor -- see _coil_fill_factor().  Getting this wrong makes the
+    # coil ~10x too conductive and the induced current ~10x too large.
+    f_fill = _coil_fill_factor(cfg, curve, int(curve['N_turns']))
+    sigma_eff = sigma * f_fill
+
+    # WhitneyAVSolver must EXPORT the Lagrange multiplier that carries the
+    # circuit current.  CalcFields reads it as
+    # `LagrangeVar % Values(IvarId)` (fem/src/MagnetoDynamics/CalcFields.F90,
+    # CASE ('stranded')).  Without this export the value vector is
+    # unallocated and we SEGFAULT at the first CalcFields call on
+    # `E(1,:) += LagrangeVar % Values(IvarId) * N_j * ...` -- observed.
+    sif, n = re.subn(
+        r'(Procedure\s+=\s*"MagnetoDynamics"\s+"WhitneyAVSolver")',
+        r'\1\n  Export Lagrange Multiplier = Logical True\n'
+        '  NonLinear System Relaxation Factor = 1',
+        sif, count=1)
+    if n != 1:
+        raise SystemExit("[err] closed circuit: could not find WhitneyAVSolver "
+                         "block to add `Export Lagrange Multiplier`.")
+    sif, n = re.subn(
+        r'(Material\s+1\b[^E]*?Electric Conductivity\s*=\s*)[\d.eE+-]+',
+        rf'\g<1>{sigma_eff:.7e}', sif, count=1, flags=re.DOTALL)
+    if n != 1:
+        raise SystemExit("[err] closed circuit: could not patch "
+                         "`Material 1 Electric Conductivity`.  "
+                         "Has the template changed?")
+    return sif
+
+
+def motion_expr(cfg) -> tuple:
+    """Return (matc_expression, human_readable_description)."""
+    mode = cfg.get("experiment", {}).get("motion_mode", "free_fall")
+    if mode == "spring":
+        sp = load_spring(cfg)
+        expr = sp["matc_expr"]
+        desc = (f"spring-mass-damper: m={sp['m']} kg k={sp['k']} N/m "
+                f"c={sp['c']} N.s/m  T={sp['period']:.4f} s  "
+                f"Q={sp['Q']:.1f}  A={sp['amplitude']*1000:.1f} mm  "
+                f"z_eq={sp['z_eq_m']*1000:.2f} mm  "
+                f"released at z={sp['z_release_m']*1000:.1f} mm from rest")
+    elif mode == "free_fall":
+        g = float(cfg["physics"]["G"])
+        expr = f"-0.5*{g}*tx*tx"
+        desc = (f"free fall: z(t) = z0 - 1/2 * {g} * t^2  "
+                f"(z0 taken from the mesh, magnet bottom face is the reference)")
+    else:
+        raise SystemExit(f"[err] unknown motion_mode '{mode}' "
+                         f"(use 'spring' or 'free_fall')")
+    return expr, desc
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--out", default=str(TEMPLATE))
+    ap.add_argument("--show", action="store_true")
+    ap.add_argument("--solver", choices=SOLVERS, default="umfpack",
+                    help="linear-algebra backend for Solver 2 "
+                         "(default: umfpack)")
+    ap.add_argument("--curve", default=None,
+                    help="which entry in [curves] is the active study.  A "
+                         "CONDUCTOR curve (N_turns > 0) is always solved with "
+                         "the closed circuit, so this flag is what selects "
+                         "the winding: it sets Number of Turns, the load "
+                         "resistance, the wire conductivity and the "
+                         "sif_suffix.  `--curve empty` (N_turns = 0) has no "
+                         "conductor, so it yields the plain template -- that "
+                         "is the no-Lenz-braking baseline.  Omit the flag to "
+                         "get the plain template too.")
+    a = ap.parse_args()
+
+    cfg = json.loads(CFG_PATH.read_text(encoding="utf-8"))
+    expr, desc = motion_expr(cfg)
+
+    if a.show:
+        # Validate --curve against the curves block (skipping non-dict
+        # entries such as `_comment_block`).  Done here too so the
+        # user catches a typo even when they only ask for --show.
+        if a.curve is not None:
+            c = cfg['curves'].get(a.curve)
+            if not isinstance(c, dict):
+                raise SystemExit(
+                    f"[err] --curve {a.curve!r}: not a valid curve "
+                    f"(must be a dict entry, not a doc string). "
+                    f"Available: {[k for k, v in cfg['curves'].items() if isinstance(v, dict)]}")
+        print(f"motion_mode : {cfg['experiment']['motion_mode']}")
+        print(f"description : {desc}")
+        print(f"MATC        : {expr}")
+        print(f"solver      : {a.solver}")
+        if a.curve:
+            c = cfg['curves'][a.curve]
+            n = int(c.get('N_turns', 0) or 0)
+            print(f"curve       : {a.curve}  N={n}  "
+                  f"R_load={c.get('R_load_ohm')}  "
+                  f"circuit={'CLOSED' if n > 0 else 'none (no conductor)'}")
+        return
+
+    src = TEMPLATE.read_text(encoding="utf-8")
+    new, n = re.subn(r'(Real MATC\s*)"[^"]*"', r'\1"' + expr + '"', src, count=1)
+    if n != 1:
+        raise SystemExit("[err] could not find `Real MATC \"...\"` in the template")
+
+    # time stepping is driven from config.json too
+    exp = cfg["experiment"]
+    dt = float(exp["dt_s"])
+    t_end = float(exp["t_end_default_s"])
+    nsteps = int(round(t_end / dt))
+    new, n1 = re.subn(r"Timestep Sizes\s*=\s*[0-9.eE+-]+",
+                      f"Timestep Sizes         = {dt:.6e}", new, count=1)
+    new, n2 = re.subn(r"Timestep Intervals\s*=\s*\d+",
+                      f"Timestep Intervals     = {nsteps}", new, count=1)
+    if n1 != 1 or n2 != 1:
+        raise SystemExit("[err] could not patch the timestep block")
+
+    # Force portable mesh / results paths.
+    #
+    # The template carries whatever absolute path the machine that last wrote
+    # it happened to have, e.g.
+    #     Mesh DB "c:\Users\JosephVStalin\Desktop\PysProject" "mesh"
+    #     Results Directory "c:\Users\JosephVStalin\Desktop\PysProject\results"
+    # which fails the moment the case is moved anywhere -- a Docker container
+    # reports `LoadMesh: Requested mesh > c:\...\mesh < does not exist!`, and
+    # HPC scratch directories hit the same wall.  Elmer resolves "." against
+    # its own working directory, so pinning both to relative paths makes the
+    # SIF location-independent.  Doing it here (rather than editing the
+    # template by hand) means it is re-applied on every regeneration.
+    new, n3 = re.subn(r'(Mesh DB\s*)"[^"]*"\s*"[^"]*"',
+                      r'\1"." "mesh"', new, count=1)
+    new, n4 = re.subn(r'(Results Directory\s*)"[^"]*"',
+                      r'\1"results"', new, count=1)
+    if n3 != 1 or n4 != 1:
+        raise SystemExit("[err] could not patch the `Mesh DB` / "
+                         "`Results Directory` block")
+
+    # Linear-solver backend.  Applied to the generated copy only: the
+    # template keeps the UMFPACK default, so this stays idempotent and
+    # `python make_sif.py` with no flags reproduces the original file.
+    new = patch_solver(new, a.solver)
+
+    # Validate --curve against the curves block (skipping non-dict entries
+    # such as `_comment_block`), then decide the circuit treatment.
+    #
+    # Since the open-circuit variant was removed there is no mode flag any
+    # more: a CONDUCTOR curve (N_turns > 0) is ALWAYS solved with the closed
+    # circuit, and a curve with no conductor (`empty`) always gets the plain
+    # template.  The distinction is a property of the curve, not a choice.
+    closed_circuit = False
+    if a.curve is not None:
+        c = cfg['curves'].get(a.curve)
+        if not isinstance(c, dict):
+            raise SystemExit(f"[err] --curve {a.curve!r}: not a valid curve "
+                             f"(must be a dict entry, not a doc string). "
+                             f"Available: {[k for k, v in cfg['curves'].items() if isinstance(v, dict)]}")
+        closed_circuit = _is_conductor(c)
+
+    if closed_circuit:
+        # Material 1 sigma=0 -> sigma_wire, plus the coil/load Components,
+        # the W / CircuitsAndDynamics / CircuitsOutput solvers, the
+        # CoilStart/CoilEnd BCs and the MNA definitions.  See hpc/notes.md 13.
+        new = patch_circuit_closed(new, c, cfg)
+
+    Path(a.out).write_text(new, encoding="utf-8")
+    # The closed-circuit SIF does `INCLUDE circuits.definitions`, which
+    # Elmer resolves relative to the SIF's own directory.  Write it next
+    # to the SIF so the pair travels together into a case directory.
+    if closed_circuit:
+        defs = Path(a.out).parent / "circuits.definitions"
+        defs.write_text(_CIRCUIT_DEFINITIONS, encoding="utf-8")
+        print(f"[ok] wrote {defs}")
+    print(f"[ok] wrote {a.out}")
+    print(f"     motion_mode : {cfg['experiment']['motion_mode']}")
+    print(f"     {desc}")
+    print(f"     MATC        : \"{expr}\"")
+    print(f"     dt = {dt:g} s  t_end = {t_end:g} s  "
+          f"-> {nsteps} timesteps")
+    print(f"     paths       : Mesh DB \".\" \"mesh\"   "
+          f"Results Directory \"results\"")
+    if a.solver == "umfpack":
+        print("     solver      : Solver 2 = Direct / UMFPACK")
+    else:
+        print(f"     solver      : Solver 2 = Iterative / Hypre AMS "
+              f"(Krylov index {HYPRE_AMS_INDEX} = BiCGStab)")
+        print("                   needs an Elmer built with -DWITH_Hypre=TRUE")
+    if closed_circuit:
+        print(f"     curve       : {a.curve}  "
+              f"N={int(c['N_turns'])}  R_load={c['R_load_ohm']}  "
+              f"circuit=CLOSED")
+        f_fill = _coil_fill_factor(cfg, c, int(c['N_turns']))
+        sigma_eff = c['wire_conductivity_S_per_m'] * f_fill
+        print(f"     circuit     : Material 1 sigma = {sigma_eff:.4e} S/m "
+              f"(= f x {c['wire_conductivity_S_per_m']:.4e}, f = {f_fill:.6f})")
+        print(f"                   R_load = {c['R_load_ohm']} ohm;  "
+              f"N_j = {_coil_turn_density(cfg, int(c['N_turns'])):.4e} 1/m^2")
+        print("                   Solver 5 WPotentialSolver, Solver 6 "
+              "CircuitsAndDynamics, Solver 7 CircuitsOutput")
+        print("                   Component 1 = stranded coil "
+              f"(N={int(c['N_turns'])}), Component 2 = load resistor")
+        print("                   BC 3 CoilStart (target 3, W=1) + "
+              "BC 4 CoilEnd (target 4, W=0)")
+        print("                   INCLUDE circuits.definitions "
+              "(written next to the SIF)")
+        print("                   REQUIRES the mesh to carry those two "
+              "physical groups --")
+        print("                   rebuild with solenoid3d.py (it emits them "
+              "when N_turns > 0)")
+        print("                   Solvers 9/10 run `Before timestep`, NOT "
+              "`Always`: Elmer")
+        print("                   executes the per-timestep solvers in "
+              "SOLVER-NUMBER order, so")
+        print("                   an `Always` circuit solver would be reached "
+              "only after")
+        print("                   Solver 3 (CalcFields) had already crashed. "
+              "See hpc/notes.md 15.7.")
+        print("                   VERIFIED: all 10 solvers run, the circuit "
+              "assembles, r_component(2) = 10 ohm.")
+    elif a.curve:
+        print(f"     curve       : {a.curve}  "
+              f"N={c.get('N_turns', 0)}  circuit=none (no conductor)")
+        print("     circuit     : no conductor in this curve, so no circuit. "
+              "Material 1 stays")
+        print("                   sigma = 0.0 and the plain template is "
+              "written -- this is the")
+        print("                   no-Lenz-braking baseline.")
+    else:
+        print("     circuit     : none -- no --curve given, plain template")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,137 @@
+# =============================================================================
+#  pyproject.toml  --  PEP 518/621 project metadata + setuptools backend
+# =============================================================================
+#  This file is the single source of truth for:
+#    - project name / version / description
+#    - Python version requirements
+#    - runtime dependencies (cross-checked with requirements.txt)
+#    - dev dependencies (testing, linting)
+#    - console script entrypoints
+#    - setuptools configuration
+#
+#  Build a wheel:        pip wheel . -w dist/
+#  Build an sdist:       python -m build --sdist
+#  Install locally:      pip install -e .
+#  Publish to PyPI:      python -m twine upload dist/pysproject-*.whl
+# =============================================================================
+
+[build-system]
+requires = ["setuptools>=68", "wheel", "build>=1.0"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name            = "pysproject"
+version         = "2.2.0"     # keep in sync with __version__.py
+description     = "Magnet free-fall FEM pipeline (Elmer 26.2 + gmsh + pyvista)"
+readme          = "README.md"
+license         = {file = "LICENSE"}
+requires-python = ">=3.10"
+authors = [
+    {name = "Joseph V Stalin", email = "joseph@example.com"},
+]
+keywords = [
+    "fem", "magnetostatic", "elmer", "gmsh", "pyvista",
+    "magnet-free-fall", "lenz-law", "mhd", "scientific-computing",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+
+dependencies = [
+    "gmsh>=4.13,<5.0",
+    "meshio>=5.3,<6.0",
+    "pyvista>=0.43,<1.0",
+    "numpy>=1.24,<3.0",
+    "matplotlib>=3.7,<4.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "pytest-cov>=4.1",
+    "ruff>=0.1",
+    "mypy>=1.7",
+    "pip-tools>=7.3",        # for pip-compile
+]
+viz = [
+    "free-cad-macro>=0.1",   # placeholder; FreeCAD GUI not pip-installable
+]
+
+[project.urls]
+Homepage     = "https://github.com/example/pysproject"
+Documentation= "https://pysproject.readthedocs.io"
+"Bug Tracker"= "https://github.com/example/pysproject/issues"
+Changelog    = "https://github.com/example/pysproject/blob/main/CHANGELOG.md"
+
+# ---- console script entrypoints ---------------------------------------------
+[project.scripts]
+pysproject-build  = "solenoid3d:main"
+pysproject-run    = "tests.test_mesh:main"     # pytest discovery
+pysproject-clean  = "clean:main"               # placeholder; use clean.sh / .ps1
+
+
+# =============================================================================
+#  setuptools configuration
+# =============================================================================
+[tool.setuptools]
+include-package-data = true
+zip-safe             = false
+
+[tool.setuptools.packages.find]
+where      = ["."]
+include    = ["solenoid3d*", "tests*", "__version__*"]
+exclude    = ["elmer262*", "mesh*", "results*", "test_outputs*", "build*", "dist*"]
+
+[tool.setuptools.package-data]
+"solenoid3d" = ["case_simple.sif"]
+"" = ["config.json", "*.sif"]
+
+[tool.setuptools.data-files]
+"share/pysproject" = ["config.json", "README.md", "CHANGELOG.md", "LICENSE"]
+
+
+# =============================================================================
+#  Tooling configuration (ruff, mypy, pytest)
+# =============================================================================
+[tool.pytest.ini_options]
+minversion        = "7.4"
+testpaths         = ["tests"]
+addopts           = "-v --tb=short --strict-markers"
+filterwarnings    = [
+    "ignore::DeprecationWarning:gmsh.*",
+    "ignore::DeprecationWarning:meshio.*",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "fem:  marks tests that require ElmerSolver",
+    "viz:  marks tests that require FreeCAD",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+extend-exclude = ["elmer262", "build", "dist"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP"]
+ignore = ["E501", "E402"]    # long lines + module-level imports are OK
+
+[tool.mypy]
+python_version         = "3.11"
+ignore_missing_imports = true
+warn_unused_ignores    = true
+disallow_untyped_defs  = false
+
+# pip-compile dependency lockfile target:
+#   pip-compile pyproject.toml --output-file requirements.lock \
+#             --extra dev --upgrade
